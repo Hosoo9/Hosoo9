@@ -76,7 +76,7 @@ model User {
   // schedule      Schedule[] @ignore
   password      String?
 
-  companyId     String?
+  companyId     String?   @db.NVarChar(10)
   company       Company?  @relation(fields: [companyId], references: [id])
   role          Int       @default(1)
   createdAt     DateTime  @default(now())
@@ -130,7 +130,7 @@ model Operation {
 
 model Company {
   id          String       @id @db.NVarChar(10)
-  name        String
+  name        String       @db.NVarChar(60)
   users       User[]       @ignore
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @default(now()) @updatedAt
