@@ -1,12 +1,12 @@
 import { createInvite, getInvites } from "@/contexts/invite"
-import { getUserByEmail } from "@/contexts/user"
+import { getById } from "@/contexts/user"
 import { getCurrentUser } from "@/lib/session"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { NOT_AUTHORIZED } from "../../constants"
 
 const inviteUserSchema = z.object({
-  email: z.string(),
+  id: z.string(),
   role: z.coerce.number().default(1)
 })
 
@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const params = inviteUserSchema.parse(await request.json())
 
-  const user = await getUserByEmail(params.email.toLowerCase())
+  const user = await getById(params.id.toLowerCase())
 
   if (user !== null) {
     return NextResponse.json({ error: "User already exists" }, { status: 400 })

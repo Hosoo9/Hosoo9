@@ -25,7 +25,7 @@ model CasbinRule {
 
 model Account {
   id                 String   @id @default(uuid())
-  userId             String
+  userId             String   @db.NVarChar(30)
   type               String
   provider           String
   providerAccountId  String
@@ -45,7 +45,7 @@ model Account {
 model Session {
   id           String   @id @default(uuid())
   sessionToken String   @unique
-  userId       String
+  userId       String   @db.NVarChar(30)
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -66,15 +66,14 @@ model ResetCode {
 }
 
 model User {
-  id            String   @id @default(uuid())
-  username      String   @unique
+  id            String    @id @db.NVarChar(30)
   name          String?
   nameKana      String?
   image         String?
   accounts      Account[]
   sessions      Session[]
   // schedule      Schedule[] @ignore
-  password      String?
+  password      String
 
   companyId     String?   @db.NVarChar(10)
   company       Company?  @relation(fields: [companyId], references: [id])

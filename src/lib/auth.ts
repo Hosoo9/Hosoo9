@@ -1,9 +1,7 @@
+import prisma from "@/utils/prisma"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import NextAuth, { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
-import GoogleProvider from "next-auth/providers/google"
-import prisma from "@/utils/prisma"
-import { getUserByEmail } from "@/contexts/user"
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.AUTH_SECRET || "some-secret",
@@ -13,10 +11,6 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
-    }),
     CredentialsProvider({
       // The name to display on the sign in form (e.g. 'Sign in with...')
       name: "Credentials",
@@ -24,7 +18,7 @@ export const authOptions: NextAuthOptions = {
       // You can specify whatever fields you are expecting to be submitted.
       // e.g. domain, username, password, 2FA token, etc.
       credentials: {
-        username: { label: "Email", type: "text", placeholder: "jsmith" },
+        username: { label: "Id", type: "text", placeholder: "manager" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
@@ -37,7 +31,7 @@ export const authOptions: NextAuthOptions = {
         const res = await fetch(`${process.env.BASE_URL}/api/auth/login`, {
           method: "POST",
           body: JSON.stringify({
-            email: credentials?.username,
+            id: credentials?.username,
             password: credentials?.password,
           }),
           headers: { "Content-Type": "application/json" },
@@ -63,7 +57,6 @@ export const authOptions: NextAuthOptions = {
       if (token) {
         session.user.id = token.id
         session.user.name = token.name
-        session.user.email = token.email
         session.user.role = token.role
         session.user.companyCode = token.companyCode
       }
@@ -71,9 +64,7 @@ export const authOptions: NextAuthOptions = {
       return session
     },
     async jwt({ token, user }: { token: any; user: any }) {
-      const dbUser = await getUserByEmail(token.email)
-
-      if (!dbUser) {
+      if (!user) {
         if (user) {
           token.id = user?.id
         }
@@ -81,11 +72,10 @@ export const authOptions: NextAuthOptions = {
       }
 
       return {
-        id: dbUser.id,
-        name: dbUser.name,
-        email: dbUser.email,
-        role: dbUser.role,
-        companyCode: dbUser.companyCode,
+        id: user.id,
+        name: user.name,
+        role: user.role,
+        companyCode: user.companyId,
       }
     },
   },

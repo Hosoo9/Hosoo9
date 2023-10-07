@@ -38,7 +38,7 @@ services:
     ports:
       - "1433:1433"
     volumes:
-      - "ariel-mssql-volume:/var/opt/mssql"
+      - "ursula-mssql-volume:/var/opt/mssql"
 
   mailcatcher:
     image: schickling/mailcatcher
@@ -48,5 +48,5 @@ services:
 
 
 volumes:
-  ariel-db-volume:
-  ariel-mssql-volume:
+  ursula-db-volume:
+  ursula-mssql-volume:

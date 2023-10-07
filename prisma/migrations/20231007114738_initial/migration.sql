@@ -18,7 +18,7 @@ CREATE TABLE [dbo].[casbin_rule] (
 -- CreateTable
 CREATE TABLE [dbo].[Account] (
     [id] NVARCHAR(1000) NOT NULL,
-    [userId] NVARCHAR(1000) NOT NULL,
+    [userId] NVARCHAR(30) NOT NULL,
     [type] NVARCHAR(1000) NOT NULL,
     [provider] NVARCHAR(1000) NOT NULL,
     [providerAccountId] NVARCHAR(1000) NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE [dbo].[Account] (
 CREATE TABLE [dbo].[Session] (
     [id] NVARCHAR(1000) NOT NULL,
     [sessionToken] NVARCHAR(1000) NOT NULL,
-    [userId] NVARCHAR(1000) NOT NULL,
+    [userId] NVARCHAR(30) NOT NULL,
     [expires] DATETIME2 NOT NULL,
     CONSTRAINT [Session_pkey] PRIMARY KEY CLUSTERED ([id]),
     CONSTRAINT [Session_sessionToken_key] UNIQUE NONCLUSTERED ([sessionToken])
@@ -64,18 +64,16 @@ CREATE TABLE [dbo].[ResetCode] (
 
 -- CreateTable
 CREATE TABLE [dbo].[User] (
-    [id] NVARCHAR(1000) NOT NULL,
-    [username] NVARCHAR(1000) NOT NULL,
+    [id] NVARCHAR(30) NOT NULL,
     [name] NVARCHAR(1000),
     [nameKana] NVARCHAR(1000),
     [image] NVARCHAR(1000),
-    [password] NVARCHAR(1000),
+    [password] NVARCHAR(1000) NOT NULL,
     [companyId] NVARCHAR(10),
     [role] INT NOT NULL CONSTRAINT [User_role_df] DEFAULT 1,
     [createdAt] DATETIME2 NOT NULL CONSTRAINT [User_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
     [updatedAt] DATETIME2 NOT NULL CONSTRAINT [User_updatedAt_df] DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT [User_pkey] PRIMARY KEY CLUSTERED ([id]),
-    CONSTRAINT [User_username_key] UNIQUE NONCLUSTERED ([username])
+    CONSTRAINT [User_pkey] PRIMARY KEY CLUSTERED ([id])
 );
 
 -- CreateTable

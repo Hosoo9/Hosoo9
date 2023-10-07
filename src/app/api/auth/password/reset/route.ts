@@ -1,5 +1,5 @@
 import config from "@/config"
-import { getUserByEmail } from "@/contexts/user"
+import { getById } from "@/contexts/user"
 import { sendEmail } from "@/lib/mailer"
 import { renderTemplate } from "@/lib/template/renderer"
 import { signJwt } from "@/utils/jwt"
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
   try {
     const params = schema.parse(await request.json())
 
-    const user = await getUserByEmail(params.email.toLowerCase())
+    const user = await getById(params.id.toLowerCase())
     const resetCode = crypto.randomBytes(20).toString("hex")
 
     if (user === null || user.email === null) {
