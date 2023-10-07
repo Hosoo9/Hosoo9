@@ -1,0 +1,52 @@
+version: "3.7"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+    command: pnpm run dev
+    environment:
+      DATABASE_URL: postgresql://postgres:secret@db:5432/ariel
+    volumes:
+      - .:/app
+      - /app/node_modules
+    profiles: ["app"]
+
+  # db:
+  #   image: postgres:11.2-alpine
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: secret
+  #     POSTGRES_DB: ariel
+  #   ports:
+  #     - "54324:5432"
+  #   volumes:
+  #     - ariel-db-volume:/var/lib/postgresql/data
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    platform: linux/amd64
+    cap_add: [ 'SYS_PTRACE' ]
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: Password123
+    ports:
+      - "1433:1433"
+    volumes:
+      - "ariel-mssql-volume:/var/opt/mssql"
+
+  mailcatcher:
+    image: schickling/mailcatcher
+    ports:
+      - "1025:1025"
+      - "1080:1080"
+
+
+volumes:
+  ariel-db-volume:
+  ariel-mssql-volume:

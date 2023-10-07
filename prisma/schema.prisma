@@ -1,0 +1,137 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model CasbinRule {
+  id    Int     @id @default(autoincrement())
+  ptype String
+  v0    String?
+  v1    String?
+  v2    String?
+  v3    String?
+  v4    String?
+  v5    String?
+
+  @@map("casbin_rule")
+}
+
+model Account {
+  id                 String   @id @default(uuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model ResetCode {
+  id         BigInt     @id @default(autoincrement())
+  email      String     @unique
+  token      String
+  expires    DateTime
+}
+
+model User {
+  id            String   @id @default(uuid())
+  username      String   @unique
+  name          String?
+  nameKana      String?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  // schedule      Schedule[] @ignore
+  password      String?
+
+  companyId     String?
+  company       Company?  @relation(fields: [companyId], references: [id])
+  role          Int       @default(1)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @default(now()) @updatedAt
+}
+
+
+model Operation {
+  id                           BigInt     @id @default(autoincrement())
+  isSecurityWork               Boolean    @default(false)
+  status                       Int        @db.TinyInt @default(1)
+  changedNotificationFlag      Boolean
+  valveOpenFlag                Boolean
+  prePauseStatus               Int?        @db.TinyInt
+  pauseTimestamp               DateTime?
+  pauseDuration                Int?        @db.TinyInt
+  customerNumber               String
+  postalCode                   String     @db.NVarChar(8)
+  municipality                 String     @db.NVarChar(50)
+  address                      String     @db.NVarChar(100)
+  buildingNameRoomNumber       String?    @db.NVarChar(100)
+  name                         String     @db.NVarChar(60)
+  nameKana                     String?    @db.NVarChar(100)
+  phoneNumber                  String     @db.NVarChar(20)
+  assignedWorkerId             String?    @db.NVarChar(30)
+  memo                         String?    @db.NVarChar(500)
+  scheduledDatetime            DateTime?  @db.DateTime
+  footprint                    Int       @db.TinyInt
+  postcardOutputTimestamp      DateTime? @db.DateTime
+  absenceNoticeDeliveryDate    DateTime    @db.Date
+  openrationType               Int       @db.TinyInt
+  completedAt                  DateTime? @db.DateTime
+  exchangingDate               DateTime? @db.DateTime
+  removingMeterId              String?   @db.NVarChar(30)
+  removingMeterNumber          String?   @db.NVarChar(20)
+  removingMeterValue           Int?      @db.Int
+  removingMeterInspectionDate  DateTime? @db.DateTime
+  referenceDate                DateTime? @db.DateTime
+  position                     String?   @db.NVarChar
+  removingMeterImagePath       String? @db.NVarChar
+  installingMeterId            String?
+  installingMeterNumber        String?
+  installingMeterValue         Int?
+  installingMeterReferenceDate DateTime @db.Date
+  installingMeterImagePath     String? @db.NVarChar
+  signatureImgPath             String? @db.NVarChar
+
+  createdAt              DateTime   @default(now())
+  updatedAt              DateTime   @default(now()) @updatedAt
+}
+
+model Company {
+  id          String       @id @db.NVarChar(10)
+  name        String
+  users       User[]       @ignore
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @default(now()) @updatedAt
+}

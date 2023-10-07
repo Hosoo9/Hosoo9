@@ -1,0 +1,8 @@
+const STATE_MAPPING = {
+  1: "DRAFT",
+  2: "REQUESTED",
+  3: "APPROVED",
+  4: "REJECTED",
+  5: "ONGOING",
+  6: "COMPLETED",
+}
