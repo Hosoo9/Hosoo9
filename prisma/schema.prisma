@@ -114,14 +114,14 @@ model Operation {
   removingMeterValue           Int?      @db.Int
   removingMeterInspectionDate  DateTime? @db.DateTime
   referenceDate                DateTime? @db.DateTime
-  position                     String?   @db.NVarChar
-  removingMeterImagePath       String? @db.NVarChar
+  position                     String?
+  removingMeterImagePath       String?
   installingMeterId            String?
   installingMeterNumber        String?
   installingMeterValue         Int?
   installingMeterReferenceDate DateTime @db.Date
-  installingMeterImagePath     String? @db.NVarChar
-  signatureImgPath             String? @db.NVarChar
+  installingMeterImagePath     String?
+  signatureImgPath             String?
 
   createdAt              DateTime   @default(now())
   updatedAt              DateTime   @default(now()) @updatedAt
