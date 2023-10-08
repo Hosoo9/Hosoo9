@@ -1,6 +1,3 @@
-import { NextResponse } from "next/server"
-import type { NextRequest } from "next/server"
-import { getServerSession } from "next-auth/next"
 import createMiddleware from 'next-intl/middleware';
 // import { authOptions } from "./app/api/auth/[...nextauth]/route"
 
@@ -9,7 +6,8 @@ export default createMiddleware({
   locales: ['en', 'jp'],
  
   // If this locale is matched, pathnames work without a prefix (e.g. `/about`)
-  defaultLocale: 'jp'
+  defaultLocale: 'jp',
+  localeDetection: false
 });
 
 // This function can be marked `async` if using `await` inside

@@ -1,17 +1,16 @@
 import LoadingProvider from "@/utils/loadingProvider"
+import { MantineProvider } from "@mantine/core"
 import { NextIntlClientProvider } from "next-intl"
 import { notFound } from "next/navigation"
 import Provider from "../../components/Provider"
 import ClientProviders from "../../components/providers/ClientProviders"
-import { MantineProvider, ColorSchemeScript } from "@mantine/core"
-import { Sidebar } from "../../components/Sidebar"
 import "./globals.css"
 
-import '@mantine/core/styles.css';
-import '@mantine/dates/styles.css';
+import '@mantine/core/styles.css'
+import '@mantine/dates/styles.css'
 
 export function generateStaticParams() {
-  return [{ locale: "en" }, { locale: "jp" }]
+  return [{ locale: "jp" }, { locale: "mn" }]
 }
 
 export default async function RootLayout({
