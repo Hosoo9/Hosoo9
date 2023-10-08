@@ -1,13 +1,11 @@
 "use client"
 
-import '@mantine/core/styles.css';
-import { AppShell, MantineProvider } from "@mantine/core"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { useState } from "react"
-import CustomHeader from "../layout/header"
-import { CustomNavbar } from "../layout/navbar"
-import DateProviderWrapper from "./DatesProviderWrapper"
-import { Sidebar } from "../Sidebar"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useState } from "react";
+import { Sidebar } from "../Sidebar";
+import classes from "../Sidebar.module.css"
+import DateProviderWrapper from "./DatesProviderWrapper";
+import { Container } from '@mantine/core';
 
 const queryClient = new QueryClient()
 
@@ -39,8 +37,13 @@ function ClientProviders({
         {/*   })} */}
         {/* > */}
         <div className="flex">
-          <Sidebar />
-          {children}
+          <Sidebar  />
+
+          <main className={classes.main}>
+            <Container size="lg">
+              {children}
+            </Container>
+          </main>
         </div>
         {/* </AppShell> */}
       </DateProviderWrapper>

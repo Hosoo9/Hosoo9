@@ -1,42 +1,41 @@
-import Image from "next/image"
-import React, { useState } from "react"
-import SignatureCanvas from "react-signature-canvas"
+// import Image from "next/image"
+// import { useRef, useState } from "react"
 
-function SignaturePad() {
-  const [sign, setSign] = useState()
-  const [url, setUrl] = useState("")
+// function SignaturePad() {
+//   const [imageURL, setImageURL] = useState(null)
+//   const [sign, setSign] = useState()
+//   const [url, setUrl] = useState("")
+//   const sigCanvas = useRef<any>({})
 
-  const handleClear = () => {
-    // if (sign !== undefined) {
-    //   sign.clear()
-    //   setUrl("")
-    // }
-  }
-  const handleGenerate = () => {
-    // setUrl(sign.getTrimmedCanvas().toDataURL("image/png"))
-  }
+//   const handleClear = () => {
+//     // if (sign !== undefined) {
+//     //   sign.clear()
+//     //   setUrl("")
+//     // }
+//   }
+//   const handleGenerate = () => {
+//     // setUrl(sign.getTrimmedCanvas().toDataURL("image/png"))
+//   }
 
-  return (
-    <div>
-      <div style={{ border: "2px solid black", width: 500, height: 200 }}>
-        <SignatureCanvas
-          canvasProps={{ width: 500, height: 200, className: "sigCanvas" }}
-          // ref={(data: React.SetStateAction<undefined>) => setSign(data)}
-        />
-      </div>
+//   const save = () =>
+//     setImageURL(sigCanvas.current.getTrimmedCanvas().toDataURL("image/png"))
 
-      <br></br>
-      <button style={{ height: "30px", width: "60px" }} onClick={handleClear}>
-        Clear
-      </button>
-      <button style={{ height: "30px", width: "60px" }} onClick={handleGenerate}>
-        Save
-      </button>
-
-      <br />
-      <br />
-      <Image alt="signature" src={url} />
-    </div>
-  )
-}
-export default SignaturePad
+//   return (
+//     <div>
+//       <SignaturePad
+//         ref={sigCanvas}
+//         canvasProps={{
+//           className: "signatureCanvas",
+//         }}
+//       />
+//       {/* Button to trigger save canvas image */}
+//       <button onClick={save}>Save</button>
+//       <button onClick={clear}>Clear</button>
+//       <button onClick={close}>Close</button>
+//       <br />
+//       <br />
+//       <Image alt="signature" src={url} />
+//     </div>
+//   )
+// }
+// export default SignaturePad

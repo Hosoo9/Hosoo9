@@ -9,20 +9,31 @@
 
 import "dayjs/locale/ja"
 
-import { Select, Radio, Input, Textarea, Flex, Button, Checkbox } from "@mantine/core"
-import { SetStateAction, useId, useState } from "react"
-import { DatePickerInput } from "@mantine/dates"
-import { useTranslations } from "next-intl"
-import PostalToAddress from "../test/PostalToAddress"
-import { IMaskInput } from "react-imask"
+import {
+    Button,
+    Container,
+    Divider,
+    Title
+} from "@mantine/core"
 import { useForm } from "@mantine/form"
+import { useDisclosure } from "@mantine/hooks"
 import { useMutation } from "@tanstack/react-query"
+import { useTranslations } from "next-intl"
 import { useRouter } from "next/navigation"
-import ContactHistory from "../ContactHistory"
-import AlarmList from "../test/AlarmList"
+import { SetStateAction, useId, useState } from "react"
+import SignatureCanvas from "react-signature-canvas"
+import { CustomerInformation } from "./CustomerInformation"
+import { Flags } from "./Flags"
+import { InstallingMeterInformation } from "./InstallingMeterInformation"
+import { MetaInformation } from "./MetaInformation"
+import { Pause } from "./Pause"
+import { RemovingMeterInformation } from "./RemovingMeterInformation"
+import { WorkInformation } from "./WorkInformation"
+import { WorkScheduleInformation } from "./WorkScheduleInformation"
 
 function OperationForm() {
   const router = useRouter()
+  const [opened, { open, close }] = useDisclosure(false)
 
   const form = useForm({
     initialValues: {
@@ -31,7 +42,7 @@ function OperationForm() {
       type: null,
       customerNumber: "",
       gasType: null,
-      phoneNumber: "+81 (222) 2222-2222",
+      phoneNumber: "",
       nameKana: "",
       name: "",
       workType: null,
@@ -103,200 +114,50 @@ function OperationForm() {
   const id = useId()
 
   return (
-    <div className="container mx-auto">
-      <form onReset={form.onReset} onSubmit={form.onSubmit(saveOperation)}>
-        <h1>{t("enterApplicationDetails")}</h1>
-        <h2>{t("inputWorkOutline")}</h2>
+    <Container fluid>
+      <Title order={1} size="h1" className="py-5">
+        {t("workDetails")}
+      </Title>
 
-        <ContactHistory
-          contacts={form.values.ContactOperation}
-          onNewContact={(contacts) => form.insertListItem("ContactOperation", contacts)}
-        />
-        <div className="grid grid-cols-3 gap-3">
+      <form onReset={form.onReset} onSubmit={form.onSubmit(saveOperation)}>
+        {/* <ContactHistory */}
+        {/*   contacts={form.values.ContactOperation} */}
+        {/*   onNewContact={(contacts) => form.insertListItem("ContactOperation", contacts)} */}
+        {/* /> */}
+        <MetaInformation />
+        <Flags />
+        <Pause />
+
+        <Divider my="lg" />
+
+        <WorkScheduleInformation />
+
+        <Divider my="lg" />
+
+        <CustomerInformation />
+
+        <Divider my="lg" />
+        <WorkInformation />
+
+        <Divider my="lg" />
+        <RemovingMeterInformation />
+
+        <Divider my="lg" />
+        <InstallingMeterInformation />
+
+        <Divider />
+        <Title order={3} size="h4" className="py-3">
+          {t("leakInvestigationAfterWork")}
+        </Title>
+
+        <div className="pb-5">
+          <SignatureCanvas
+            canvasProps={{ width: 500, height: 200, className: "sigCanvas border-solid border-1" }}
+          />
+        </div>
+
+        <div className="pb-5">
           <div className="col-span-1">
-            <Select
-              {...form.getInputProps("type")}
-              label={t("workType")}
-              data={[
-                { value: "1", label: t("maturityExchange") },
-                { value: "2", label: t("newInstallation") },
-                { value: "3", label: t("lumpSumLease") },
-                { value: "4", label: t("wholesaleSales") },
-                { value: "5", label: t("leaseCancellationRemoval") },
-              ]}
-            ></Select>
-          </div>
-          <div>
-            <Select
-              {...form.getInputProps("solicitingCompany")}
-              label={t("solicitingCompany")}
-              data={[""]}
-            ></Select>
-          </div>
-          <div className="col-span-1">
-            <DatePickerInput
-              {...form.getInputProps("applicationDate")}
-              data-testid="applicationDate"
-              label={t("applicationDate")}
-              name="applicationDate"
-              // value={}
-              // onChange={setSubmitDate}
-              mx="auto"
-            />
-          </div>
-          <div className="col-span-1">
-            <Radio.Group
-              name="gasType"
-              label={t("gasType")}
-              withAsterisk
-              {...form.getInputProps("gasType")}
-            >
-              {/* <Group mt="xs"> */}
-              <Radio value="1" label={t("cityGas")} my="xs" />
-              <Radio value="2" label={t("propane")} my="xs" />
-              {/* </Group> */}
-            </Radio.Group>
-          </div>
-          <div className="col-span-1 ">
-            <Radio.Group
-              name="paymentType"
-              label={t("paymentType")}
-              withAsterisk
-              {...form.getInputProps("paymentType")}
-            >
-              {/* <Group mt="xs"> */}
-              <Radio value="1" label={t("cash")} my="xs" />
-              <Radio value="2" label={t("lease")} my="xs" />
-              {/* </Group> */}
-            </Radio.Group>
-          </div>
-          <div className="col-start-1 col-end-2">
-            <DatePickerInput
-              data-testid="desiredDate"
-              label={t("desiredDate")}
-              // value={progressDate}
-              // onChange={setProgressDate}
-              mx="auto"
-            />
-          </div>
-          <div className="col-span-1">
-            <Select
-              label={t("desiredTimeSlot")}
-              data={[
-                { value: "1", label: "09:00-11:00" },
-                { value: "2", label: "10:00-12:00" },
-                { value: "3", label: "13:00-15:00" },
-                { value: "4", label: "15:00-17:00" },
-              ]}
-            ></Select>
-          </div>
-          <div className="col-span-3">
-            <Textarea label="Remarks" className="w-full" />{" "}
-          </div>
-          <div className="col-span-1">
-            <h2>{t("consumerSearch")}</h2>
-            <Flex direction={{ base: "column", sm: "row" }} gap={"sm"} align="center">
-              <Input
-                placeholder="Search"
-                value={searchQuery}
-                onChange={handleSearchInputChange}
-                radius="xl"
-              />
-              <Button onClick={handleSearchClick} size="xs" radius="xl">
-                {t("search")}
-              </Button>
-            </Flex>
-          </div>
-          <div className="col-span-3">
-            <h2>{t("enterApplicationInformation")}</h2>
-          </div>
-          <div className="col-start-1 col-end-2">
-            <Checkbox label={t("nonCustomer")} />
-          </div>
-          <div className="col-span-3">
-            <PostalToAddress form={form} />
-          </div>
-          <div className="col-span-1">
-            <Radio.Group
-              name="housingType"
-              label={t("buildingType")}
-              withAsterisk
-              {...form.getInputProps("housingType")}
-            >
-              {/* <Group mt="xs"> */}
-              <Radio value="1" label={t("detachedHouse")} my="xs" />
-              <Radio value="2" label={t("housingComplex")} my="xs" />
-              {/* </Group> */}
-            </Radio.Group>
-          </div>
-          <div className="col-span-3">
-            <Textarea
-              placeholder=""
-              label={t("nameCompanyName")}
-              {...form.getInputProps("name")}
-            ></Textarea>
-          </div>
-          <div className="col-span-3">
-            <Textarea
-              placeholder=""
-              label={t("nameKana")}
-              {...form.getInputProps("nameKana")}
-            ></Textarea>
-          </div>
-          <div className="col-span-1">
-            <Input.Wrapper id={id} label={t("phoneNumber")} required maw={500}>
-              <Input
-                data-testid="phoneNumber"
-                component={IMaskInput}
-                mask="+81 (000) 0000-0000"
-                id={id}
-                placeholder="Your phone number"
-                {...form.getInputProps("phoneNumber")}
-              />
-            </Input.Wrapper>
-          </div>
-          <div className="col-span-1">
-            <div className="grid grid-cols-2 gap-3">
-              <Select
-                {...form.getInputProps("phoneNumberType")}
-                label={t("phoneNumberType")}
-                data={[
-                  { value: "1", label: t("onesHome") },
-                  { value: "2", label: t("workplace") },
-                  { value: "3", label: t("mobilePhone") },
-                ]}
-              ></Select>
-            </div>
-          </div>
-          <div className="col-span-3">
-            <Input.Wrapper id={id} label={t("mailAddress")}>
-              <Input placeholder="Your email" data-testid="mailAddress" />{" "}
-            </Input.Wrapper>
-          </div>
-          <div className="col-span-3">
-            <h2>{t("installationAlarmDeviceInformationInput")}</h2>
-          </div>
-          <div className="col-span-1">
-            <Radio.Group
-              name="oneOrBulk"
-              label={t("mountingForm")}
-              withAsterisk
-              {...form.getInputProps("oneOrBulk")}
-            >
-              {/* <Group mt="xs"> */}
-              <Radio value="1" my="xs" label={t("individual")} />
-              <Radio value="2" my="xs" label={t("bulk")} />
-              {/* </Group> */}
-            </Radio.Group>
-          </div>
-          <div className="col-span-3">
-            <AlarmList
-              alarms={form.values.alarmOperation}
-              onNewAlarm={(alarm) => form.insertListItem("alarmOperation", alarm)}
-            />
-          </div>
-          {JSON.stringify(form.values.alarmOperation)}
-          <div className="col-span-1 col-start-1">
             <Button
               type="reset"
               onClick={(e) => form.reset()}
@@ -310,8 +171,18 @@ function OperationForm() {
             </Button>
           </div>
         </div>
+        {/* <Modal opened={opened} onClose={close} title="Authentication"> */}
+        {/*   <SignatureCanvas */}
+        {/*     penColor="green" */}
+        {/*     canvasProps={{ className: "signature" }} */}
+        {/*     ref={sigRef} */}
+        {/*     onEnd={handleSignatureEnd} */}
+        {/*   /> */}
+        {/* </Modal> */}
+
+        {/* <Button onClick={open}>Open modal</Button> */}
       </form>
-    </div>
+    </Container>
   )
 }
 export default OperationForm

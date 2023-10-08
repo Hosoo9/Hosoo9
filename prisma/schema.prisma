@@ -106,7 +106,7 @@ model Operation {
   footprint                    Int       @db.TinyInt
   postcardOutputTimestamp      DateTime? @db.DateTime
   absenceNoticeDeliveryDate    DateTime    @db.Date
-  openrationType               Int       @db.TinyInt
+  operationType                Int       @db.TinyInt
   completedAt                  DateTime? @db.DateTime
   exchangingDate               DateTime? @db.DateTime
   removingMeterId              String?   @db.NVarChar(30)

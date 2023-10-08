@@ -3,9 +3,12 @@ import { NextIntlClientProvider } from "next-intl"
 import { notFound } from "next/navigation"
 import Provider from "../../components/Provider"
 import ClientProviders from "../../components/providers/ClientProviders"
-import { MantineProvider, ColorSchemeScript } from '@mantine/core';
+import { MantineProvider, ColorSchemeScript } from "@mantine/core"
 import { Sidebar } from "../../components/Sidebar"
 import "./globals.css"
+
+import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
 
 export function generateStaticParams() {
   return [{ locale: "en" }, { locale: "jp" }]
@@ -29,19 +32,19 @@ export default async function RootLayout({
   return (
     <html lang={locale}>
       <body suppressHydrationWarning={true}>
-        <LoadingProvider>
-          <Provider>
-            <NextIntlClientProvider locale={locale} messages={messages}>
-              <MantineProvider theme={{}}>
+        <MantineProvider theme={{}}>
+          <LoadingProvider>
+            <Provider>
+              <NextIntlClientProvider locale={locale} messages={messages}>
                 <ClientProviders params={{ locale }} messages={messages}>
                   {children}
                 </ClientProviders>
-              </MantineProvider>
-              {/* <MainWrapper> */}
-              {/* </MainWrapper> */}
-            </NextIntlClientProvider>
-          </Provider>
-        </LoadingProvider>
+                {/* <MainWrapper> */}
+                {/* </MainWrapper> */}
+              </NextIntlClientProvider>
+            </Provider>
+          </LoadingProvider>
+        </MantineProvider>
       </body>
     </html>
   )

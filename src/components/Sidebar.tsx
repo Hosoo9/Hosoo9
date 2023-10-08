@@ -18,7 +18,7 @@ import Link from "next/link"
 import { signOut, useSession } from "next-auth/react"
 
 const data = [
-  { link: "", label: "Operations", icon: IconTools },
+  { link: "/en", label: "Operations", icon: IconTools },
   // { link: "", label: "Billing", icon: IconReceipt2 },
   // { link: "", label: "Security", icon: IconFingerprint },
   // { link: "", label: "SSH Keys", icon: IconKey },
@@ -31,19 +31,18 @@ export function Sidebar() {
   const [active, setActive] = useState("Billing")
 
   const links = data.map((item) => (
-    <a
+    <Link
       className={classes.link}
       data-active={item.label === active || undefined}
       href={item.link}
       key={item.label}
-      onClick={(event) => {
-        event.preventDefault()
+      onClick={() => {
         setActive(item.label)
       }}
     >
       <item.icon className={classes.linkIcon} stroke={1.5} />
       <span>{item.label}</span>
-    </a>
+    </Link>
   ))
 
   return (

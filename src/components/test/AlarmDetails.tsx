@@ -16,8 +16,6 @@ import { useTranslations } from "next-intl"
 import { SetStateAction, useId, useState } from "react"
 import { IMaskInput } from "react-imask"
 import PostalToAddress from "./PostalToAddress"
-import AlarmList from "./AlarmList"
-import TestAlarmlist from "./TestAlarmlist"
 
 function AlarmDetails() {
   const t = useTranslations("OperationForm")
@@ -54,10 +52,6 @@ function AlarmDetails() {
   return (
     <div className="container mx-auto">
       {/* <TestAlarmlist /> */}
-      <AlarmList
-        alarms={form.values.alarmOperation}
-        onNewAlarm={(alarm) => form.insertListItem("alarmOperation", alarm)}
-      />
       <form className="grid grid-cols-3 gap-5">
         <h1>{t("alarmDetails")}</h1>
         <h2 className="col-start-1">{t("installationAlarmDetails")}</h2>

@@ -1,6 +1,15 @@
+.main {
+  margin-left: rem(300px);
+  width: 100%;
+}
+
 .navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+
   min-height: 100vh;
-  width: rem(500px);
+  width: rem(300px);
   padding: var(--mantine-spacing-md);
   display: flex;
   flex-direction: column;
