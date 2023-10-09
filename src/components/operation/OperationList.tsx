@@ -9,7 +9,7 @@
 
 import "dayjs/locale/ja"
 
-import { Button, Grid, Table } from "@mantine/core"
+import { Box, Button, Grid, LoadingOverlay, Table } from "@mantine/core"
 import { useQuery } from "@tanstack/react-query"
 import Link from "next/link"
 
@@ -25,11 +25,9 @@ function OperationList() {
   //   queryFn: () => get("/api/operation").then((res) => res.json()),
   // })
 
-  if (isLoading) return <div>Loading...</div>
-
   // if (error) return "An error has occurred: " + error.message
 
-  const rows = data.map((o: any) => (
+  const rows = (data || []).map((o: any) => (
     <Table.Tr key={o.code} className="w-100">
       <Table.Td>
         <Link href={`/en/operation/${o.code}`}>{o.code}</Link>
@@ -43,20 +41,27 @@ function OperationList() {
     <Grid>
       <Grid.Col span={12}>
         <h2>Operation list</h2>
-        <Button component="a" href="/operation/new">
+        <Button component={Link} href="/operation/new">
           New
         </Button>
 
-        <Table>
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>Code</Table.Th>
-              <Table.Th>Name</Table.Th>
-              <Table.Th>Status</Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <tbody>{rows}</tbody>
-        </Table>
+        <Box pos="relative">
+          <LoadingOverlay
+            visible={isLoading}
+            zIndex={1000}
+            overlayProps={{ radius: "sm", blur: 2 }}
+          />
+          <Table>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>Code</Table.Th>
+                <Table.Th>Name</Table.Th>
+                <Table.Th>Status</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <tbody>{rows}</tbody>
+          </Table>
+        </Box>
       </Grid.Col>
     </Grid>
   )
