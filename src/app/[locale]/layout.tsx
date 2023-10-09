@@ -8,6 +8,7 @@ import "./globals.css"
 
 import '@mantine/core/styles.css'
 import '@mantine/dates/styles.css'
+import DateProviderWrapper from "@/components/providers/DatesProviderWrapper"
 
 export function generateStaticParams() {
   return [{ locale: "jp" }, { locale: "mn" }]
@@ -35,9 +36,11 @@ export default async function RootLayout({
           <LoadingProvider>
             <Provider>
               <NextIntlClientProvider locale={locale} messages={messages}>
-                <ClientProviders params={{ locale }} messages={messages}>
-                  {children}
-                </ClientProviders>
+                <DateProviderWrapper>
+                  <ClientProviders params={{ locale }} messages={messages}>
+                    {children}
+                  </ClientProviders>
+                </DateProviderWrapper>
                 {/* <MainWrapper> */}
                 {/* </MainWrapper> */}
               </NextIntlClientProvider>
