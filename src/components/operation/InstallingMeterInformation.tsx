@@ -1,13 +1,14 @@
-import { Input, Radio, Title } from "@mantine/core"
+import { Input, Radio, Select, Title } from "@mantine/core"
 import { useTranslations } from "next-intl"
 import { TakePicture } from "./TakePicture"
+import { MonthPickerInput, YearPicker, YearPickerInput } from "@mantine/dates"
 
 export const InstallingMeterInformation = () => {
   const t = useTranslations("OperationForm")
 
   return (
     <>
-      <Title order={2} size="h3">
+      <Title order={2} size="h3" className="pb-5">
         {t("installingMeterInformation")}
       </Title>
       <Title order={3} size="h4" className="py-3">
@@ -16,9 +17,14 @@ export const InstallingMeterInformation = () => {
 
       <div className="grid grid-cols-5 gap-3 py-5">
         <div>
-          <Input.Wrapper label={t("testType")}>
-            <Input data-testid="testType" />{" "}
-          </Input.Wrapper>
+          <Select
+            label={t("testType")}
+            data-testid="testType"
+            data={[
+              { value: "1", label: "1" },
+              { value: "2", label: "2" },
+            ]}
+          ></Select>
         </div>
         <div>
           <Input.Wrapper label={t("kpa")}>
@@ -42,9 +48,14 @@ export const InstallingMeterInformation = () => {
       </Title>
       <div className="grid grid-cols-5 gap-3 py-5">
         <div>
-          <Input.Wrapper label={t("testType")}>
-            <Input data-testid="testType" />{" "}
-          </Input.Wrapper>
+          <Select
+            label={t("testType")}
+            data-testid="testType"
+            data={[
+              { value: "1", label: "1" },
+              { value: "2", label: "2" },
+            ]}
+          ></Select>
         </div>
         <div>
           <Input.Wrapper label={t("kpa")}>
@@ -65,8 +76,8 @@ export const InstallingMeterInformation = () => {
 
       <div className="grid grid-cols-5 gap-3 pb-5">
         <div>
-          <Input.Wrapper label={t("meterType")}>
-            <Input data-testid="meterType" />{" "}
+          <Input.Wrapper label={t("meterModel")}>
+            <Input data-testid="meterModel" />{" "}
           </Input.Wrapper>
         </div>
         <div>
@@ -100,15 +111,11 @@ export const InstallingMeterInformation = () => {
         </div>
 
         <div>
-          <Input.Wrapper label={t("certificationYear")}>
-            <Input data-testid="certificationYear" />{" "}
-          </Input.Wrapper>
+          <YearPickerInput label={t("certificationYear")} />
         </div>
 
         <div>
-          <Input.Wrapper label={t("examinationMonth")}>
-            <Input data-testid="examinationMonth" />{" "}
-          </Input.Wrapper>
+          <MonthPickerInput label={t("examinationMonth")} />
         </div>
       </div>
 

@@ -1,6 +1,7 @@
 import { Input, Title } from "@mantine/core"
 import { useTranslations } from "next-intl"
 import { TakePicture } from "./TakePicture"
+import { MonthPickerInput, YearPickerInput } from "@mantine/dates"
 
 export const RemovingMeterInformation = () => {
   const t = useTranslations("OperationForm")
@@ -11,10 +12,10 @@ export const RemovingMeterInformation = () => {
         {t("removingMeterInformation")}
       </Title>
 
-      <div className="grid grid-cols-5 gap-3 pb-5">
+      <div className="grid grid-cols-5 gap-3 py-5">
         <div>
-          <Input.Wrapper label={t("meterType")}>
-            <Input data-testid="meterType" />{" "}
+          <Input.Wrapper label={t("meterModel")}>
+            <Input data-testid="meterModel" />{" "}
           </Input.Wrapper>
         </div>
         <div>
@@ -47,15 +48,15 @@ export const RemovingMeterInformation = () => {
         </div>
 
         <div>
-          <Input.Wrapper label={t("certificationYear")}>
-            <Input data-testid="certificationYear" />{" "}
-          </Input.Wrapper>
+          <YearPickerInput
+            label={t("certificationYear")}
+          />
         </div>
 
         <div>
-          <Input.Wrapper label={t("examinationMonth")}>
-            <Input data-testid="examinationMonth" />{" "}
-          </Input.Wrapper>
+          <MonthPickerInput
+            label={t("examinationMonth")}
+          />
         </div>
       </div>
 

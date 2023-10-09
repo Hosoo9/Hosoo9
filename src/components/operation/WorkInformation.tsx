@@ -1,4 +1,4 @@
-import { Input, Title } from "@mantine/core"
+import { Input, Select, Title } from "@mantine/core"
 import { useTranslations } from "next-intl"
 
 export const WorkInformation = () => {
@@ -10,16 +10,20 @@ export const WorkInformation = () => {
         {t("workInformation")}
       </Title>
 
-      <div className="grid grid-cols-5 gap-3 pb-5">
+      <div className="grid grid-cols-5 gap-3 py-5">
         <div>
-          <Input.Wrapper label={t("exchangeDate")}>
-            <Input data-testid="exchangeDate" />{" "}
+          <Input.Wrapper label={t("exchangingDate")}>
+            <Input data-testid="exchangingDate" />{" "}
           </Input.Wrapper>
         </div>
         <div>
-          <Input.Wrapper label={t("workClassification")}>
-            <Input data-testid="workClassification" />{" "}
-          </Input.Wrapper>
+          <Select
+            label={t("operationType")}
+            data={[
+              { value: "1", label: "1" },
+              { value: "2", label: "2" },
+            ]}
+          ></Select>
         </div>
       </div>
     </>
