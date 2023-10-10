@@ -5,7 +5,7 @@ import Schedulling from "../../../components/test/Schedulling"
 export default async function Home() {
   return (
     <main>
-      <h1 className="font-bold">Users</h1>
+      {/* <h1 className="font-bold">Users</h1> */}
       <Schedulling />
     </main>
   )

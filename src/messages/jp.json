@@ -1,7 +1,7 @@
 {
   "OperationForm": {
     "workDetails": "作業詳細",
-    "metaInformation": "メーター情報",
+    "metaInformation": "メタ情報",
     "createdAt": "作成日時",
     "completedAt": "作業完了日時",
     "isSecurityWork": "保安業務フラグ",
@@ -37,7 +37,7 @@
     "municipalities" :  "市区町村",
     "address" : "番地",
     "buildingNameRoomNumber" : "建物名・部屋番号",
-    "buildingType": "建物形態", 
+    "buildingType": "建物形態",
     "detachedHouse":"一戸建て",
     "housingComplex" : "集合住宅",
     "nameCompanyName": "氏名・法人名",
@@ -73,7 +73,7 @@
     "bulk": "一括",
     "mountingAlarmList": "取付警報機一覧",
     "model": "機種",
-    "quantity": "数量",    
+    "quantity": "数量",
     "addition": "追加",
     "register": "登録",
     "scheduleAdjustment":"日程調整",

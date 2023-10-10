@@ -147,7 +147,7 @@ function OperationForm() {
 
         <Divider />
         <Title order={3} size="h4" className="py-3">
-          {t("leakInvestigationAfterWork")}
+          {t("signInput")}
         </Title>
 
         <div className="pb-5">
