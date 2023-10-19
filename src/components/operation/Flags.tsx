@@ -3,20 +3,20 @@ import {
 } from "@mantine/core"
 import { useTranslations } from "next-intl"
 
-export const Flags = () => {
+export const Flags = ({ form }: { form: any }) => {
   const t = useTranslations("OperationForm")
 
   return (
     <>
       <div className="grid grid-cols-5 gap-3 pb-5">
         <div className="col-span-1">
-          <Checkbox label={t("isSecurityWork")} />
+          <Checkbox label={t("isSecurityWork")} {...form.getInputProps("isSecurityWork")} />
         </div>
         <div className="col-span-1">
-          <Checkbox label={t("changedNotificationFlag")} />
+          <Checkbox label={t("changedNotificationFlag")} {...form.getInputProps("changedNotificationFlag")} />
         </div>
         <div className="col-span-1">
-          <Checkbox label={t("inspectionFlag")} />
+          <Checkbox label={t("inspectionFlag")} {...form.getInputProps("inspectionFlag")} />
         </div>
       </div>
     </>

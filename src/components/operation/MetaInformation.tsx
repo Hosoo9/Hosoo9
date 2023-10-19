@@ -4,14 +4,14 @@ import {
 } from "@mantine/core"
 import { useTranslations } from "next-intl"
 
-export const MetaInformation = () => {
+export const MetaInformation = ({ form }: { form: any }) => {
   const t = useTranslations("OperationForm")
 
   return (
     <>
-      <Title order={2} size="h3">
-        {t("metaInformation")}
-      </Title>
+      {/* <Title order={2} size="h3"> */}
+      {/*   {t("metaInformation")} */}
+      {/* </Title> */}
       <div className="grid grid-cols-5 gap-3 py-5">
         <div className="col-span-1">
           <Input.Wrapper label={t("workDetails")}>

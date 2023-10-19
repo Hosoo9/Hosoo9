@@ -13,6 +13,8 @@ import {
     Button,
     Container,
     Divider,
+    Group,
+    Stepper,
     Title
 } from "@mantine/core"
 import { useForm } from "@mantine/form"
@@ -37,8 +39,6 @@ function OperationForm() {
 
   const form = useForm({
     initialValues: {
-      alarmOperation: [],
-      ContactOperation: [],
       type: null,
       customerNumber: "",
       gasType: null,
@@ -50,6 +50,9 @@ function OperationForm() {
       paymentType: null,
       desiredDate: null,
       desiredTimeSlot: null,
+      responsibleWorker: "",
+      removing: {},
+      installing: {}
     },
 
     validate: {
@@ -113,64 +116,102 @@ function OperationForm() {
   }
   const id = useId()
 
+
+  const [active, setActive] = useState(1);
+  const nextStep = () => setActive((current) => (current < 6 ? current + 1 : current));
+  const prevStep = () => setActive((current) => (current > 0 ? current - 1 : current));
+
   return (
     <Container fluid>
-      <Title order={1} size="h1" className="py-5">
-        {t("workDetails")}
-      </Title>
+      {/* <Title order={1} size="h1" className="py-5"> */}
+      {/*   {t("workDetails")} */}
+      {/* </Title> */}
 
       <form onReset={form.onReset} onSubmit={form.onSubmit(saveOperation)}>
         {/* <ContactHistory */}
         {/*   contacts={form.values.ContactOperation} */}
         {/*   onNewContact={(contacts) => form.insertListItem("ContactOperation", contacts)} */}
         {/* /> */}
-        <MetaInformation />
-        <Flags />
-        <Pause />
 
-        <Divider my="lg" />
+        <MetaInformation form={form} />
 
-        <WorkScheduleInformation />
+        <Divider my="lg" className="pt-5" />
 
-        <Divider my="lg" />
+        <Stepper active={active} onStepClick={setActive}>
+          <Stepper.Step label={t("metaInformation")}>
+            <div className="py-2">
+              <div className="py-5">
+                <Flags form={form} />
+                <Pause />
+              </div>
+            </div>
+          </Stepper.Step>
 
-        <CustomerInformation />
+          {/* <Divider my="lg" /> */}
 
-        <Divider my="lg" />
-        <WorkInformation />
+          <Stepper.Step label={t("workScheduleInformation")}>
+            <WorkScheduleInformation form={form} className="py-2" />
+          </Stepper.Step>
 
-        <Divider my="lg" />
-        <RemovingMeterInformation />
+          {/* <Divider my="lg" /> */}
 
-        <Divider my="lg" />
-        <InstallingMeterInformation />
+          <Stepper.Step label={t("customerInformation")}>
+            <CustomerInformation form={form} className="py-2" />
+          </Stepper.Step>
 
-        <Divider />
-        <Title order={3} size="h4" className="py-3">
-          {t("signInput")}
-        </Title>
+          {/* <Divider my="lg" /> */}
+          <Stepper.Step label={t("workInformation")}>
+            <WorkInformation form={form} className="py-2" />
+          </Stepper.Step>
 
-        <div className="pb-5">
-          <SignatureCanvas
-            canvasProps={{ width: 500, height: 200, className: "sigCanvas border-solid border-1" }}
-          />
-        </div>
+          {/* <Divider my="lg" /> */}
+          <Stepper.Step label={t("removingMeterInformation")} className="py-2">
+            <RemovingMeterInformation form={form} />
+          </Stepper.Step>
 
-        <div className="pb-5">
-          <div className="col-span-1">
-            <Button
-              type="reset"
-              onClick={(e) => form.reset()}
-              className="mr-3"
-              variant="outline"
-            >
-              Reset
-            </Button>
-            <Button type="submit" variant="filled">
-              Save
-            </Button>
-          </div>
-        </div>
+          {/* <Divider my="lg" /> */}
+
+          <Stepper.Step label={t("installingMeterInformation")}>
+            <InstallingMeterInformation form={form} className="py-2" />
+            <pre>{ JSON.stringify(form.values, null, 2) }</pre>
+          </Stepper.Step>
+
+
+          {/* <Divider /> */}
+          <Stepper.Completed>
+            <Title order={3} size="h4" className="py-3">
+              {t("signInput")}
+            </Title>
+
+            <div className="pb-5">
+              <SignatureCanvas
+                canvasProps={{ width: 500, height: 200, className: "sigCanvas border-solid border-1" }}
+              />
+            </div>
+
+          </Stepper.Completed>
+        </Stepper>
+
+        <Group justify="center" mt="xl">
+          <Button variant="default" onClick={prevStep}>Back</Button>
+          <Button onClick={nextStep}>Next step</Button>
+        </Group>
+
+        {/* <div className="pb-5"> */}
+        {/*   <div className="col-span-1"> */}
+        {/*     <Button */}
+        {/*       type="reset" */}
+        {/*       onClick={(e) => form.reset()} */}
+        {/*       className="mr-3" */}
+        {/*       variant="outline" */}
+        {/*     > */}
+        {/*       Reset */}
+        {/*     </Button> */}
+        {/*     <Button type="submit" variant="filled"> */}
+        {/*       Save */}
+        {/*     </Button> */}
+        {/*   </div> */}
+        {/* </div> */}
         {/* <Modal opened={opened} onClose={close} title="Authentication"> */}
         {/*   <SignatureCanvas */}
         {/*     penColor="green" */}

@@ -1,16 +1,22 @@
 import { Input, Radio, Select, Title } from "@mantine/core"
+import { MonthPickerInput, YearPickerInput } from "@mantine/dates"
 import { useTranslations } from "next-intl"
 import { TakePicture } from "./TakePicture"
-import { MonthPickerInput, YearPicker, YearPickerInput } from "@mantine/dates"
 
-export const InstallingMeterInformation = () => {
+export const InstallingMeterInformation = ({
+  form,
+  className,
+}: {
+  form: any
+  className?: string
+}) => {
   const t = useTranslations("OperationForm")
 
   return (
-    <>
-      <Title order={2} size="h3" className="pb-5">
-        {t("installingMeterInformation")}
-      </Title>
+    <div className={className}>
+      {/* <Title order={2} size="h3" className="pb-5"> */}
+      {/*   {t("installingMeterInformation")} */}
+      {/* </Title> */}
       <Title order={3} size="h4" className="py-3">
         {t("leakInvestigationBeforeWork")}
       </Title>
@@ -24,15 +30,16 @@ export const InstallingMeterInformation = () => {
               { value: "1", label: "1" },
               { value: "2", label: "2" },
             ]}
+            {...form.getInputProps("installing.testType")}
           ></Select>
         </div>
         <div>
           <Input.Wrapper label={t("kpa")}>
-            <Input data-testid="kpa" />{" "}
+            <Input data-testid="kpa" {...form.getInputProps("installing.kpa")} />{" "}
           </Input.Wrapper>
         </div>
         <div>
-          <Radio.Group label={t("result")}>
+          <Radio.Group label={t("result")} {...form.getInputProps("installing.result")}>
             {/* name="result" */}
             {/* {...form.getInputProps("result")} */}
             {/* <Group mt="xs"> */}
@@ -55,6 +62,7 @@ export const InstallingMeterInformation = () => {
               { value: "1", label: "1" },
               { value: "2", label: "2" },
             ]}
+            {...form.getInputProps("installing.testType")}
           ></Select>
         </div>
         <div>
@@ -130,6 +138,6 @@ export const InstallingMeterInformation = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
