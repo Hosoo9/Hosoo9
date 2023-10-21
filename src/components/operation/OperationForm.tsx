@@ -9,20 +9,12 @@
 
 import "dayjs/locale/ja"
 
-import {
-    Button,
-    Container,
-    Divider,
-    Group,
-    Stepper,
-    Title
-} from "@mantine/core"
+import { Button, Container, Divider, Group, Stepper, Title } from "@mantine/core"
 import { useForm } from "@mantine/form"
-import { useDisclosure } from "@mantine/hooks"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
-import { useRouter } from "next/navigation"
-import { SetStateAction, useId, useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { SetStateAction, useEffect, useId, useState } from "react"
 import SignatureCanvas from "react-signature-canvas"
 import { CustomerInformation } from "./CustomerInformation"
 import { Flags } from "./Flags"
@@ -33,12 +25,25 @@ import { RemovingMeterInformation } from "./RemovingMeterInformation"
 import { WorkInformation } from "./WorkInformation"
 import { WorkScheduleInformation } from "./WorkScheduleInformation"
 
-function OperationForm() {
+function OperationForm({ code }: { code: string }) {
   const router = useRouter()
-  const [opened, { open, close }] = useDisclosure(false)
+  const { isLoading, isError, data, error } = useQuery({
+    queryKey: ["operation", code],
+    queryFn: async () => {
+      const result = await fetch(`/api/operation/${code}`)
+      return result.json()
+    },
+    onSettled: (data: any) => {
+      form.setInitialValues(data)
+      form.setValues(data)
+    },
+  })
 
   const form = useForm({
     initialValues: {
+      isSecurityWork: false,
+      changedNotificationFlag: false,
+      valveOpenFlag: false,
       type: null,
       customerNumber: "",
       gasType: null,
@@ -52,7 +57,7 @@ function OperationForm() {
       desiredTimeSlot: null,
       responsibleWorker: "",
       removing: {},
-      installing: {}
+      installing: {},
     },
 
     validate: {
@@ -70,12 +75,19 @@ function OperationForm() {
     },
   })
 
+  const searchParams = useSearchParams()
+
   type FormValues = typeof form.values
 
-  const { isLoading, isSuccess, error, mutateAsync } = useMutation({
+  const {
+    isLoading: mutationLoading,
+    isSuccess: isMutationSuccess,
+    error: mutationError,
+    mutateAsync,
+  } = useMutation({
     mutationFn: (newOperation: FormValues) => {
-      return fetch("/api/operation", {
-        method: "POST",
+      return fetch(`/api/operation/${code}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
@@ -88,38 +100,31 @@ function OperationForm() {
     console.log(error)
   }
 
-  // if (isSuccess) {
-  //   return router.push("/en/dashboard")
-  // }
-
   const t = useTranslations("OperationForm")
 
-  const [value, setValue] = useState<Date | null>(null)
-  const [submitDate, setSubmitDate] = useState<Date | null>(null)
-  const [progressDate, setProgressDate] = useState<Date | null>(null)
-
-  const [searchQuery, setSearchQuery] = useState("")
-
-  const handleSearchInputChange = (event: {
-    target: { value: SetStateAction<string> }
-  }) => {
-    setSearchQuery(event.target.value)
-  }
-
-  const handleSearchClick = () => {
-    console.log(`Searching for "${searchQuery}"...`)
-  }
   const saveOperation = async (values: FormValues) => {
     const result = await mutateAsync(values)
 
     router.push("/dashboard")
   }
-  const id = useId()
 
+  const [active, setActive] = useState(
+    searchParams.get("step") ? parseInt(searchParams.get("step") as string) - 1 : 0,
+  )
 
-  const [active, setActive] = useState(1);
-  const nextStep = () => setActive((current) => (current < 6 ? current + 1 : current));
-  const prevStep = () => setActive((current) => (current > 0 ? current - 1 : current));
+  useEffect(() => {
+    router.replace(`?step=${active + 1}`)
+  }, [active, router])
+
+  const nextStep = async () => {
+    await saveOperation(form.values)
+    setActive((current) => (current < 6 ? current + 1 : current))
+  }
+
+  const prevStep = async () => {
+    await saveOperation(form.values)
+    setActive((current) => (current > 0 ? current - 1 : current))
+  }
 
   return (
     <Container fluid>
@@ -128,12 +133,15 @@ function OperationForm() {
       {/* </Title> */}
 
       <form onReset={form.onReset} onSubmit={form.onSubmit(saveOperation)}>
+        {/* <pre>{JSON.stringify(form.values, null, 2)}</pre> */}
+        {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
         {/* <ContactHistory */}
         {/*   contacts={form.values.ContactOperation} */}
         {/*   onNewContact={(contacts) => form.insertListItem("ContactOperation", contacts)} */}
         {/* /> */}
 
         <MetaInformation form={form} />
+        <Pause />
 
         <Divider my="lg" className="pt-5" />
 
@@ -142,7 +150,6 @@ function OperationForm() {
             <div className="py-2">
               <div className="py-5">
                 <Flags form={form} />
-                <Pause />
               </div>
             </div>
           </Stepper.Step>
@@ -173,9 +180,8 @@ function OperationForm() {
 
           <Stepper.Step label={t("installingMeterInformation")}>
             <InstallingMeterInformation form={form} className="py-2" />
-            <pre>{ JSON.stringify(form.values, null, 2) }</pre>
+            {/* <pre>{ JSON.stringify(form.values, null, 2) }</pre> */}
           </Stepper.Step>
-
 
           {/* <Divider /> */}
           <Stepper.Completed>
@@ -185,43 +191,22 @@ function OperationForm() {
 
             <div className="pb-5">
               <SignatureCanvas
-                canvasProps={{ width: 500, height: 200, className: "sigCanvas border-solid border-1" }}
+                canvasProps={{
+                  width: 500,
+                  height: 200,
+                  className: "sigCanvas border-solid border-1",
+                }}
               />
             </div>
-
           </Stepper.Completed>
         </Stepper>
 
         <Group justify="center" mt="xl">
-          <Button variant="default" onClick={prevStep}>Back</Button>
+          <Button variant="default" onClick={prevStep}>
+            Back
+          </Button>
           <Button onClick={nextStep}>Next step</Button>
         </Group>
-
-        {/* <div className="pb-5"> */}
-        {/*   <div className="col-span-1"> */}
-        {/*     <Button */}
-        {/*       type="reset" */}
-        {/*       onClick={(e) => form.reset()} */}
-        {/*       className="mr-3" */}
-        {/*       variant="outline" */}
-        {/*     > */}
-        {/*       Reset */}
-        {/*     </Button> */}
-        {/*     <Button type="submit" variant="filled"> */}
-        {/*       Save */}
-        {/*     </Button> */}
-        {/*   </div> */}
-        {/* </div> */}
-        {/* <Modal opened={opened} onClose={close} title="Authentication"> */}
-        {/*   <SignatureCanvas */}
-        {/*     penColor="green" */}
-        {/*     canvasProps={{ className: "signature" }} */}
-        {/*     ref={sigRef} */}
-        {/*     onEnd={handleSignatureEnd} */}
-        {/*   /> */}
-        {/* </Modal> */}
-
-        {/* <Button onClick={open}>Open modal</Button> */}
       </form>
     </Container>
   )

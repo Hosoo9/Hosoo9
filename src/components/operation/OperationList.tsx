@@ -30,7 +30,7 @@ function OperationList() {
   const rows = (data || []).map((o: any) => (
     <Table.Tr key={o.code} className="w-100">
       <Table.Td>
-        <Link href={`/en/operation/${o.code}`}>{o.code}</Link>
+        <Link href={`/operation/${o.code}`}>{o.code}</Link>
       </Table.Td>
       <Table.Td>{o.name}</Table.Td>
       <Table.Td>{o.status}</Table.Td>

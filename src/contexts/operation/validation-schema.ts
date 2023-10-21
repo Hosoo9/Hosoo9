@@ -1,9 +1,8 @@
 import { z } from "zod"
 
 const common = {
-  type: z.enum(["1", "2", "3", "4", "5"]),
-  applicationDate: z.coerce.date(),
-  // createdBy: string
+  type: z.enum(["1", "2", "3", "4", "5"]).optional(),
+  applicationDate: z.coerce.date().optional(),
   solicitingCompanyId: z.string().optional(),
   gasType: z.enum(["1", "2"]),
   customerNumber: z.string().optional(),
@@ -36,12 +35,9 @@ const common = {
 }
 
 const create = {
-  ...common,
-  installationAlarms: z.array(
-    z.object({
-      modelNumber: z.string(),
-    }),
-  ),
+  isSecurityWork: z.boolean(),
+  changedNotificationFlag: z.boolean(),
+  valveOpenFlag: z.boolean(),
 }
 
 const update = {...common}

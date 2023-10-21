@@ -25,21 +25,27 @@ export const InstallingMeterInformation = ({
         <div>
           <Select
             label={t("testType")}
-            data-testid="testType"
+            data-testid="installing.beforeWorkInspectionType"
             data={[
               { value: "1", label: "1" },
               { value: "2", label: "2" },
             ]}
-            {...form.getInputProps("installing.testType")}
+            {...form.getInputProps("installing.beforeWorkInspectionType")}
           ></Select>
         </div>
         <div>
           <Input.Wrapper label={t("kpa")}>
-            <Input data-testid="kpa" {...form.getInputProps("installing.kpa")} />{" "}
+            <Input
+              data-testid="beforeWorkKpa"
+              {...form.getInputProps("installing.beforeWorkKpa")}
+            />{" "}
           </Input.Wrapper>
         </div>
         <div>
-          <Radio.Group label={t("result")} {...form.getInputProps("installing.result")}>
+          <Radio.Group
+            label={t("result")}
+            {...form.getInputProps("installing.beforeWorkResult")}
+          >
             {/* name="result" */}
             {/* {...form.getInputProps("result")} */}
             {/* <Group mt="xs"> */}
@@ -62,16 +68,19 @@ export const InstallingMeterInformation = ({
               { value: "1", label: "1" },
               { value: "2", label: "2" },
             ]}
-            {...form.getInputProps("installing.testType")}
+            {...form.getInputProps("installing.afterWorkInspectionType")}
           ></Select>
         </div>
         <div>
           <Input.Wrapper label={t("kpa")}>
-            <Input data-testid="kpa" />{" "}
+            <Input data-testid="installing.afterWorkKpa" />{" "}
           </Input.Wrapper>
         </div>
         <div>
-          <Radio.Group label={t("result")}>
+          <Radio.Group
+            label={t("result")}
+            {...form.getInputProps("installing.afterWorkResult")}
+          >
             {/* name="result" */}
             {/* {...form.getInputProps("result")} */}
             {/* <Group mt="xs"> */}
@@ -85,22 +94,34 @@ export const InstallingMeterInformation = ({
       <div className="grid grid-cols-5 gap-3 pb-5">
         <div>
           <Input.Wrapper label={t("meterModel")}>
-            <Input data-testid="meterModel" />{" "}
+            <Input
+              data-testid="meterModel"
+              {...form.getInputProps("installing.meterModel")}
+            />{" "}
           </Input.Wrapper>
         </div>
         <div>
           <div className="flex">
             <Input.Wrapper label={t("serialNumber")} className="pr-3">
-              <Input data-testid="serialNumber" />{" "}
+              <Input
+                data-testid="serialNumber"
+                {...form.getInputProps("installing.serialNumber")}
+              />{" "}
             </Input.Wrapper>
             <Input.Wrapper label={t("meterType")}>
-              <Input data-testid="meterType" />{" "}
+              <Input
+                data-testid="meterType"
+                {...form.getInputProps("installing.meterType")}
+              />{" "}
             </Input.Wrapper>
           </div>
         </div>
         <div>
           <Input.Wrapper label={t("meterMaximumUsage")}>
-            <Input data-testid="meterMaximumUsage" />{" "}
+            <Input
+              data-testid="meterMaximumUsage"
+              {...form.getInputProps("installing.meterMaximumUsage")}
+            />{" "}
           </Input.Wrapper>
         </div>
       </div>
@@ -108,22 +129,34 @@ export const InstallingMeterInformation = ({
       <div className="grid grid-cols-5 gap-3 pb-5">
         <div>
           <Input.Wrapper label={t("meterNumber")}>
-            <Input data-testid="meterNumber" />{" "}
+            <Input
+              data-testid="meterNumber"
+              {...form.getInputProps("installing.meterNumber")}
+            />{" "}
           </Input.Wrapper>
         </div>
 
         <div>
           <Input.Wrapper label={t("meterValue")}>
-            <Input data-testid="meterValue" />{" "}
+            <Input
+              data-testid="meterValue"
+              {...form.getInputProps("installing.meterValue")}
+            />{" "}
           </Input.Wrapper>
         </div>
 
         <div>
-          <YearPickerInput label={t("certificationYear")} />
+          <YearPickerInput
+            label={t("certificationYear")}
+            {...form.getInputProps("installing.certificationYear")}
+          />
         </div>
 
         <div>
-          <MonthPickerInput label={t("examinationMonth")} />
+          <MonthPickerInput
+            label={t("examinationMonth")}
+            {...form.getInputProps("installing.examinationMonth")}
+          />
         </div>
       </div>
 
@@ -133,7 +166,7 @@ export const InstallingMeterInformation = ({
         <div className="grid grid-cols-1 gap-3 py-5">
           <div>
             <Input.Wrapper label={t("memo")}>
-              <Input data-testid="memo" />{" "}
+              <Input data-testid="memo" {...form.getInputProps("installing.memo")} />{" "}
             </Input.Wrapper>
           </div>
         </div>

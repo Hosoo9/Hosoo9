@@ -36,8 +36,8 @@ export async function PUT(
   const user = await getCurrentUser()
 
   if (
-    user === undefined ||
-    (await enforce(user.id, "operation", "write")) === false
+    user === undefined
+    // (await enforce(user.id, "operation", "write")) === false
   ) {
     return unauthorized()
   }

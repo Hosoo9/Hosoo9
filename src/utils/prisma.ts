@@ -1,7 +1,7 @@
 import "./bigint"
 import { PrismaClient } from "@prisma/client"
 import { PrismaAdapter as CasbinPrismaAdapter } from "casbin-prisma-adapter"
-import casbin from "casbin"
+import * as casbin from "casbin"
 
 const prisma = new PrismaClient()
 

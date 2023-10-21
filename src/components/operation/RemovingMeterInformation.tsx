@@ -1,4 +1,4 @@
-import { Input, Title } from "@mantine/core"
+import { Input } from "@mantine/core"
 import { useTranslations } from "next-intl"
 import { TakePicture } from "./TakePicture"
 import { MonthPickerInput, YearPickerInput } from "@mantine/dates"

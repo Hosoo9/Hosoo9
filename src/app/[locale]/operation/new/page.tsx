@@ -1,11 +1,11 @@
 "use client"
 
-import OperationForm from "@/components/operation/OperationForm"
+import OperationCreateForm from "@/components/operation/OperationCreateForm"
 
 export default function OperationNew() {
   return (
     <main>
-      <OperationForm />
+      <OperationCreateForm />
     </main>
   )
 }

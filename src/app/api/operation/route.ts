@@ -1,18 +1,9 @@
-import {
-  GasType,
-  HousingType,
-  OneOrBulkType,
-  OperationWorkType,
-  PhoneNumberType,
-  createOperation,
-  findOperations,
-} from "@/contexts/operation"
-import { createOperationSchema } from "@/contexts/operation/validation-schema"
+import { createOperation, findOperations } from "@/contexts/operation"
 import { getCurrentUser } from "@/lib/session"
-import { getEnforcer } from "@/utils/prisma"
 import { NextRequest, NextResponse } from "next/server"
 import { ZodError, z } from "zod"
 import { unauthorized } from "../helpers"
+import { createOperationSchema } from "@/contexts/operation/validation-schema"
 
 const schema = z.object({
   page: z.coerce.number().default(1),
@@ -43,11 +34,11 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser()
 
-    const enforcer = await getEnforcer()
+    // const enforcer = await getEnforcer()
 
     if (
-      user === undefined ||
-      (await enforcer.enforce(user.id, "operation", "write")) === false
+      user === undefined
+      // (await enforcer.enforce(user.id, "operation", "write")) === false
     ) {
       return unauthorized()
     }
@@ -56,14 +47,6 @@ export async function POST(request: NextRequest) {
 
     const operation = await createOperation({
       ...params,
-      solicitingCompanyId: user.companyCode,
-      createdBy: user.id,
-      status: 1,
-      type: parseInt(params.type) as OperationWorkType,
-      gasType: parseInt(params.gasType) as GasType,
-      housingType: parseInt(params.housingType) as HousingType,
-      phoneNumberType: parseInt(params.phoneNumberType) as PhoneNumberType,
-      oneOrBulk: parseInt(params.oneOrBulk) as OneOrBulkType,
     })
 
     return NextResponse.json(operation, { status: 201 })
