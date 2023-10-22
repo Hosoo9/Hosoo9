@@ -77,6 +77,7 @@ model User {
 
   companyId     String?   @db.NVarChar(10)
   company       Company?  @relation(fields: [companyId], references: [id])
+  Operations    Operation[]
   role          Int       @default(1)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @default(now()) @updatedAt
@@ -92,31 +93,31 @@ model Operation {
   status                       Int        @db.TinyInt @default(1)
   prePauseStatus               Int?       @db.TinyInt
   pauseTimestamp               DateTime?
-  pauseDuration                Int?        @db.TinyInt
+  pauseDuration                Int?       @db.TinyInt
   customerNumber               String?
-  postalCode                   String?     @db.NVarChar(8)
-  municipality                 String?     @db.NVarChar(50)
-  address                      String?     @db.NVarChar(100)
+  postalCode                   String?    @db.NVarChar(8)
+  municipality                 String?    @db.NVarChar(50)
+  address                      String?    @db.NVarChar(100)
   buildingNameRoomNumber       String?    @db.NVarChar(100)
-  name                         String?     @db.NVarChar(60)
+  name                         String?    @db.NVarChar(60)
   nameKana                     String?    @db.NVarChar(100)
-  phoneNumber                  String?     @db.NVarChar(20)
+  phoneNumber                  String?    @db.NVarChar(20)
   assignedWorkerId             String?    @db.NVarChar(30)
   memo                         String?    @db.NVarChar(500)
   scheduledDatetime            DateTime?  @db.DateTime
-  footprint                    Int?        @db.TinyInt
+  footprint                    Int?       @db.TinyInt
   postcardOutputTimestamp      DateTime?  @db.DateTime
   absenceNoticeDeliveryDate    DateTime?  @db.Date
-  operationType                Int?        @db.TinyInt
+  operationType                Int?       @db.TinyInt
   completedAt                  DateTime?  @db.DateTime
   exchangingDate               DateTime?  @db.DateTime
   removingMeterId              String?    @db.NVarChar(30)
   removingMeterNumber          String?    @db.NVarChar(20)
   removingMeterValue           Int?       @db.Int
   removingMeterInspectionDate  DateTime?  @db.DateTime
+  removingMeterImagePath       String?
   referenceDate                DateTime?  @db.DateTime
   position                     String?
-  removingMeterImagePath       String?
   installingMeterId            String?
   installingMeterNumber        String?
   installingMeterValue         Int?
@@ -131,8 +132,18 @@ model Operation {
 
   signatureImgPath             String?
 
+  createdBy                    String     @db.NVarChar(30)
+  createdByUser                User      @relation(fields: [createdBy], references: [id])
+
   createdAt              DateTime   @default(now())
   updatedAt              DateTime   @default(now()) @updatedAt
+}
+
+model Meter {
+  id                  BigInt     @id @default(autoincrement())
+  serialNumber        String     @db.NVarChar(20)
+  meterType           String     @db.NVarChar(20)
+  meterMaximumUsage   Int        @db.Int
 }
 
 model Company {

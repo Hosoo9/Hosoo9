@@ -46,6 +46,7 @@ export async function POST(request: NextRequest) {
     const params = createOperationSchema.parse(await request.json())
 
     const operation = await createOperation({
+      createdBy: user.id,
       ...params,
     })
 

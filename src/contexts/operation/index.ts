@@ -1,5 +1,6 @@
 import prisma from "@/utils/prisma"
 import { ContextOptions, PaginationParams } from "@/utils/types"
+import { Prisma } from "@prisma/client"
 import crypto from "crypto"
 
 export type OperationWorkType = 1 | 2 | 3 | 4 | 5
@@ -13,6 +14,7 @@ type CreateAlarmInput = {
 }
 
 type CreateOperationInput = {
+  createdBy: string
   isSecurityWork: boolean
   changedNotificationFlag: boolean
   valveOpenFlag: boolean
@@ -79,7 +81,7 @@ export const completeOperation = async (
 
 export const updateOperation = async (
   code: string,
-  input: UpdateOperationInput,
+  input: Prisma.OperationUpdateInput,
   options: ContextOptions = {},
 ) => {
   const operation = await (options.transaction || prisma).operation.update({
@@ -115,7 +117,6 @@ export const findOperations = async ({
       customerNumber: {
         startsWith: customerNumber,
       },
-      desiredDate: desiredDate,
     },
   })
 }

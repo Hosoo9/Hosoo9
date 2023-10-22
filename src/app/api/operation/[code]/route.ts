@@ -1,17 +1,8 @@
+import { findOperation, updateOperation } from "@/contexts/operation"
+import { updateOperationSchema } from "@/contexts/operation/validation-schema"
+import { getCurrentUser } from "@/lib/session"
 import { NextRequest, NextResponse } from "next/server"
 import { NOT_AUTHORIZED } from "../../constants"
-import { getCurrentUser } from "@/lib/session"
-import {
-  GasType,
-  HousingType,
-  OneOrBulkType,
-  OperationWorkType,
-  PhoneNumberType,
-  updateOperation,
-  findOperation,
-} from "@/contexts/operation"
-import { updateOperationSchema } from "@/contexts/operation/validation-schema"
-import { enforce } from "@/utils/prisma"
 import { unauthorized } from "../../helpers"
 
 export async function GET(
@@ -46,14 +37,14 @@ export async function PUT(
 
   const operation = await updateOperation(params.code, {
     ...input,
-    solicitingCompanyId: user.companyCode,
-    createdBy: user.id,
-    status: 1,
-    type: parseInt(input.type) as OperationWorkType,
-    gasType: parseInt(input.gasType) as GasType,
-    housingType: parseInt(input.housingType) as HousingType,
-    phoneNumberType: parseInt(input.phoneNumberType) as PhoneNumberType,
-    oneOrBulk: parseInt(input.oneOrBulk) as OneOrBulkType,
+    operationType: input.operationType ? parseInt(input.operationType) : null,
+    footprint: input.footprint ? parseInt(input.footprint) : null,
+    // solicitingCompanyId: user.companyCode,
+    // type: parseInt(input.type) as OperationWorkType,
+    // gasType: parseInt(input.gasType) as GasType,
+    // housingType: parseInt(input.housingType) as HousingType,
+    // phoneNumberType: parseInt(input.phoneNumberType) as PhoneNumberType,
+    // oneOrBulk: parseInt(input.oneOrBulk) as OneOrBulkType,
   })
 
   return NextResponse.json(operation, { status: 200 })

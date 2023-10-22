@@ -14,7 +14,7 @@ import { useForm } from "@mantine/form"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
 import { useRouter, useSearchParams } from "next/navigation"
-import { SetStateAction, useEffect, useId, useState } from "react"
+import { useEffect, useState } from "react"
 import SignatureCanvas from "react-signature-canvas"
 import { CustomerInformation } from "./CustomerInformation"
 import { Flags } from "./Flags"
@@ -24,6 +24,11 @@ import { Pause } from "./Pause"
 import { RemovingMeterInformation } from "./RemovingMeterInformation"
 import { WorkInformation } from "./WorkInformation"
 import { WorkScheduleInformation } from "./WorkScheduleInformation"
+import { LoaderComponent } from "../Provider"
+
+const setDate = (date: Date) => {
+  return date === null ? null : new Date(date)
+}
 
 function OperationForm({ code }: { code: string }) {
   const router = useRouter()
@@ -34,8 +39,18 @@ function OperationForm({ code }: { code: string }) {
       return result.json()
     },
     onSettled: (data: any) => {
-      form.setInitialValues(data)
-      form.setValues(data)
+      form.setInitialValues({
+        ...data,
+        scheduledDatetime: setDate(data.scheduledDatetime),
+        postcardOutputTimestamp: setDate(data.postcardOutputTimestamp),
+        absenceNoticeDeliveryDate: setDate(data.absenceNoticeDeliveryDate),
+      })
+      form.setValues({
+        ...data,
+        scheduledDatetime: setDate(data.scheduledDatetime),
+        postcardOutputTimestamp: setDate(data.postcardOutputTimestamp),
+        absenceNoticeDeliveryDate: setDate(data.absenceNoticeDeliveryDate),
+      })
     },
   })
 
@@ -44,18 +59,27 @@ function OperationForm({ code }: { code: string }) {
       isSecurityWork: false,
       changedNotificationFlag: false,
       valveOpenFlag: false,
+      footprint: null,
       type: null,
-      customerNumber: "",
+      customerNumber: null,
+      postalCode: null,
       gasType: null,
-      phoneNumber: "",
-      nameKana: "",
-      name: "",
+      phoneNumber: null,
+      nameKana: null,
+      name: null,
       workType: null,
       applicationDate: null,
       paymentType: null,
       desiredDate: null,
       desiredTimeSlot: null,
-      responsibleWorker: "",
+      postcardOutputTimestamp: null,
+      absenceNoticeDeliveryDate: null,
+      exchangingDate: null,
+      operationType: null,
+      municipality: null,
+      buildingNameRoomNumber: null,
+      address: null,
+      scheduledDatetime: null,
       removing: {},
       installing: {},
     },
@@ -132,82 +156,86 @@ function OperationForm({ code }: { code: string }) {
       {/*   {t("workDetails")} */}
       {/* </Title> */}
 
-      <form onReset={form.onReset} onSubmit={form.onSubmit(saveOperation)}>
-        {/* <pre>{JSON.stringify(form.values, null, 2)}</pre> */}
-        {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
-        {/* <ContactHistory */}
-        {/*   contacts={form.values.ContactOperation} */}
-        {/*   onNewContact={(contacts) => form.insertListItem("ContactOperation", contacts)} */}
-        {/* /> */}
+      {isLoading ? (
+        <LoaderComponent />
+      ) : (
+        <form onReset={form.onReset} onSubmit={form.onSubmit(saveOperation)}>
+          {/* <pre>{JSON.stringify(form.values, null, 2)}</pre> */}
+          {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
+          {/* <ContactHistory */}
+          {/*   contacts={form.values.ContactOperation} */}
+          {/*   onNewContact={(contacts) => form.insertListItem("ContactOperation", contacts)} */}
+          {/* /> */}
 
-        <MetaInformation form={form} />
-        <Pause />
+          <MetaInformation form={form} />
+          <Pause />
 
-        <Divider my="lg" className="pt-5" />
+          <Divider my="lg" className="pt-5" />
 
-        <Stepper active={active} onStepClick={setActive}>
-          <Stepper.Step label={t("metaInformation")}>
-            <div className="py-2">
-              <div className="py-5">
-                <Flags form={form} />
+          <Stepper active={active} onStepClick={setActive}>
+            <Stepper.Step label={t("metaInformation")}>
+              <div className="py-2">
+                <div className="py-5">
+                  <Flags form={form} />
+                </div>
               </div>
-            </div>
-          </Stepper.Step>
+            </Stepper.Step>
 
-          {/* <Divider my="lg" /> */}
+            {/* <Divider my="lg" /> */}
 
-          <Stepper.Step label={t("workScheduleInformation")}>
-            <WorkScheduleInformation form={form} className="py-2" />
-          </Stepper.Step>
+            <Stepper.Step label={t("workScheduleInformation")}>
+              <WorkScheduleInformation form={form} className="py-2" />
+            </Stepper.Step>
 
-          {/* <Divider my="lg" /> */}
+            {/* <Divider my="lg" /> */}
 
-          <Stepper.Step label={t("customerInformation")}>
-            <CustomerInformation form={form} className="py-2" />
-          </Stepper.Step>
+            <Stepper.Step label={t("customerInformation")}>
+              <CustomerInformation form={form} className="py-2" />
+            </Stepper.Step>
 
-          {/* <Divider my="lg" /> */}
-          <Stepper.Step label={t("workInformation")}>
-            <WorkInformation form={form} className="py-2" />
-          </Stepper.Step>
+            {/* <Divider my="lg" /> */}
+            <Stepper.Step label={t("workInformation")}>
+              <WorkInformation form={form} className="py-2" />
+            </Stepper.Step>
 
-          {/* <Divider my="lg" /> */}
-          <Stepper.Step label={t("removingMeterInformation")} className="py-2">
-            <RemovingMeterInformation form={form} />
-          </Stepper.Step>
+            {/* <Divider my="lg" /> */}
+            <Stepper.Step label={t("removingMeterInformation")} className="py-2">
+              <RemovingMeterInformation form={form} />
+            </Stepper.Step>
 
-          {/* <Divider my="lg" /> */}
+            {/* <Divider my="lg" /> */}
 
-          <Stepper.Step label={t("installingMeterInformation")}>
-            <InstallingMeterInformation form={form} className="py-2" />
-            {/* <pre>{ JSON.stringify(form.values, null, 2) }</pre> */}
-          </Stepper.Step>
+            <Stepper.Step label={t("installingMeterInformation")}>
+              <InstallingMeterInformation form={form} className="py-2" />
+              {/* <pre>{ JSON.stringify(form.values, null, 2) }</pre> */}
+            </Stepper.Step>
 
-          {/* <Divider /> */}
-          <Stepper.Completed>
-            <Title order={3} size="h4" className="py-3">
-              {t("signInput")}
-            </Title>
+            {/* <Divider /> */}
+            <Stepper.Completed>
+              <Title order={3} size="h4" className="py-3">
+                {t("signInput")}
+              </Title>
 
-            <div className="pb-5">
-              <SignatureCanvas
-                canvasProps={{
-                  width: 500,
-                  height: 200,
-                  className: "sigCanvas border-solid border-1",
-                }}
-              />
-            </div>
-          </Stepper.Completed>
-        </Stepper>
+              <div className="pb-5">
+                <SignatureCanvas
+                  canvasProps={{
+                    width: 500,
+                    height: 200,
+                    className: "sigCanvas border-solid border-1",
+                  }}
+                />
+              </div>
+            </Stepper.Completed>
+          </Stepper>
 
-        <Group justify="center" mt="xl">
-          <Button variant="default" onClick={prevStep}>
-            Back
-          </Button>
-          <Button onClick={nextStep}>Next step</Button>
-        </Group>
-      </form>
+          <Group justify="center" mt="xl">
+            <Button variant="default" onClick={prevStep}>
+              Back
+            </Button>
+            <Button onClick={nextStep}>Next step</Button>
+          </Group>
+        </form>
+      )}
     </Container>
   )
 }
