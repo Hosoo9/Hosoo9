@@ -1,17 +1,10 @@
 import { unauthorized } from "@/app/api/helpers"
-import { changeState, completeOperation, findOperation } from "@/contexts/operation"
+import { changeState, findOperation } from "@/contexts/operation"
 import { getCurrentUser } from "@/lib/session"
-import { enforce } from "@/utils/prisma"
 import { NextRequest, NextResponse } from "next/server"
 import { ZodError, z } from "zod"
 
-const completeOperationSchema = z.object({
-  contractDate: z.coerce.date(),
-  branchType: z.number(),
-  supplyType: z.number(),
-  buildingType: z.number(),
-  facilityType: z.number(),
-})
+const completeOperationSchema = z.object({})
 
 export async function POST(
   request: NextRequest,
@@ -21,8 +14,8 @@ export async function POST(
     const user = await getCurrentUser()
 
     if (
-      user === undefined ||
-      (await enforce(user.id, "operation", "approve")) === false
+      user === undefined
+      // (await enforce(user.id, "operation", "approve")) === false
     ) {
       return unauthorized()
     }

@@ -1,7 +1,7 @@
 import { unauthorized } from "@/app/api/helpers"
 import { changeState, findOperation } from "@/contexts/operation"
 import { getCurrentUser } from "@/lib/session"
-import { enforce } from "@/utils/prisma"
+// import { enforce } from "@/utils/prisma"
 import { NextRequest, NextResponse } from "next/server"
 import { ZodError } from "zod"
 
@@ -13,8 +13,8 @@ export async function POST(
     const user = await getCurrentUser()
 
     if (
-      user === undefined ||
-      (await enforce(user.id, "operation", "approve")) === false
+      user === undefined
+      // (await enforce(user.id, "operation", "approve")) === false
     ) {
       return unauthorized()
     }

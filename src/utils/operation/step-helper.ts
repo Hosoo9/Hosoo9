@@ -7,11 +7,11 @@ export const getLastStep = (operationState: number) => {
 }
 
 export const isShortForm = (operationState: number) => {
-  return operationState <= 2
+  return [1, 2, 4].includes(operationState)
 }
 
 export const isFullForm = (operationState: number) => {
-  return operationState >= 3
+  return [3, 5, 6].includes(operationState)
 }
 
 export const isLastStep = (operationState: number, active: number) => {

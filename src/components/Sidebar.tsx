@@ -10,10 +10,12 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 import classes from "./Sidebar.module.css"
+import { useQuery } from "@tanstack/react-query"
 
-const data = [
+const menuData = [
   { link: "/", label: "Draft operations", icon: IconTools },
   { link: "/operation/request", label: "Operation requests", icon: IconTools },
+  { link: "/operation/approved", label: "Approved operations", icon: IconTools },
   { link: "/operation/completed", label: "Completed operations", icon: IconTools },
   // { link: "", label: "Billing", icon: IconReceipt2 },
   // { link: "", label: "Security", icon: IconFingerprint },
@@ -23,11 +25,38 @@ const data = [
   // { link: "", label: "Other Settings", icon: IconSettings },
 ]
 
-const paths = data.map((item) => item.link)
+const technicianMenu = [
+  { link: "/operation/approved", label: "Approved operations", icon: IconTools },
+  { link: "/operation/completed", label: "Completed operations", icon: IconTools },
+]
+
+const paths = menuData.map((item) => item.link)
 
 export function Sidebar() {
   const pathname = usePathname()
   const [active, setActive] = useState(pathname)
+  const [currentMenu, setCurrentMenu] = useState<any>([])
+
+  const {
+    isLoading: isCurrentUserLoading,
+    isError: isCurrentUserError,
+    data: currentUser,
+  } = useQuery({
+    queryKey: ["currentUser"],
+    queryFn: async () => {
+      const result = await fetch(`/api/me`)
+      return result.json()
+    },
+    onSettled: (data: any) => {
+      if (data) {
+        if (data.role === 2) {
+          setCurrentMenu(technicianMenu)
+        } else {
+          setCurrentMenu(menuData)
+        }
+      }
+    }
+  })
 
   useEffect(() => {
     if (paths.includes(pathname)) {
@@ -35,7 +64,7 @@ export function Sidebar() {
     }
   }, [pathname])
 
-  const links = data.map((item) => (
+  const links = currentMenu.map((item: any) => (
     <Link
       className={classes.link}
       data-active={item.link === active || undefined}
@@ -46,8 +75,6 @@ export function Sidebar() {
       <span>{item.label}</span>
     </Link>
   ))
-
-
 
   return (
     <nav className={classes.navbar}>

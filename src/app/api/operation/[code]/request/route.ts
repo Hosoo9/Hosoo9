@@ -17,9 +17,9 @@ export async function POST(
 
     const operation = await findOperation(params.code)
 
-    if (operation?.status !== 1) {
+    if (operation?.status !== 1 && operation?.status !== 4) {
       return NextResponse.json(
-        { error: "Operation is not in draft state" },
+        { error: "Operation is not in draft or rejected state" },
         { status: 400 },
       )
     }

@@ -1,10 +1,10 @@
+import { getOperationStateName } from "@/lib/enum/operation-state"
 import {
-    Input,
-    Title
+    Input
 } from "@mantine/core"
 import { useTranslations } from "next-intl"
 
-export const MetaInformation = ({ form }: { form: any }) => {
+export const MetaInformation = ({ form, operation }: { form: any, operation: any }) => {
   const t = useTranslations("OperationForm")
 
   return (
@@ -17,7 +17,7 @@ export const MetaInformation = ({ form }: { form: any }) => {
         </div>
         <div className="col-span-1">
           <Input.Wrapper label={t("status")}>
-            <Input data-testid="status" disabled />{" "}
+            <Input data-testid="status" disabled value={operation ? getOperationStateName(operation.status) : ""} />{" "}
           </Input.Wrapper>
         </div>
         <div className="col-span-1">

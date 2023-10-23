@@ -1,20 +1,19 @@
 import { unauthorized } from "@/app/api/helpers"
-import { completeOperation, findOperation } from "@/contexts/operation"
+import { changeState, findOperation } from "@/contexts/operation"
 import { getCurrentUser } from "@/lib/session"
-import { saveFile } from "@/utils/file"
-import { enforce } from "@/utils/prisma"
-import crypto from "crypto"
 import { NextRequest, NextResponse } from "next/server"
 import { ZodError, z } from "zod"
 
-const completeOperationSchema = z.object({
-  contractDate: z.coerce.date(),
-  branchType: z.coerce.number(),
-  supplyType: z.coerce.number(),
-  buildingType: z.coerce.number(),
-  facilityType: z.coerce.number(),
-  signature: z.any(),
-})
+// const completeOperationSchema = z.object({
+//   contractDate: z.coerce.date(),
+//   branchType: z.coerce.number(),
+//   supplyType: z.coerce.number(),
+//   buildingType: z.coerce.number(),
+//   facilityType: z.coerce.number(),
+//   signature: z.any(),
+// })
+
+const completeOperationSchema = z.object({})
 
 export async function POST(
   request: NextRequest,
@@ -24,8 +23,8 @@ export async function POST(
     const user = await getCurrentUser()
 
     if (
-      user === undefined ||
-      (await enforce(user.id, "operation", "operate")) === false
+      user === undefined
+      // (await enforce(user.id, "operation", "operate")) === false
     ) {
       return unauthorized()
     }
@@ -41,21 +40,23 @@ export async function POST(
       )
     }
 
-    const formPayload = Object.fromEntries(await request.formData())
+    // const formPayload = Object.fromEntries(await request.formData())
+    const formPayload = request.body
 
     const body = completeOperationSchema.parse(formPayload)
 
-    const signature = body.signature as File
+    // const signature = body.signature as File
 
-    await saveFile(operation?.code + "-" + crypto.randomUUID(), signature)
+    // await saveFile(operation?.code + "-" + crypto.randomUUID(), signature)
 
-    const updated = await completeOperation(params.code, {
-      branchType: body.branchType,
-      buildingType: body.buildingType,
-      contractDate: body.contractDate,
-      facilityType: body.facilityType,
-      supplyType: body.supplyType,
-    })
+    const updated = await changeState(params.code, 6)
+    // const updated = await completeOperation(params.code, {
+    //   branchType: body.branchType,
+    //   buildingType: body.buildingType,
+    //   contractDate: body.contractDate,
+    //   facilityType: body.facilityType,
+    //   supplyType: body.supplyType,
+    // })
 
     return NextResponse.json(updated, { status: 200 })
   } catch (e) {

@@ -28,6 +28,8 @@ import { LoaderComponent } from "../Provider"
 import { isFullForm, isLastStep, isShortForm } from "@/utils/operation/step-helper"
 import { SubmitForApproval } from "./SubmitForApproval"
 import { SubmitCompleteOperation } from "./SubmitCompleteOperation"
+import { ApproveOperationButton } from "./ApproveOperationButton"
+import { RejectOperationButton } from "./RejectOperationButton"
 
 const setDate = (date: Date) => {
   return date === null ? null : new Date(date)
@@ -48,6 +50,18 @@ const transformData = (data: any) => {
 function OperationForm({ code }: { code: string }) {
   const router = useRouter()
   const [operation, setOperation] = useState<any>(null)
+
+  const {
+    isLoading: isCurrentUserLoading,
+    isError: isCurrentUserError,
+    data: currentUser,
+  } = useQuery({
+    queryKey: ["currentUser"],
+    queryFn: async () => {
+      const result = await fetch(`/api/me`)
+      return result.json()
+    },
+  })
 
   const { isLoading, isError, data, error } = useQuery({
     queryKey: ["operation", code],
@@ -176,6 +190,8 @@ function OperationForm({ code }: { code: string }) {
     // setOperation(operation)
   }
 
+  const beforeSubmit = async () => await saveOperation(form.values)
+
   return (
     <Container fluid>
       {/* <Title order={1} size="h1" className="py-5"> */}
@@ -193,7 +209,7 @@ function OperationForm({ code }: { code: string }) {
           {/*   onNewContact={(contacts) => form.insertListItem("ContactOperation", contacts)} */}
           {/* /> */}
 
-          <MetaInformation form={form} />
+          <MetaInformation form={form} operation={operation} />
           <Pause />
 
           <Divider my="lg" className="pt-5" />
@@ -266,30 +282,55 @@ function OperationForm({ code }: { code: string }) {
           </Stepper>
 
           <Group justify="center" mt="xl">
-            <Button variant="default" onClick={prevStep} loading={mutationLoading} disabled={active === 0}>
+            <Button
+              variant="default"
+              onClick={prevStep}
+              loading={mutationLoading}
+              disabled={active === 0 || isLoading}
+            >
               Back
             </Button>
             <Button
               onClick={nextStep}
               type="button"
               variant={lastStep ? "outline" : "filled"}
+              disabled={isLoading}
               loading={mutationLoading}
             >
               {lastStep ? "Save" : "Next step"}
             </Button>
 
-            {lastStep && shortForm && operation.status === 1 && (
+            {lastStep && shortForm && [1, 4].includes(operation.status) && (
               <SubmitForApproval
                 code={code}
                 onSubmit={onRequestForApproval}
-                beforeSubmit={() => saveOperation(form.values)}
+                beforeSubmit={beforeSubmit}
               >
                 Submit for approval
               </SubmitForApproval>
             )}
 
+            {lastStep &&
+              shortForm &&
+              operation.status === 2 &&
+              currentUser &&
+              currentUser.role === 3 && (
+                <>
+                  <ApproveOperationButton beforeSubmit={beforeSubmit} code={code}>
+                    Approve
+                  </ApproveOperationButton>
+                  <RejectOperationButton beforeSubmit={beforeSubmit} code={code}>
+                    Reject
+                  </RejectOperationButton>
+                </>
+              )}
+
             {lastStep && !shortForm && [3, 5].includes(operation.status) && (
-              <SubmitCompleteOperation code={code} onSubmit={onCompleteOperation}>
+              <SubmitCompleteOperation
+                beforeSubmit={beforeSubmit}
+                code={code}
+                onSubmit={onCompleteOperation}
+              >
                 Complete operation
               </SubmitCompleteOperation>
             )}

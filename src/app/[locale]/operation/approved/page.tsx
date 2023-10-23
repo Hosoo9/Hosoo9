@@ -14,10 +14,10 @@ export default async function RequestedOperationsPage() {
     <>
       <div className="py-5">
         <Title order={3} size="h4" className="pb-3">
-          Completed operations
+          Approved operations
         </Title>
 
-        <OperationList statuses={[6]} className="py-5" />
+        <OperationList statuses={[3, 5]} className="py-5" />
       </div>
     </>
   )
