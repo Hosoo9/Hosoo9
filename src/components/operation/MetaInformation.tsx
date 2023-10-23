@@ -9,13 +9,10 @@ export const MetaInformation = ({ form }: { form: any }) => {
 
   return (
     <>
-      {/* <Title order={2} size="h3"> */}
-      {/*   {t("metaInformation")} */}
-      {/* </Title> */}
       <div className="grid grid-cols-5 gap-3 py-5">
         <div className="col-span-1">
           <Input.Wrapper label={t("workDetails")}>
-            <Input data-testid="mailAddress" disabled />{" "}
+            <Input data-testid="workDetails" disabled  />
           </Input.Wrapper>
         </div>
         <div className="col-span-1">
@@ -25,12 +22,12 @@ export const MetaInformation = ({ form }: { form: any }) => {
         </div>
         <div className="col-span-1">
           <Input.Wrapper label={t("author")}>
-            <Input data-testid="author" disabled />{" "}
+            <Input data-testid="author" disabled value={form.values.createdByUser?.name} />{" "}
           </Input.Wrapper>
         </div>
         <div className="col-span-1">
           <Input.Wrapper label={t("createdAt")}>
-            <Input data-testid="creationDateTime" disabled />{" "}
+            <Input data-testid="creationDatetime" disabled value={form.values.createdAt} />{" "}
           </Input.Wrapper>
         </div>
         <div className="col-span-1">

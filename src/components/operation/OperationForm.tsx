@@ -25,13 +25,30 @@ import { RemovingMeterInformation } from "./RemovingMeterInformation"
 import { WorkInformation } from "./WorkInformation"
 import { WorkScheduleInformation } from "./WorkScheduleInformation"
 import { LoaderComponent } from "../Provider"
+import { isFullForm, isLastStep, isShortForm } from "@/utils/operation/step-helper"
+import { SubmitForApproval } from "./SubmitForApproval"
+import { SubmitCompleteOperation } from "./SubmitCompleteOperation"
 
 const setDate = (date: Date) => {
   return date === null ? null : new Date(date)
 }
 
+const transformData = (data: any) => {
+  return {
+    ...data,
+    scheduledDatetime: setDate(data.scheduledDatetime),
+    postcardOutputTimestamp: setDate(data.postcardOutputTimestamp),
+    absenceNoticeDeliveryDate: setDate(data.absenceNoticeDeliveryDate),
+    footprint: data.footprint ? data.footprint.toString() : null,
+    operationType: data.operationType ? data.operationType.toString() : null,
+    exchangingDate: setDate(data.exchangingDate),
+  }
+}
+
 function OperationForm({ code }: { code: string }) {
   const router = useRouter()
+  const [operation, setOperation] = useState<any>(null)
+
   const { isLoading, isError, data, error } = useQuery({
     queryKey: ["operation", code],
     queryFn: async () => {
@@ -39,18 +56,10 @@ function OperationForm({ code }: { code: string }) {
       return result.json()
     },
     onSettled: (data: any) => {
-      form.setInitialValues({
-        ...data,
-        scheduledDatetime: setDate(data.scheduledDatetime),
-        postcardOutputTimestamp: setDate(data.postcardOutputTimestamp),
-        absenceNoticeDeliveryDate: setDate(data.absenceNoticeDeliveryDate),
-      })
-      form.setValues({
-        ...data,
-        scheduledDatetime: setDate(data.scheduledDatetime),
-        postcardOutputTimestamp: setDate(data.postcardOutputTimestamp),
-        absenceNoticeDeliveryDate: setDate(data.absenceNoticeDeliveryDate),
-      })
+      const transformed = transformData(data)
+      form.setInitialValues(transformed)
+      form.setValues(transformed)
+      setOperation({ ...data })
     },
   })
 
@@ -82,6 +91,7 @@ function OperationForm({ code }: { code: string }) {
       scheduledDatetime: null,
       removing: {},
       installing: {},
+      createdAt: null,
     },
 
     validate: {
@@ -127,9 +137,7 @@ function OperationForm({ code }: { code: string }) {
   const t = useTranslations("OperationForm")
 
   const saveOperation = async (values: FormValues) => {
-    const result = await mutateAsync(values)
-
-    router.push("/dashboard")
+    await mutateAsync(values)
   }
 
   const [active, setActive] = useState(
@@ -140,14 +148,32 @@ function OperationForm({ code }: { code: string }) {
     router.replace(`?step=${active + 1}`)
   }, [active, router])
 
-  const nextStep = async () => {
-    await saveOperation(form.values)
-    setActive((current) => (current < 6 ? current + 1 : current))
+  const lastStep = operation ? isLastStep(operation.status, active) : false
+  const shortForm = operation ? isShortForm(operation.status) : false
+
+  const nextStep = async (e: any) => {
+    e.preventDefault()
+
+    await saveOperation({ ...form.values })
+    setActive((current) => (!lastStep ? current + 1 : current))
   }
 
   const prevStep = async () => {
     await saveOperation(form.values)
     setActive((current) => (current > 0 ? current - 1 : current))
+  }
+
+  const onRequestForApproval = async (operation: any) => {
+    await saveOperation(form.values)
+
+    console.log(`-------------operation---------------`)
+    console.log(operation)
+    console.log(`----------------------------`)
+    // setOperation(operation)
+  }
+
+  const onCompleteOperation = async (operation: any) => {
+    // setOperation(operation)
   }
 
   return (
@@ -172,11 +198,12 @@ function OperationForm({ code }: { code: string }) {
 
           <Divider my="lg" className="pt-5" />
 
-          <Stepper active={active} onStepClick={setActive}>
-            <Stepper.Step label={t("metaInformation")}>
+          <Stepper active={active} onStepClick={setActive} iconSize={32}>
+            <Stepper.Step label={t("workInformation")}>
               <div className="py-2">
                 <div className="py-5">
                   <Flags form={form} />
+                  <WorkInformation form={form} />
                 </div>
               </div>
             </Stepper.Step>
@@ -194,51 +221,83 @@ function OperationForm({ code }: { code: string }) {
             </Stepper.Step>
 
             {/* <Divider my="lg" /> */}
-            <Stepper.Step label={t("workInformation")}>
-              <WorkInformation form={form} className="py-2" />
-            </Stepper.Step>
+            {/* <Stepper.Step label={t("workInformation")}> */}
+            {/*   <WorkInformation form={form} className="py-2" /> */}
+            {/* </Stepper.Step> */}
 
             {/* <Divider my="lg" /> */}
-            <Stepper.Step label={t("removingMeterInformation")} className="py-2">
-              <RemovingMeterInformation form={form} />
-            </Stepper.Step>
+            {isFullForm(operation?.status) && (
+              <Stepper.Step label={t("removingMeterInformation")} className="py-2">
+                <RemovingMeterInformation form={form} />
+              </Stepper.Step>
+            )}
+
+            {isFullForm(operation?.status) && (
+              <Stepper.Step label={t("installingMeterInformation")}>
+                <InstallingMeterInformation form={form} className="py-2" />
+                {/* <pre>{ JSON.stringify(form.values, null, 2) }</pre> */}
+              </Stepper.Step>
+            )}
+
+            {isFullForm(operation?.status) && (
+              <Stepper.Step label={t("workInformation")}>
+                <Title order={3} size="h4" className="py-3">
+                  {t("signInput")}
+                </Title>
+
+                <div className="pb-5">
+                  <SignatureCanvas
+                    canvasProps={{
+                      width: 500,
+                      height: 200,
+                      className: "sigCanvas border-solid border-1",
+                    }}
+                  />
+                </div>
+              </Stepper.Step>
+            )}
 
             {/* <Divider my="lg" /> */}
-
-            <Stepper.Step label={t("installingMeterInformation")}>
-              <InstallingMeterInformation form={form} className="py-2" />
-              {/* <pre>{ JSON.stringify(form.values, null, 2) }</pre> */}
-            </Stepper.Step>
 
             {/* <Divider /> */}
-            <Stepper.Completed>
-              <Title order={3} size="h4" className="py-3">
-                {t("signInput")}
-              </Title>
-
-              <div className="pb-5">
-                <SignatureCanvas
-                  canvasProps={{
-                    width: 500,
-                    height: 200,
-                    className: "sigCanvas border-solid border-1",
-                  }}
-                />
-              </div>
-            </Stepper.Completed>
+            {/* <Stepper.Completed> */}
+            {/*   {/1* <Button>Send request</Button> *1/} */}
+            {/* </Stepper.Completed> */}
           </Stepper>
 
           <Group justify="center" mt="xl">
-            <Button variant="default" onClick={prevStep}>
+            <Button variant="default" onClick={prevStep} loading={mutationLoading} disabled={active === 0}>
               Back
             </Button>
-            <Button onClick={nextStep}>Next step</Button>
+            <Button
+              onClick={nextStep}
+              type="button"
+              variant={lastStep ? "outline" : "filled"}
+              loading={mutationLoading}
+            >
+              {lastStep ? "Save" : "Next step"}
+            </Button>
+
+            {lastStep && shortForm && operation.status === 1 && (
+              <SubmitForApproval
+                code={code}
+                onSubmit={onRequestForApproval}
+                beforeSubmit={() => saveOperation(form.values)}
+              >
+                Submit for approval
+              </SubmitForApproval>
+            )}
+
+            {lastStep && !shortForm && [3, 5].includes(operation.status) && (
+              <SubmitCompleteOperation code={code} onSubmit={onCompleteOperation}>
+                Complete operation
+              </SubmitCompleteOperation>
+            )}
           </Group>
         </form>
       )}
     </Container>
   )
 }
-export default OperationForm
 
-//To do comment
+export default OperationForm

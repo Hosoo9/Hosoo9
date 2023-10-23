@@ -1,7 +1,8 @@
-import { Input, Select } from "@mantine/core"
+import { Select } from "@mantine/core"
+import { DatePickerInput } from "@mantine/dates"
 import { useTranslations } from "next-intl"
 
-export const WorkInformation = ({ form, className }: { form: any, className: string }) => {
+export const WorkInformation = ({ form, className }: { form: any, className?: string }) => {
   const t = useTranslations("OperationForm")
 
   return (
@@ -12,16 +13,20 @@ export const WorkInformation = ({ form, className }: { form: any, className: str
 
       <div className="grid grid-cols-5 gap-3 py-5">
         <div>
-          <Input.Wrapper label={t("exchangingDate")}>
-            <Input data-testid="exchangingDate" {...form.getInputProps("exchangingDate")}/>{" "}
-          </Input.Wrapper>
+          <DatePickerInput
+            label={t("exchangingDate")}
+            {...form.getInputProps("exchangingDate")}
+          />
         </div>
         <div>
           <Select
             label={t("operationType")}
             data={[
-              { value: "1", label: "1" },
-              { value: "2", label: "2" },
+              { value: "1", label: t("operationType1") },
+              { value: "2", label: t("operationType2") },
+              { value: "3", label: t("operationType3") },
+              { value: "4", label: t("operationType4") },
+              { value: "5", label: t("operationType5") },
             ]}
             {...form.getInputProps("operationType")}
           ></Select>

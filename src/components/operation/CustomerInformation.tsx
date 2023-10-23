@@ -39,10 +39,10 @@ export const CustomerInformation = ({
           </Input.Wrapper>
         </div>
         <div>
-          <Input.Wrapper label={t("municipalities")}>
+          <Input.Wrapper label={t("municipality")}>
             <Input
-              data-testid="municipalities"
-              {...form.getInputProps("municipalities")}
+              data-testid="municipality"
+              {...form.getInputProps("municipality")}
             />{" "}
           </Input.Wrapper>
         </div>

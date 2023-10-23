@@ -1,6 +1,4 @@
-import {
-    Input
-} from "@mantine/core"
+import { Input } from "@mantine/core"
 import { DatePickerInput } from "@mantine/dates"
 import { useTranslations } from "next-intl"
 

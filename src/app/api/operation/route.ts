@@ -1,20 +1,12 @@
-import { createOperation, findOperations } from "@/contexts/operation"
+import { OperationType, createOperation, findOperations } from "@/contexts/operation"
 import { getCurrentUser } from "@/lib/session"
 import { NextRequest, NextResponse } from "next/server"
 import { ZodError, z } from "zod"
 import { unauthorized } from "../helpers"
-import { createOperationSchema } from "@/contexts/operation/validation-schema"
-
-const schema = z.object({
-  page: z.coerce.number().default(1),
-  limit: z.coerce.number().default(10),
-  customerNumber: z.string().optional(),
-  address: z.string().optional(),
-  status: z.coerce.number().optional(),
-  customerName: z.string().optional(),
-  desiredDate: z.coerce.date().optional(),
-  technicianName: z.string().optional(),
-})
+import {
+  createOperationSchema,
+  selectOperationSchema,
+} from "@/contexts/operation/validation-schema"
 
 export async function GET(request: NextRequest) {
   const user = await getCurrentUser()
@@ -23,9 +15,12 @@ export async function GET(request: NextRequest) {
     return unauthorized()
   }
 
-  const params = schema.parse(Object.fromEntries(request.nextUrl.searchParams))
+  const params = selectOperationSchema.parse({
+    ...Object.fromEntries(request.nextUrl.searchParams),
+    statuses: request.nextUrl.searchParams.getAll("statuses"),
+  })
 
-  const operations = await findOperations(params)
+  const operations = await findOperations(params, { includeUser: true })
 
   return NextResponse.json(operations, { status: 200 })
 }
@@ -46,8 +41,9 @@ export async function POST(request: NextRequest) {
     const params = createOperationSchema.parse(await request.json())
 
     const operation = await createOperation({
-      createdBy: user.id,
       ...params,
+      createdBy: user.id,
+      operationType: parseInt(params.operationType) as OperationType,
     })
 
     return NextResponse.json(operation, { status: 201 })

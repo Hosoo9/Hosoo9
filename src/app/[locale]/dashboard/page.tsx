@@ -6,7 +6,7 @@ import OperationList from "../../../components/operation/OperationList"
 export default function Dashboard() {
   return (
     <main>
-      <OperationList />
+      <OperationList className="py-5" />
       {/* <OperationList/> */}
       {/* <OperationForm /> */}
     </main>

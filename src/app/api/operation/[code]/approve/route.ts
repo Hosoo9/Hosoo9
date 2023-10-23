@@ -1,5 +1,5 @@
 import { unauthorized } from "@/app/api/helpers"
-import { completeOperation, findOperation } from "@/contexts/operation"
+import { changeState, completeOperation, findOperation } from "@/contexts/operation"
 import { getCurrentUser } from "@/lib/session"
 import { enforce } from "@/utils/prisma"
 import { NextRequest, NextResponse } from "next/server"
@@ -38,7 +38,7 @@ export async function POST(
       )
     }
 
-    const updated = await completeOperation(params.code, body)
+    const updated = await changeState(params.code, 3)
 
     return NextResponse.json(updated, { status: 200 })
   } catch (e) {

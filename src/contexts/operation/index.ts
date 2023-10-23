@@ -3,7 +3,8 @@ import { ContextOptions, PaginationParams } from "@/utils/types"
 import { Prisma } from "@prisma/client"
 import crypto from "crypto"
 
-export type OperationWorkType = 1 | 2 | 3 | 4 | 5
+export type OperationState = 1 | 2 | 3 | 4 | 5 | 6
+export type OperationType = 1 | 2 | 3 | 4 | 5
 export type GasType = 1 | 2
 export type HousingType = 1 | 2
 export type PhoneNumberType = 1 | 2 | 3
@@ -18,6 +19,7 @@ type CreateOperationInput = {
   isSecurityWork: boolean
   changedNotificationFlag: boolean
   valveOpenFlag: boolean
+  operationType: OperationType
 }
 
 type FindOperationsInput = PaginationParams & {
@@ -25,7 +27,7 @@ type FindOperationsInput = PaginationParams & {
   limit: number
   customerNumber?: string
   address?: string
-  status?: number
+  statuses?: number[]
   customerName?: string
   desiredDate?: Date
   technicianName?: string
@@ -86,31 +88,39 @@ export const updateOperation = async (
 ) => {
   const operation = await (options.transaction || prisma).operation.update({
     where: { code },
-    data: input,
+    data: { ...input },
   })
 
   return operation
 }
 
-export const findOperation = async (code: string) => {
-  return await prisma.operation.findUnique({ where: { code } })
+export const findOperation = async (
+  code: string,
+  { includeUser } = { includeUser: false },
+) => {
+  return await prisma.operation.findUnique({
+    where: { code },
+    include: { createdByUser: includeUser },
+  })
 }
 
 export const findOperations = async ({
   page,
   limit,
   address,
-  status,
+  statuses,
   customerNumber,
   desiredDate,
   customerName,
   technicianName,
-}: FindOperationsInput) => {
+}: FindOperationsInput, { includeUser } = { includeUser: true }) => {
   return await prisma.operation.findMany({
     skip: (page - 1) * limit,
     take: limit,
     where: {
-      status,
+      status: {
+        in: statuses,
+      },
       address: {
         startsWith: address,
       },
@@ -118,5 +128,8 @@ export const findOperations = async ({
         startsWith: customerNumber,
       },
     },
+    include: {
+      createdByUser: includeUser,
+    }
   })
 }

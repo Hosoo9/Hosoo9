@@ -9,15 +9,14 @@
 
 import "dayjs/locale/ja"
 
-import { Button, Container, Divider, Group, Stepper } from "@mantine/core"
+import { Button, Container, Group, Stepper } from "@mantine/core"
 import { useForm } from "@mantine/form"
 import { useMutation } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
 import { useRouter } from "next/navigation"
 import { SetStateAction, useState } from "react"
 import { Flags } from "./Flags"
-import { MetaInformation } from "./MetaInformation"
-import { Pause } from "./Pause"
+import { WorkInformation } from "./WorkInformation"
 
 function OperationForm() {
   const router = useRouter()
@@ -26,7 +25,9 @@ function OperationForm() {
     initialValues: {
       isSecurityWork: false,
       changedNotificationFlag: false,
-      valveOpenFlag: false
+      valveOpenFlag: false,
+      exchangingDate: null,
+      operationType: null,
     },
   })
 
@@ -82,16 +83,18 @@ function OperationForm() {
         {/*   onNewContact={(contacts) => form.insertListItem("ContactOperation", contacts)} */}
         {/* /> */}
 
-        <MetaInformation form={form} />
-        <Pause />
+        {/* <MetaInformation form={form} /> */}
+        {/* <Pause /> */}
 
-        <Divider my="lg" className="pt-5" />
+        {/* <Divider my="lg" className="pt-5" /> */}
+        <div className="mt-5"></div>
 
         <Stepper active={0}>
           <Stepper.Step label={t("metaInformation")}>
             <div className="py-2">
               <div className="py-5">
                 <Flags form={form} />
+                <WorkInformation form={form} />
               </div>
             </div>
           </Stepper.Step>

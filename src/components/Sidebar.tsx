@@ -1,24 +1,20 @@
 "use client"
 
 import {
-  Icon2fa,
-  IconBellRinging,
-  IconDatabaseImport,
-  IconFingerprint,
-  IconKey,
-  IconLogout,
-  IconReceipt2,
-  IconSettings,
-  IconSwitchHorizontal,
-  IconTools,
+    IconLogout,
+    IconSwitchHorizontal,
+    IconTools
 } from "@tabler/icons-react"
-import { useState } from "react"
-import classes from "./Sidebar.module.css"
+import { signOut } from "next-auth/react"
 import Link from "next/link"
-import { signOut, useSession } from "next-auth/react"
+import { usePathname } from "next/navigation"
+import { useEffect, useState } from "react"
+import classes from "./Sidebar.module.css"
 
 const data = [
-  { link: "/en", label: "Operations", icon: IconTools },
+  { link: "/", label: "Draft operations", icon: IconTools },
+  { link: "/operation/request", label: "Operation requests", icon: IconTools },
+  { link: "/operation/completed", label: "Completed operations", icon: IconTools },
   // { link: "", label: "Billing", icon: IconReceipt2 },
   // { link: "", label: "Security", icon: IconFingerprint },
   // { link: "", label: "SSH Keys", icon: IconKey },
@@ -27,23 +23,31 @@ const data = [
   // { link: "", label: "Other Settings", icon: IconSettings },
 ]
 
+const paths = data.map((item) => item.link)
+
 export function Sidebar() {
-  const [active, setActive] = useState("Billing")
+  const pathname = usePathname()
+  const [active, setActive] = useState(pathname)
+
+  useEffect(() => {
+    if (paths.includes(pathname)) {
+      setActive(pathname)
+    }
+  }, [pathname])
 
   const links = data.map((item) => (
     <Link
       className={classes.link}
-      data-active={item.label === active || undefined}
+      data-active={item.link === active || undefined}
       href={item.link}
       key={item.label}
-      onClick={() => {
-        setActive(item.label)
-      }}
     >
       <item.icon className={classes.linkIcon} stroke={1.5} />
       <span>{item.label}</span>
     </Link>
   ))
+
+
 
   return (
     <nav className={classes.navbar}>

@@ -34,7 +34,7 @@
     "postalCode": "郵便番号",
     "addressAutoFill" :"住所自動入力",
     "prefectures" : "都道府県",
-    "municipalities" :  "市区町村",
+    "municipality" :  "市区町村",
     "address" : "番地",
     "buildingNameRoomNumber" : "建物名・部屋番号",
     "buildingType": "建物形態",
@@ -189,6 +189,13 @@
     "contactHistory" : "連絡履歴",
     "companyCode" : "会社番号",
     "companyName" : "会社名",
-    "dateAndTimeOfContact": "Date and time of contact"
+    "dateAndTimeOfContact": "Date and time of contact",
+    "operationType1": "交換",
+    "operationType2": "取外",
+    "operationType3": "入室不要工法",
+    "operationType4": "保安閉栓",
+    "operationType5": "閉栓返却",
+    "createdBy": "作成者",
+    "assignedWorker": "担当作業員"
   }
 }

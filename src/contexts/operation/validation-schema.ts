@@ -4,6 +4,8 @@ const create = {
   isSecurityWork: z.boolean(),
   changedNotificationFlag: z.boolean(),
   valveOpenFlag: z.boolean(),
+  exchangingDate: z.coerce.date().nullable(),
+  operationType: z.enum(["1", "2", "3", "4", "5"]),
 }
 
 const update = {
@@ -44,18 +46,29 @@ const update = {
   postcardOutputTimestamp: z.coerce.date().nullable(),
   absenceNoticeDeliveryDate: z.coerce.date().nullable(),
   exchangingDate: z.coerce.date().nullable(),
-  operationType: z.enum(["1", "2"]).nullable(),
+  operationType: z.enum(["1", "2", "3", "4", "5"]).nullable(),
   customerNumber: z.string().nullable(),
-  postalCode: z.string().nullable(),
-  municipality: z.string().nullable(),
-  address: z.string().nullable(),
-  buildingNameRoomNumber: z.string().nullable(),
   name: z.string().nullable(),
   nameKana: z.string().nullable(),
   phoneNumber: z.string().nullable(),
   assignedWorkerId: z.string().nullable(),
+  postalCode: z.string().nullable(),
+  municipality: z.string().nullable(),
+  address: z.string().nullable(),
+  buildingNameRoomNumber: z.string().nullable(),
   // meterImage: z.string().nullable(),
 }
+
+export const selectOperationSchema = z.object({
+  page: z.coerce.number().default(1),
+  limit: z.coerce.number().default(10),
+  customerNumber: z.string().optional(),
+  address: z.string().optional(),
+  customerName: z.string().optional(),
+  desiredDate: z.coerce.date().optional(),
+  technicianName: z.string().optional(),
+  statuses: z.array(z.coerce.number()).optional(),
+})
 
 export const createOperationSchema = z.object(create)
 export const updateOperationSchema = z.object(update)

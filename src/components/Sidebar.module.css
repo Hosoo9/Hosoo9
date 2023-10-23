@@ -56,18 +56,18 @@
     }
   }
 
-  /* &[data-active] { */
-  /*   &, */
-  /*   &:hover { */
-  /*     box-shadow: var(--mantine-shadow-sm); */
-  /*     background-color: var(--mantine-color-white); */
-  /*     color: var(--mantine-color-blue-filled); */
+  &[data-active] {
+    &,
+    &:hover {
+      box-shadow: var(--mantine-shadow-sm);
+      background-color: var(--mantine-color-white);
+      color: var(--mantine-color-blue-filled);
 
-  /*     .linkIcon { */
-  /*       color: var(--mantine-color-blue-filled); */
-  /*     } */
-  /*   } */
-  /* } */
+      .linkIcon {
+        color: var(--mantine-color-blue-filled);
+      }
+    }
+  }
 }
 
 .linkIcon {

@@ -4,6 +4,7 @@ import { getCurrentUser } from "@/lib/session"
 import { NextRequest, NextResponse } from "next/server"
 import { NOT_AUTHORIZED } from "../../constants"
 import { unauthorized } from "../../helpers"
+import { presentOperation } from "@/utils/operation/operation-transformer"
 
 export async function GET(
   request: NextRequest,
@@ -15,9 +16,13 @@ export async function GET(
     return NextResponse.json({ error: NOT_AUTHORIZED }, { status: 401 })
   }
 
-  const operation = await findOperation(params.code)
+  const operation = await findOperation(params.code, { includeUser: true })
 
-  return NextResponse.json(operation, { status: 200 })
+  if (operation === null) {
+    return NextResponse.json({ error: "Operation not found" }, { status: 404 })
+  }
+
+  return NextResponse.json(presentOperation(operation), { status: 200 })
 }
 
 export async function PUT(
@@ -34,6 +39,10 @@ export async function PUT(
   }
 
   const input = updateOperationSchema.parse(await request.json())
+
+  console.log(`-------------input---------------`)
+  console.log(input)
+  console.log(`----------------------------`)
 
   const operation = await updateOperation(params.code, {
     ...input,

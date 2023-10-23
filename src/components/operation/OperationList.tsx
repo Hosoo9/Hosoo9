@@ -12,12 +12,26 @@ import "dayjs/locale/ja"
 import { Box, Button, Grid, LoadingOverlay, Table } from "@mantine/core"
 import { useQuery } from "@tanstack/react-query"
 import Link from "next/link"
+import { getOperationStateName } from "@/lib/enum/operation-state"
+import { useTranslations } from "next-intl"
+import { formatDate } from "@/utils/date-helper"
 
-function OperationList() {
+function OperationList({ statuses, className }: { statuses?: number[], className?: string }) {
   const { isLoading, error, data } = useQuery({
-    queryKey: ["operations"],
-    queryFn: () => fetch("/api/operation").then((res) => res.json()),
+    queryKey: [`operations${(statuses || [[]]).sort().join(",")}`],
+    queryFn: () => { 
+
+      const params = new URLSearchParams();
+
+      for (const status of statuses || []) {
+        params.append('statuses', status.toString());
+      }
+
+      return fetch(`/api/operation?${params.toString()}`).then((res) => res.json()) 
+    },
   })
+  
+  const t = useTranslations("OperationForm")
 
   // const { data } = useQuery({
   //   queryKey: ["operations"],
@@ -32,19 +46,17 @@ function OperationList() {
       <Table.Td>
         <Link href={`/operation/${o.code}`}>{o.code}</Link>
       </Table.Td>
-      <Table.Td>{o.name}</Table.Td>
-      <Table.Td>{o.status}</Table.Td>
+      <Table.Td>{getOperationStateName(o.status)}</Table.Td>
+      <Table.Td>{t(`operationType${o.operationType}`)}</Table.Td>
+      <Table.Td>{o.createdByUser.name}</Table.Td>
+      <Table.Td>{o.assignedWorkerId}</Table.Td>
+      <Table.Td>{formatDate(o.createdAt)}</Table.Td>
     </Table.Tr>
   ))
 
   return (
-    <Grid>
+    <Grid className={className}>
       <Grid.Col span={12}>
-        <h2>Operation list</h2>
-        <Button component={Link} href="/operation/new">
-          New
-        </Button>
-
         <Box pos="relative">
           <LoadingOverlay
             visible={isLoading}
@@ -54,9 +66,12 @@ function OperationList() {
           <Table>
             <Table.Thead>
               <Table.Tr>
-                <Table.Th>Code</Table.Th>
-                <Table.Th>Name</Table.Th>
-                <Table.Th>Status</Table.Th>
+                <Table.Th>ID</Table.Th>
+                <Table.Th>{ t("status") }</Table.Th>
+                <Table.Th>{ t("operationType") }</Table.Th>
+                <Table.Th>{ t("createdBy") }</Table.Th>
+                <Table.Th>{ t("assignedWorker") }</Table.Th>
+                <Table.Th>{ t("createdAt") }</Table.Th>
               </Table.Tr>
             </Table.Thead>
             <tbody>{rows}</tbody>

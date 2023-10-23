@@ -9,7 +9,7 @@ async function main() {
       await prisma.user.create({
         data: {
           id: "manager",
-          name: "manager",
+          name: "高橋",
           password: await hashPassword(process.env.SUPER_ADMIN_PASS),
           role: 1,
         },
@@ -17,7 +17,7 @@ async function main() {
       await prisma.user.create({
         data: {
           id: "technician",
-          name: "technician",
+          name: "猿飛",
           password: await hashPassword(process.env.SUPER_ADMIN_PASS),
           role: 2,
         },
@@ -25,7 +25,7 @@ async function main() {
       await prisma.user.create({
         data: {
           id: "bureau",
-          name: "bureau",
+          name: "鈴木",
           password: await hashPassword(process.env.SUPER_ADMIN_PASS),
           role: 3,
         },
