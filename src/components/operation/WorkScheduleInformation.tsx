@@ -1,5 +1,5 @@
 import { Select } from "@mantine/core"
-import { DatePickerInput, DateTimePicker } from "@mantine/dates"
+import { DatePickerInput, TimeInput } from "@mantine/dates"
 import { useTranslations } from "next-intl"
 import UserSelect from "../form/UserSelect"
 
@@ -24,12 +24,19 @@ export const WorkScheduleInformation = ({
             />
           </div>
           <div className="col-span-1">
-
-            <DateTimePicker
-              data-testid="scheduledDatetime"
-              label={t("scheduledDatetime")}
-              name="scheduledDatetime"
-              {...form.getInputProps("scheduledDatetime")}
+            <DatePickerInput
+              data-testid="scheduledDate"
+              label={t("scheduledDate")}
+              name="scheduledDate"
+              {...form.getInputProps("scheduledDate")}
+            />
+          </div>
+          <div className="col-span-1">
+            <TimeInput
+              data-testid="scheduledTime"
+              label={t("scheduledTime")}
+              name="scheduledTime"
+              {...form.getInputProps("scheduledTime")}
             />
           </div>
           <div className="col-span-1">

@@ -1,11 +1,10 @@
 "use client"
 
+import { Container } from '@mantine/core';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 import { Sidebar } from "../Sidebar";
-import classes from "../Sidebar.module.css"
-import DateProviderWrapper from "./DatesProviderWrapper";
-import { Container } from '@mantine/core';
+import classes from "../Sidebar.module.css";
 
 const queryClient = new QueryClient()
 

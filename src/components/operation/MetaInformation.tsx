@@ -12,7 +12,7 @@ export const MetaInformation = ({ form, operation }: { form: any, operation: any
       <div className="grid grid-cols-5 gap-3 py-5">
         <div className="col-span-1">
           <Input.Wrapper label={t("workDetails")}>
-            <Input data-testid="workDetails" disabled  />
+            <Input data-testid="workDetails" disabled value=""  />
           </Input.Wrapper>
         </div>
         <div className="col-span-1">
@@ -22,17 +22,17 @@ export const MetaInformation = ({ form, operation }: { form: any, operation: any
         </div>
         <div className="col-span-1">
           <Input.Wrapper label={t("author")}>
-            <Input data-testid="author" disabled value={form.values.createdByUser?.name} />{" "}
+            <Input data-testid="author" disabled value={form.values.createdByUser?.name || ""} />{" "}
           </Input.Wrapper>
         </div>
         <div className="col-span-1">
           <Input.Wrapper label={t("createdAt")}>
-            <Input data-testid="creationDatetime" disabled value={form.values.createdAt} />{" "}
+            <Input data-testid="creationDatetime" disabled value={form.values.createdAt || ""} />{" "}
           </Input.Wrapper>
         </div>
         <div className="col-span-1">
           <Input.Wrapper label={t("completedAt")}>
-            <Input data-testid="completedAt" disabled />{" "}
+            <Input data-testid="completedAt" disabled value={form.values.completedAt || ""} />{" "}
           </Input.Wrapper>
         </div>
       </div>

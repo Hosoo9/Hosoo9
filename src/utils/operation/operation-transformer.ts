@@ -8,27 +8,32 @@ const setDate = (date: Date) => {
 export const transformOperation = (data: any) => {
   return {
     ...data,
-    scheduledDatetime: setDate(data.scheduledDatetime),
+    // scheduledDatetime: setDate(data.scheduledDatetime),
     postcardOutputTimestamp: setDate(data.postcardOutputTimestamp),
     absenceNoticeDeliveryDate: setDate(data.absenceNoticeDeliveryDate),
     footprint: data.footprint ? data.footprint.toString() : null,
     operationType: data.operationType ? data.operationType.toString() : null,
-    exchangingDate: setDate(data.scheduledDatetime),
+    // exchangingDate: setDate(data.scheduledDatetime),
+    // scheduledTime: data.scheduledTime ? getTimeFromDate(data.scheduledTime) : null,
   }
 }
 
 export const presentOperation = (
   operation: Operation & {
-    createdByUser: User
+    createdByUser?: User
   },
 ) => {
   {
-    return {
-      ...operation,
-      createdByUser: {
-        id: operation.createdByUser.id,
-        name: operation.createdByUser.name,
-      },
+    if (operation.createdByUser) {
+      return {
+        ...transformOperation(operation),
+        createdByUser: {
+          id: operation.createdByUser.id,
+          name: operation.createdByUser.name,
+        },
+      }
+    } else {
+      return operation
     }
   }
 }

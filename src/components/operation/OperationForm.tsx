@@ -35,15 +35,37 @@ const setDate = (date: Date) => {
   return date === null ? null : new Date(date)
 }
 
+const setBoolean = (input: boolean | null) => {
+  if (input === false) {
+    return "1"
+  } else if (input === true) {
+    return "2"
+  } else {
+    return null
+  }
+}
+
 const transformData = (data: any) => {
   return {
     ...data,
-    scheduledDatetime: setDate(data.scheduledDatetime),
+    scheduledDate: setDate(data.scheduledDate),
     postcardOutputTimestamp: setDate(data.postcardOutputTimestamp),
     absenceNoticeDeliveryDate: setDate(data.absenceNoticeDeliveryDate),
     footprint: data.footprint ? data.footprint.toString() : null,
     operationType: data.operationType ? data.operationType.toString() : null,
     exchangingDate: setDate(data.exchangingDate),
+    referenceDate: setDate(data.referenceDate),
+    removingMeterInspectionDate: setDate(data.removingMeterInspectionDate),
+    installingMeterReferenceDate: setDate(data.installingMeterReferenceDate),
+    beforeWorkResult: setBoolean(data.beforeWorkResult),
+    afterWorkResult: setBoolean(data.afterWorkResult),
+    position: data.position === null ? "" : data.position,
+    beforeWorkInspectionType: data.beforeWorkInspectionType
+      ? data.beforeWorkInspectionType.toString()
+      : null,
+    afterWorkInspectionType: data.afterWorkInspectionType
+      ? data.afterWorkInspectionType.toString()
+      : null,
   }
 }
 
@@ -103,7 +125,6 @@ function OperationForm({ code }: { code: string }) {
       buildingNameRoomNumber: null,
       address: null,
       scheduledDatetime: null,
-      removing: {},
       installing: {},
       createdAt: null,
     },

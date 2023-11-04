@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { NOT_AUTHORIZED } from "../../constants"
 import { unauthorized } from "../../helpers"
 import { presentOperation } from "@/utils/operation/operation-transformer"
+import dayjs from "dayjs"
 
 export async function GET(
   request: NextRequest,
@@ -25,6 +26,14 @@ export async function GET(
   return NextResponse.json(presentOperation(operation), { status: 200 })
 }
 
+const toBoolean = (val: string | null) => {
+  if (val === null) {
+    return null
+  } else {
+    return val === "2" ? true : false
+  }
+}
+
 export async function PUT(
   request: NextRequest,
   { params }: { params: { code: string } },
@@ -40,21 +49,15 @@ export async function PUT(
 
   const input = updateOperationSchema.parse(await request.json())
 
-  console.log(`-------------input---------------`)
-  console.log(input)
-  console.log(`----------------------------`)
-
   const operation = await updateOperation(params.code, {
     ...input,
     operationType: input.operationType ? parseInt(input.operationType) : null,
     footprint: input.footprint ? parseInt(input.footprint) : null,
-    // solicitingCompanyId: user.companyCode,
-    // type: parseInt(input.type) as OperationWorkType,
-    // gasType: parseInt(input.gasType) as GasType,
-    // housingType: parseInt(input.housingType) as HousingType,
-    // phoneNumberType: parseInt(input.phoneNumberType) as PhoneNumberType,
-    // oneOrBulk: parseInt(input.oneOrBulk) as OneOrBulkType,
+    beforeWorkInspectionType: input.beforeWorkInspectionType ? parseInt(input.beforeWorkInspectionType) : null,
+    afterWorkInspectionType: input.afterWorkInspectionType ? parseInt(input.afterWorkInspectionType) : null,
+    beforeWorkResult: toBoolean(input.beforeWorkResult),
+    afterWorkResult: toBoolean(input.afterWorkResult),
   })
 
-  return NextResponse.json(operation, { status: 200 })
+  return NextResponse.json(presentOperation(operation), { status: 200 })
 }

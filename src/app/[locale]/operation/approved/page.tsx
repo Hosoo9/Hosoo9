@@ -3,7 +3,7 @@ import { getCurrentUser } from "@/lib/session"
 import { Title } from "@mantine/core"
 import { redirect } from "next/navigation"
 
-export default async function RequestedOperationsPage() {
+export default async function ApprovedOperationsPage() {
   const user = await getCurrentUser()
 
   if (!user) {

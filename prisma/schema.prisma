@@ -104,7 +104,8 @@ model Operation {
   phoneNumber                  String?    @db.NVarChar(20)
   assignedWorkerId             String?    @db.NVarChar(30)
   memo                         String?    @db.NVarChar(500)
-  scheduledDatetime            DateTime?  @db.DateTime
+  scheduledDate                DateTime?  @db.Date
+  scheduledTime                String?
   footprint                    Int?       @db.TinyInt
   postcardOutputTimestamp      DateTime?  @db.DateTime
   absenceNoticeDeliveryDate    DateTime?  @db.Date
@@ -140,7 +141,7 @@ model Operation {
 }
 
 model Meter {
-  id                  BigInt     @id @default(autoincrement())
+  meterModel          String     @id @db.NVarChar(20)
   serialNumber        String     @db.NVarChar(20)
   meterType           String     @db.NVarChar(20)
   meterMaximumUsage   Int        @db.Int

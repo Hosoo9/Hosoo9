@@ -1,5 +1,5 @@
 import { unauthorized } from "@/app/api/helpers"
-import { completeInstallationAlarm } from "@/contexts/installation-alarm"
+import { completeMeter } from "@/contexts/meter"
 import { findOperation } from "@/contexts/operation"
 import { getCurrentUser } from "@/lib/session"
 import { NextRequest, NextResponse } from "next/server"
@@ -34,16 +34,16 @@ export async function POST(
       return NextResponse.json({ error: "Operation not found" }, { status: 404 })
     }
 
-    const installationAlarm = await completeInstallationAlarm({
+    const meter = await completeMeter({
       operationId: operation.id,
       branchNumber: branchNumber,
     }, completeParams)
 
-    if (installationAlarm === null) {
+    if (meter === null) {
       return NextResponse.json({ error: "Installation alarm not found" }, { status: 404 })
     }
 
-    return NextResponse.json(installationAlarm, { status: 200 })
+    return NextResponse.json(meter, { status: 200 })
   } catch (e) {
     if (e instanceof ZodError) {
       return NextResponse.json(e.issues, { status: 400 })

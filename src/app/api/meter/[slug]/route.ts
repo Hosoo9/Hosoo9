@@ -1,21 +1,10 @@
-import { findInstallationAlarm } from "@/contexts/installation-alarm"
+import { findMeter } from "@/contexts/meter"
 import { findOperation } from "@/contexts/operation"
 import { getCurrentUser } from "@/lib/session"
 import { ROLE_BUREAU, ROLE_TECHNICIAN } from "@/utils/constants"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { NOT_AUTHORIZED } from "../../constants"
-
-// const schema = z.object({
-//   page: z.coerce.number().default(1),
-//   limit: z.coerce.number().default(10),
-// })
-
-const completeInstallation = z.object({
-  gasLeakDetectorAbnormality: z.boolean(),
-  carbonMonoxideDetectorAbnormality: z.boolean(),
-  fireAlarmDetectorAbnormality: z.boolean(),
-})
 
 export async function GET(
   request: NextRequest,
@@ -35,10 +24,10 @@ export async function GET(
     return NextResponse.json({ error: "Operation not found" }, { status: 404 })
   }
 
-  const alarmInstallation = await findInstallationAlarm({
+  const meter = await findMeter({
     branchNumber,
     operationId: operation.id,
   })
 
-  return NextResponse.json(alarmInstallation, { status: 200 })
+  return NextResponse.json(meter, { status: 200 })
 }

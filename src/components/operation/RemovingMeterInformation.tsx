@@ -1,7 +1,8 @@
 import { Input } from "@mantine/core"
+import { DatePickerInput, MonthPickerInput } from "@mantine/dates"
 import { useTranslations } from "next-intl"
+import { MeterSelect } from "./MeterSelect"
 import { TakePicture } from "./TakePicture"
-import { MonthPickerInput, YearPickerInput } from "@mantine/dates"
 
 export const RemovingMeterInformation = ({
   form,
@@ -18,46 +19,14 @@ export const RemovingMeterInformation = ({
       {/*   {t("removingMeterInformation")} */}
       {/* </Title> */}
 
-      <div className="grid grid-cols-5 gap-3 py-5">
-        <div>
-          <Input.Wrapper label={t("meterModel")}>
-            <Input
-              data-testid="removing.meterModel"
-              {...form.getInputProps("removing.meterModel")}
-            />{" "}
-          </Input.Wrapper>
-        </div>
-        <div>
-          <div className="flex">
-            <Input.Wrapper label={t("serialNumber")} className="pr-3">
-              <Input
-                data-testid="removing.serialNumber"
-                {...form.getInputProps("removing.serialNumber")}
-              />{" "}
-            </Input.Wrapper>
-            <Input.Wrapper label={t("meterType")}>
-              <Input
-                data-testid="removing.meterType"
-                {...form.getInputProps("removing.meterType")}
-              />{" "}
-            </Input.Wrapper>
-          </div>
-        </div>
-        <div>
-          <Input.Wrapper label={t("meterMaximumUsage")}>
-            <Input
-              data-testid="removing.meterMaximumUsage"
-              {...form.getInputProps("removing.meterMaximumUsage")}
-            />{" "}
-          </Input.Wrapper>
-        </div>
-      </div>
+      <MeterSelect form={form} name="removingMeterId" />
+
       <div className="grid grid-cols-5 gap-3 pb-5">
         <div>
           <Input.Wrapper label={t("meterNumber")}>
             <Input
-              data-testid="removing.meterNumber"
-              {...form.getInputProps("removing.meterNumber")}
+              data-testid="removingMeterNumber"
+              {...form.getInputProps("removingMeterNumber")}
             />{" "}
           </Input.Wrapper>
         </div>
@@ -65,23 +34,16 @@ export const RemovingMeterInformation = ({
         <div>
           <Input.Wrapper label={t("meterValue")}>
             <Input
-              data-testid="removing.meterValue"
-              {...form.getInputProps("removing.meterValue")}
+              data-testid="removingMeterValue"
+              {...form.getInputProps("removingMeterValue")}
             />{" "}
           </Input.Wrapper>
         </div>
 
         <div>
-          <YearPickerInput
-            label={t("certificationYear")}
-            {...form.getInputProps("removing.certificationYear")}
-          />
-        </div>
-
-        <div>
           <MonthPickerInput
-            label={t("examinationMonth")}
-            {...form.getInputProps("removing.examinationMonth")}
+            label={t("meterInspectionDate")}
+            {...form.getInputProps("removingMeterInspectionDate")}
           />
         </div>
       </div>
@@ -91,18 +53,19 @@ export const RemovingMeterInformation = ({
 
         <div className="grid grid-cols-5 gap-3 py-5">
           <div>
-            <Input.Wrapper label={t("referenceDate")}>
-              <Input
-                data-testid="referenceDate"
-                {...form.getInputProps("removing.referenceDate")}
-              />{" "}
-            </Input.Wrapper>
+            <DatePickerInput
+              data-testid="referenceDate"
+              label={t("referenceDate")}
+              name="referenceDate"
+              mx="auto"
+              {...form.getInputProps("referenceDate")}
+            />
           </div>
           <div>
             <Input.Wrapper label={t("position")}>
               <Input
                 data-testid="position"
-                {...form.getInputProps("removing.position")}
+                {...form.getInputProps("position")}
               />{" "}
             </Input.Wrapper>
           </div>

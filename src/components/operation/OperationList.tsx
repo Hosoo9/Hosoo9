@@ -9,7 +9,7 @@
 
 import "dayjs/locale/ja"
 
-import { Box, Button, Grid, LoadingOverlay, Table } from "@mantine/core"
+import { Box, Grid, LoadingOverlay, Table } from "@mantine/core"
 import { useQuery } from "@tanstack/react-query"
 import Link from "next/link"
 import { getOperationStateName } from "@/lib/enum/operation-state"
