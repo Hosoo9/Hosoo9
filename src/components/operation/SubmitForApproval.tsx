@@ -16,14 +16,16 @@ export const SubmitForApproval = ({
   const t = useTranslations("OperationForm")
 
   const { isLoading, isSuccess, error, mutateAsync } = useMutation({
-    mutationFn: (operation: any) => {
-      return fetch(`/api/operation/${code}/request`, {
+    mutationFn: async (operation: any) => {
+      const result = await fetch(`/api/operation/${code}/request`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(operation),
       })
+
+      return result.json()
     },
   })
 

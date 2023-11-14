@@ -6,6 +6,7 @@ export const SubmitCompleteOperation = ({
   code,
   children,
   onSubmit,
+  beforeSubmit
 }: {
   code: string
   children: React.ReactNode,
@@ -27,10 +28,14 @@ export const SubmitCompleteOperation = ({
   })
 
   const submit = async () => {
+    if (beforeSubmit) {
+      await beforeSubmit()
+    }
+
     const result = await mutateAsync({})
     
     if (onSubmit) {
-      onSubmit(result)
+      onSubmit(await result.json())
     }
   }
 

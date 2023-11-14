@@ -199,6 +199,9 @@
     "operationType4": "保安閉栓",
     "operationType5": "閉栓返却",
     "createdBy": "作成者",
-    "assignedWorker": "担当作業員"
+    "assignedWorker": "担当作業員",
+    "role.1": "manager",
+    "role.2": "technician",
+    "role.3": "bureau"
   }
 }

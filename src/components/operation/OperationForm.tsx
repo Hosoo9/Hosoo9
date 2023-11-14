@@ -199,12 +199,7 @@ function OperationForm({ code }: { code: string }) {
   }
 
   const onRequestForApproval = async (operation: any) => {
-    await saveOperation(form.values)
-
-    console.log(`-------------operation---------------`)
-    console.log(operation)
-    console.log(`----------------------------`)
-    // setOperation(operation)
+    setOperation(operation)
   }
 
   const onCompleteOperation = async (operation: any) => {
