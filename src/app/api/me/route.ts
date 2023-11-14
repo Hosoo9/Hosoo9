@@ -1,4 +1,4 @@
-import { getUserById } from "@/contexts/user";
+import { findById } from "@/contexts/user";
 import { getCurrentUser } from "@/lib/session";
 import { getEnforcer } from "@/utils/prisma";
 import { NextRequest, NextResponse } from "next/server";
@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     return unauthorized()
   }
 
-  const result = await getUserById(user.id)
+  const result = await findById(user.id)
 
   const enforcer = await getEnforcer()
 

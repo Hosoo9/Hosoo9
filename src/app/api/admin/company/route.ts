@@ -1,4 +1,4 @@
-import { getCompanies, upsertCompany } from "@/contexts/company"
+import { getCompanies } from "@/contexts/company"
 import { getCurrentUser } from "@/lib/session"
 import { ROLE_BUREAU } from "@/utils/constants"
 import { NextRequest, NextResponse } from "next/server"
@@ -40,5 +40,6 @@ export async function PUT(request: Request) {
   const body = await request.json()
   const params = createSchema.parse(body)
  
-  return NextResponse.json(await upsertCompany(params))
+  // return NextResponse.json(await upsertCompany(params))
+  return NextResponse.json(null)
 }

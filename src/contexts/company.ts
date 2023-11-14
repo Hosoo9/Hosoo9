@@ -11,10 +11,10 @@ type UpsertCompanyInput = {
   name: string
 }
 
-export const upsertCompany = async (input: UpsertCompanyInput) => {
-  return await prisma.company.upsert({
-    where: { code: input.code },
-    update: { name: input.name },
-    create: input,
-  })
-}
+// export const upsertCompany = async (input: UpsertCompanyInput) => {
+//   return await prisma.company.upsert({
+//     where: { code: input.code },
+//     update: { name: input.name },
+//     create: input,
+//   })
+// }

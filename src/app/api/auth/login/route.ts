@@ -1,4 +1,4 @@
-import { getById, maskUser } from "@/contexts/user"
+import { findById, maskUser } from "@/contexts/user"
 import bcrypt from "bcrypt"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
@@ -12,7 +12,7 @@ const schema = z.object({
 export async function POST(request: NextRequest) {
   const params = schema.parse(await request.json())
 
-  const user = await getById(params.id)
+  const user = await findById(params.id)
 
   if (user === null) {
     return NextResponse.json({ error: "Invalid email or password" }, { status: 400 })

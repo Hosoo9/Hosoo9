@@ -5,14 +5,13 @@ export const resetDb = async (
 ) => {
   try {
     const statements = [
-      prisma.contact.deleteMany(),
-      prisma.installationAlarm.deleteMany(),
+      // prisma.installationAlarm.deleteMany(),
       prisma.operation.deleteMany(),
       prisma.company.deleteMany(),
-      prisma.laborCost.deleteMany(),
-      prisma.alarmInfo.deleteMany(),
-      prisma.invite.deleteMany(),
-      prisma.alarmInfo.deleteMany(),
+      // prisma.laborCost.deleteMany(),
+      // prisma.alarmInfo.deleteMany(),
+      // prisma.invite.deleteMany(),
+      // prisma.alarmInfo.deleteMany(),
       prisma.casbinRule.deleteMany()
     ]
 

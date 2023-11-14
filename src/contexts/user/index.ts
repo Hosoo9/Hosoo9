@@ -2,6 +2,7 @@ import { getRole } from "@/lib/enum/user-role"
 import { defaultPassword, hashPassword } from "@/lib/pass"
 import prisma from "@/utils/prisma"
 import { PaginationParams } from "@/utils/types"
+import { Prisma } from "@prisma/client"
 import { User } from "@prisma/client"
 
 export const maskUser = (user: User | null) => {
@@ -15,11 +16,31 @@ export const maskUser = (user: User | null) => {
   }
 }
 
-export const getUserById = async (id: string) => {
+export const resetPassword = async (id: string) => {
+  return await prisma.user.update({
+    where: { id },
+    data: {
+      password: await defaultPassword(),
+    },
+  })
+}
+
+export const upsertUser = async (
+  id: string,
+  input: Prisma.UserCreateInput,
+) => {
+  return prisma.user.upsert({
+    where: { id },
+    create: { ...input, password: await defaultPassword() },
+    update: input
+  })
+}
+
+export const findUser = async (id: string) => {
   const user = await prisma.user.findUnique({
     where: {
-      id,
-    },
+      id
+    }
   })
 
   return maskUser(user)
@@ -36,15 +57,18 @@ export const getAllUsers = async ({ role }: { role?: string }) => {
 }
 
 export const getUsers = async ({ page, limit }: PaginationParams) => {
-  const users = await prisma.user.findMany({
+  const users = await prisma.user.findMany({ 
     skip: (page - 1) * limit,
     take: limit,
+    orderBy : {
+      createdAt: 'desc'
+    }
   })
 
-  return users.map((u) => maskUser(u))
+  return users
 }
 
-export const getById = async (id: string) => {
+export const findById = async (id: string) => {
   return await prisma.user.findUnique({
     where: {
       id,

@@ -10,27 +10,18 @@
 import "dayjs/locale/ja"
 
 import {
-  Container,
-  Grid,
-  Select,
-  Group,
-  Radio,
-  Input,
-  JsonInput,
-  Textarea,
-  Space,
-  Flex,
-  Button,
-  Checkbox,
+    Button,
+    Checkbox,
+    Input,
+    Radio,
+    Select,
+    Textarea
 } from "@mantine/core"
-import { SetStateAction, useId, useState } from "react"
-import { DatePicker, DatePickerInput } from "@mantine/dates"
-import { useTranslations } from "next-intl"
-import PostalToAddress from "./PostalToAddress"
-import { IMaskInput } from "react-imask"
-import SignaturePad from "./SignaturePad"
-import ContactHistory from "../ContactHistory"
+import { DatePickerInput } from "@mantine/dates"
 import { useForm } from "@mantine/form"
+import { useTranslations } from "next-intl"
+import { SetStateAction, useId, useState } from "react"
+import { IMaskInput } from "react-imask"
 
 function Schedulling() {
   const form = useForm({
