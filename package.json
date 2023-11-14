@@ -12,7 +12,7 @@
     "test": "vitest",
     "e2e": "playwright test",
     "dev-e2e": "NODE_ENV=test next dev -p 3005",
-    "migrate-test": "DATABASE_URL=sqlserver://localhost:1433;database=ariel_db_test;user=sa;password=Password123;encrypt=True;trustServerCertificate=true npx prisma migrate dev",
+    "migrate-test": "URSULA_DB_URL=sqlserver://localhost:1433;database=ariel_db_test;user=sa;password=Password123;encrypt=True;trustServerCertificate=true npx prisma migrate dev",
     "prepare": "husky install"
   },
   "prisma": {

@@ -11,7 +11,7 @@ services:
       - "3000:3000"
     command: pnpm run dev
     environment:
-      DATABASE_URL: postgresql://postgres:secret@db:5432/ariel
+      URSULA_DB_URL: postgresql://postgres:secret@db:5432/ariel
     volumes:
       - .:/app
       - /app/node_modules
