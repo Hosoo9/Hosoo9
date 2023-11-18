@@ -22,7 +22,7 @@ export const getEnforcer = async () => {
   const adapter = await getCasbinAdapter()
 
   if (enforcer === null) {
-    return await casbin.newEnforcer("src/rbac_with_deny_model.conf", adapter)
+    return await casbin.newEnforcer(`${process.env.ROOT}/casbin-policy.conf`, adapter)
   } else {
     return enforcer
   }

@@ -9,12 +9,10 @@ services:
       - db
     ports:
       - "3000:3000"
-    command: pnpm run dev
     environment:
       URSULA_DB_URL: postgresql://postgres:secret@db:5432/ariel
-    volumes:
-      - .:/app
-      - /app/node_modules
+      BASE_URL: http://localhost:3000
+      NEXTAUTH_URL: http://meter.otas.local
     profiles: ["app"]
 
   # db:
