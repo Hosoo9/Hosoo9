@@ -5,10 +5,12 @@ import { notFound } from "next/navigation"
 import Provider from "../../components/Provider"
 import ClientProviders from "../../components/providers/ClientProviders"
 import "./globals.css"
-
 import '@mantine/core/styles.css'
 import '@mantine/dates/styles.css'
+import 'mantine-datatable/styles.layer.css';
+import '@mantine/notifications/styles.css';
 import DateProviderWrapper from "@/components/providers/DatesProviderWrapper"
+import { ModalsProvider } from "@mantine/modals"
 
 export function generateStaticParams() {
   return [{ locale: "jp" }, { locale: "mn" }]
@@ -33,19 +35,21 @@ export default async function RootLayout({
     <html lang={locale}>
       <body suppressHydrationWarning={true}>
         <MantineProvider theme={{}}>
-          <LoadingProvider>
-            <Provider>
-              <NextIntlClientProvider locale={locale} messages={messages}>
-                <DateProviderWrapper>
-                  <ClientProviders params={{ locale }} messages={messages}>
-                    {children}
-                  </ClientProviders>
-                </DateProviderWrapper>
-                {/* <MainWrapper> */}
-                {/* </MainWrapper> */}
-              </NextIntlClientProvider>
-            </Provider>
-          </LoadingProvider>
+          <ModalsProvider>
+            <LoadingProvider>
+              <Provider>
+                <NextIntlClientProvider locale={locale} messages={messages}>
+                  <DateProviderWrapper>
+                    <ClientProviders params={{ locale }} messages={messages}>
+                      {children}
+                    </ClientProviders>
+                  </DateProviderWrapper>
+                  {/* <MainWrapper> */}
+                  {/* </MainWrapper> */}
+                </NextIntlClientProvider>
+              </Provider>
+            </LoadingProvider>
+          </ModalsProvider>
         </MantineProvider>
       </body>
     </html>

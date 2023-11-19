@@ -12,17 +12,11 @@ import { useEffect, useState } from "react"
 import classes from "./Sidebar.module.css"
 import { useQuery } from "@tanstack/react-query"
 
-const menuData = [
+const managerMenu = [
   { link: "/", label: "Draft operations", icon: IconTools },
   { link: "/operation/request", label: "Operation requests", icon: IconTools },
   { link: "/operation/approved", label: "Approved operations", icon: IconTools },
   { link: "/operation/completed", label: "Completed operations", icon: IconTools },
-  // { link: "", label: "Billing", icon: IconReceipt2 },
-  // { link: "", label: "Security", icon: IconFingerprint },
-  // { link: "", label: "SSH Keys", icon: IconKey },
-  // { link: "", label: "Databases", icon: IconDatabaseImport },
-  // { link: "", label: "Authentication", icon: Icon2fa },
-  // { link: "", label: "Other Settings", icon: IconSettings },
 ]
 
 const technicianMenu = [
@@ -30,7 +24,10 @@ const technicianMenu = [
   { link: "/operation/completed", label: "Completed operations", icon: IconTools },
 ]
 
-const paths = menuData.map((item) => item.link)
+const bureauMenu = [
+  ...managerMenu,
+  { link: "/users", label: "User management", icon: IconTools },
+]
 
 export function Sidebar() {
   const pathname = usePathname()
@@ -49,20 +46,22 @@ export function Sidebar() {
     },
     onSettled: (data: any) => {
       if (data) {
-        if (data.role === 2) {
-          setCurrentMenu(technicianMenu)
+        if (data.role === 3) {
+          setCurrentMenu(bureauMenu)
+        } else if (data.role === 1) {
+          setCurrentMenu(managerMenu)
         } else {
-          setCurrentMenu(menuData)
+          setCurrentMenu(technicianMenu)
         }
       }
     }
   })
 
   useEffect(() => {
-    if (paths.includes(pathname)) {
+    if (currentMenu.map((m: any) => m.link).includes(pathname)) {
       setActive(pathname)
     }
-  }, [pathname])
+  }, [pathname, currentMenu])
 
   const links = currentMenu.map((item: any) => (
     <Link
