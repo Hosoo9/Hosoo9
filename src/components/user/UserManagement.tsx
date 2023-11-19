@@ -10,6 +10,7 @@ import { useMutation, useQuery } from "@tanstack/react-query"
 import { DataTable, DataTableColumn } from "mantine-datatable"
 import { useTranslations } from "next-intl"
 import { useState } from "react"
+import { notifications } from '@mantine/notifications';
 
 type User = {
   id: string
@@ -46,6 +47,19 @@ export default function UserManagament() {
         }
       })
     },
+    onSuccess: () => {
+      notifications.show({
+        title: 'Reset password success',
+        message: 'User password has been reset',
+      })
+    },
+    onError: () => {
+      notifications.show({
+        title: 'Reset password failed',
+        message: 'User password has not been reset',
+        color: 'red',
+      })
+    }
   })
 
   const openResetModal = (record: User) => {
@@ -131,6 +145,7 @@ export default function UserManagament() {
 
   const onSave = async () => {
     await refetch()
+
     close()
   }
 

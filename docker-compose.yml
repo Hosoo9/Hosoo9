@@ -38,12 +38,6 @@ services:
     volumes:
       - "ursula-mssql-volume:/var/opt/mssql"
 
-  mailcatcher:
-    image: schickling/mailcatcher
-    ports:
-      - "1025:1025"
-      - "1080:1080"
-
 
 volumes:
   ursula-db-volume:

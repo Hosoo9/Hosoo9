@@ -13,6 +13,7 @@ import { Button, Container, Input, Select } from "@mantine/core"
 import { useForm } from "@mantine/form"
 import { useMutation } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
+import { notifications } from "@mantine/notifications"
 
 function UserForm({
   user: user,
@@ -44,6 +45,19 @@ function UserForm({
 
       return result.json()
     },
+    onSuccess: () => {
+      notifications.show({
+        title: 'Save success',
+        message: 'User has been saved',
+      })
+    },
+    onError: () => {
+      notifications.show({
+        title: 'Save failed',
+        message: 'User has not been saved',
+        color: 'red',
+      })
+    }
   })
 
   const t = useTranslations("OperationForm")

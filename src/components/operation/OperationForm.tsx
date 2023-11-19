@@ -30,6 +30,7 @@ import { SubmitForApproval } from "./SubmitForApproval"
 import { SubmitCompleteOperation } from "./SubmitCompleteOperation"
 import { ApproveOperationButton } from "./ApproveOperationButton"
 import { RejectOperationButton } from "./RejectOperationButton"
+import { notifications } from "@mantine/notifications"
 
 const setDate = (date: Date) => {
   return date === null ? null : new Date(date)
@@ -154,20 +155,31 @@ function OperationForm({ code }: { code: string }) {
     error: mutationError,
     mutateAsync,
   } = useMutation({
-    mutationFn: (newOperation: FormValues) => {
-      return fetch(`/api/operation/${code}`, {
+    mutationFn: async (newOperation: FormValues) => {
+      const result = await fetch(`/api/operation/${code}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(newOperation),
       })
-    },
-  })
 
-  if (error) {
-    console.log(error)
-  }
+      return result.json()
+    },
+    onSuccess: () => {
+      notifications.show({
+        title: 'Save success',
+        message: 'Operation has been saved',
+      })
+    },
+    onError: () => {
+      notifications.show({
+        title: 'Save failed',
+        message: 'Operation has not been saved',
+        color: 'red',
+      })
+    }
+  })
 
   const t = useTranslations("OperationForm")
 

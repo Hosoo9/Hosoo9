@@ -11,6 +11,7 @@ import 'mantine-datatable/styles.layer.css';
 import '@mantine/notifications/styles.css';
 import DateProviderWrapper from "@/components/providers/DatesProviderWrapper"
 import { ModalsProvider } from "@mantine/modals"
+import { Notifications } from "@mantine/notifications"
 
 export function generateStaticParams() {
   return [{ locale: "jp" }, { locale: "mn" }]
@@ -41,6 +42,7 @@ export default async function RootLayout({
                 <NextIntlClientProvider locale={locale} messages={messages}>
                   <DateProviderWrapper>
                     <ClientProviders params={{ locale }} messages={messages}>
+                      <Notifications />
                       {children}
                     </ClientProviders>
                   </DateProviderWrapper>

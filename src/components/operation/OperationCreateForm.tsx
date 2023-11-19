@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation"
 import { SetStateAction, useState } from "react"
 import { Flags } from "./Flags"
 import { WorkInformation } from "./WorkInformation"
+import { notifications } from "@mantine/notifications"
 
 function OperationForm() {
   const router = useRouter()
@@ -34,15 +35,30 @@ function OperationForm() {
   type FormValues = typeof form.values
 
   const { isLoading, isSuccess, error, mutateAsync } = useMutation({
-    mutationFn: (newOperation: FormValues) => {
-      return fetch("/api/operation", {
+    mutationFn: async (newOperation: FormValues) => {
+      const response = await fetch("/api/operation", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(newOperation),
       })
+
+      return response.json()
     },
+    onSuccess: () => {
+      notifications.show({
+        title: "Save success",
+        message: "Operation has been saved",
+      })
+    },
+    onError: () => {
+      notifications.show({
+        title: "Save failed",
+        message: "Operation has not been saved",
+        color: "red",
+      })
+    }
   })
 
   if (error) {
@@ -64,13 +80,7 @@ function OperationForm() {
   }
 
   const saveOperation = async (values: FormValues) => {
-    const response: Response = await mutateAsync(values)
-
-    if (response.status !== 201) {
-      return
-    }
-
-    const result = await response.json()
+    const result = await mutateAsync(values)
 
     router.push(`/operation/${result.code}`)
   }
