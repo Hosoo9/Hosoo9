@@ -206,6 +206,15 @@
     "role3": "ガス局",
     "id": "#",
     "username": "ユーザー名",
-    "name": "氏名"
+    "name": "氏名",
+    "new": "新規作成",
+    "create": "作成",
+    "save": "保存",
+    "submitForApproval": "承認申請",
+    "accept": "承認",
+    "reject": "却下",
+    "completeOperation": "作業完了",
+    "changeAccount": "アカウントを切り替える",
+    "logout": "ログアウト"
   }
 }
