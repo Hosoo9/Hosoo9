@@ -1,5 +1,4 @@
 import { Select } from "@mantine/core"
-import { DatePickerInput } from "@mantine/dates"
 import { useTranslations } from "next-intl"
 
 export const WorkInformation = ({ form, className }: { form: any, className?: string }) => {
@@ -12,12 +11,12 @@ export const WorkInformation = ({ form, className }: { form: any, className?: st
       {/* </Title> */}
 
       <div className="grid grid-cols-5 gap-3 py-5">
-        <div>
-          <DatePickerInput
-            label={t("exchangingDate")}
-            {...form.getInputProps("exchangingDate")}
-          />
-        </div>
+        {/* <div> */}
+        {/*   <DatePickerInput */}
+        {/*     label={t("exchangingDate")} */}
+        {/*     {...form.getInputProps("exchangingDate")} */}
+        {/*   /> */}
+        {/* </div> */}
         <div>
           <Select
             label={t("operationType")}

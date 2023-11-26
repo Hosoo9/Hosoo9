@@ -13,18 +13,18 @@ export const Flags = ({ form }: { form: any }) => {
             {...form.getInputProps("isSecurityWork", { type: "checkbox" })}
           />
         </div>
-        <div className="col-span-1">
-          <Checkbox
-            label={t("changedNotificationFlag")}
-            {...form.getInputProps("changedNotificationFlag", { type: "checkbox" })}
-          />
-        </div>
-        <div className="col-span-1">
-          <Checkbox
-            label={t("inspectionFlag")}
-            {...form.getInputProps("valveOpenFlag", { type: "checkbox" })}
-          />
-        </div>
+        {/* <div className="col-span-1"> */}
+        {/*   <Checkbox */}
+        {/*     label={t("changedNotificationFlag")} */}
+        {/*     {...form.getInputProps("changedNotificationFlag", { type: "checkbox" })} */}
+        {/*   /> */}
+        {/* </div> */}
+        {/* <div className="col-span-1"> */}
+        {/*   <Checkbox */}
+        {/*     label={t("inspectionFlag")} */}
+        {/*     {...form.getInputProps("valveOpenFlag", { type: "checkbox" })} */}
+        {/*   /> */}
+        {/* </div> */}
       </div>
     </>
   )

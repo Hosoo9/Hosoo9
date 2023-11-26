@@ -217,6 +217,8 @@
     "changeAccount": "アカウントを切り替える",
     "logout": "ログアウト",
     "nextStep": "次へ",
-    "back": "戻る"
+    "back": "戻る",
+    "postcardStartDate": "ハガキ出力日程開始日",
+    "postcardEndDate": "ハガキ出力日程終了日"
   }
 }

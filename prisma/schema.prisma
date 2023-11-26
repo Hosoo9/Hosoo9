@@ -105,6 +105,8 @@ model Operation {
   assignedWorkerId             String?    @db.NVarChar(30)
   memo                         String?    @db.NVarChar(500)
   scheduledDate                DateTime?  @db.Date
+  postcardStartDate            DateTime?  @db.Date
+  postcardEndDate              DateTime?  @db.Date
   scheduledTime                String?
   footprint                    Int?       @db.TinyInt
   postcardOutputTimestamp      DateTime?  @db.DateTime
