@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
 import ContactForm from "./ContactForm"
 import { LoaderComponent } from "../Provider"
+import { formatDate } from "@/utils/date-helper"
 
 type ContactItem = {
   contactType: string
@@ -25,10 +26,14 @@ export default function ContactHistory({ code }: { code: string }) {
     <Table.Tr key={index}>
       <Table.Td>{data.contactType}</Table.Td>
       <Table.Td>{data.contactedBy}</Table.Td>
-      <Table.Td>{data.contactedAt}</Table.Td>
+      <Table.Td>{formatDate(data.contactedAt)}</Table.Td>
       <Table.Td>{data.details}</Table.Td>
     </Table.Tr>
   ))
+
+  const onNewContactCreated = async () => {
+    await refetch()
+  }
 
   return (
     <div>
@@ -50,7 +55,8 @@ export default function ContactHistory({ code }: { code: string }) {
           </Table>
         </>
       )}
-      <ContactForm code={code} />
+
+      <ContactForm code={code} onContactCreated={onNewContactCreated} />
     </div>
   )
 }

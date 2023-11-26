@@ -5,6 +5,8 @@ import { ROLE_BUREAU } from "@/utils/constants"
 import { NextRequest, NextResponse } from "next/server"
 import { NOT_AUTHORIZED } from "../../../constants"
 import { stringToNumberEnum } from "@/utils/converters"
+import { recordNotFound } from "@/app/api/helpers"
+import { defaultPassword } from "@/lib/pass"
 
 export async function GET(
   request: NextRequest,
@@ -33,9 +35,16 @@ export async function PUT(
 
   const input = upsertUserSchema.parse(await request.json())
 
+  const dbUser = await findUser(params.id)
+
+  if (dbUser === null) {
+    return recordNotFound()
+  }
+
   const result = await upsertUser(params.id, {
     ...input,
     role: stringToNumberEnum(input.role),
+    password: dbUser.password || await defaultPassword(),
   })
 
   return NextResponse.json(result, { status: 200 })
