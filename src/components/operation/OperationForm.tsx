@@ -52,7 +52,7 @@ const transformData = (data: any) => {
     scheduledDate: setDate(data.scheduledDate),
     postcardStartDate: setDate(data.postcardStartDate),
     postcardEndDate: setDate(data.postcardEndDate),
-    postcardOutputTimestamp: setDate(data.postcardOutputTimestamp),
+    // postcardOutputTimestamp: setDate(data.postcardOutputTimestamp),
     absenceNoticeDeliveryDate: setDate(data.absenceNoticeDeliveryDate),
     footprint: data.footprint ? data.footprint.toString() : null,
     operationType: data.operationType ? data.operationType.toString() : null,

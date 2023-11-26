@@ -46,7 +46,7 @@ const update = {
   postcardStartDate: z.coerce.date().nullable(),
   postcardEndDate: z.coerce.date().nullable(),
   footprint: z.enum(["1", "2"]).nullable(),
-  postcardOutputTimestamp: z.coerce.date().nullable(),
+  // postcardOutputTimestamp: z.coerce.date().nullable(),
   absenceNoticeDeliveryDate: z.coerce.date().nullable(),
   exchangingDate: z.coerce.date().nullable(),
   operationType: z.enum(["1", "2", "3", "4", "5"]).nullable(),
