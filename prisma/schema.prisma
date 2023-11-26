@@ -91,6 +91,7 @@ model Operation {
   isSecurityWork               Boolean    @default(false)
   changedNotificationFlag      Boolean
   valveOpenFlag                Boolean
+  isExpiredExchange            Boolean    @default(false)
   status                       Int        @db.TinyInt @default(1)
   prePauseStatus               Int?       @db.TinyInt
   pauseTimestamp               DateTime?

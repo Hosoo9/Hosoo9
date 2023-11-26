@@ -15,6 +15,7 @@ import { useTranslations } from "next-intl"
 
 const managerMenu = [
   { link: "/", label: "Draft operations", icon: IconTools },
+  { link: "/operation/expired", label: "Expired operations", icon: IconTools },
   { link: "/operation/request", label: "Operation requests", icon: IconTools },
   { link: "/operation/approved", label: "Approved operations", icon: IconTools },
   { link: "/operation/completed", label: "Completed operations", icon: IconTools },

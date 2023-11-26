@@ -18,6 +18,10 @@ export async function GET(request: NextRequest) {
   const params = selectOperationSchema.parse({
     ...Object.fromEntries(request.nextUrl.searchParams),
     statuses: request.nextUrl.searchParams.getAll("statuses"),
+    isExpiredExchange:
+      request.nextUrl.searchParams.get("isExpiredExchange") === undefined
+        ? undefined
+        : request.nextUrl.searchParams.get("isExpiredExchange") === "true",
   })
 
   const operations = await findOperations(params, { includeUser: true })

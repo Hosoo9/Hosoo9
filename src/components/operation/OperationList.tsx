@@ -16,21 +16,32 @@ import { getOperationStateName } from "@/lib/enum/operation-state"
 import { useTranslations } from "next-intl"
 import { formatDate } from "@/utils/date-helper"
 
-function OperationList({ statuses, className }: { statuses?: number[], className?: string }) {
+function OperationList({
+  statuses,
+  className,
+  isExpired,
+}: {
+  statuses?: number[]
+  className?: string
+  isExpired?: boolean
+}) {
   const { isLoading, error, data } = useQuery({
     queryKey: [`operations${(statuses || [[]]).sort().join(",")}`],
-    queryFn: () => { 
-
-      const params = new URLSearchParams();
+    queryFn: () => {
+      const params = new URLSearchParams()
 
       for (const status of statuses || []) {
-        params.append('statuses', status.toString());
+        params.append("statuses", status.toString())
       }
 
-      return fetch(`/api/operation?${params.toString()}`).then((res) => res.json()) 
+      if (isExpired) {
+        params.append("isExpiredExchange", "true")
+      }
+
+      return fetch(`/api/operation?${params.toString()}`).then((res) => res.json())
     },
   })
-  
+
   const t = useTranslations("OperationForm")
 
   // const { data } = useQuery({
@@ -67,11 +78,11 @@ function OperationList({ statuses, className }: { statuses?: number[], className
             <Table.Thead>
               <Table.Tr>
                 <Table.Th>ID</Table.Th>
-                <Table.Th>{ t("status") }</Table.Th>
-                <Table.Th>{ t("operationType") }</Table.Th>
-                <Table.Th>{ t("createdBy") }</Table.Th>
-                <Table.Th>{ t("assignedWorker") }</Table.Th>
-                <Table.Th>{ t("createdAt") }</Table.Th>
+                <Table.Th>{t("status")}</Table.Th>
+                <Table.Th>{t("operationType")}</Table.Th>
+                <Table.Th>{t("createdBy")}</Table.Th>
+                <Table.Th>{t("assignedWorker")}</Table.Th>
+                <Table.Th>{t("createdAt")}</Table.Th>
               </Table.Tr>
             </Table.Thead>
             <tbody>{rows}</tbody>

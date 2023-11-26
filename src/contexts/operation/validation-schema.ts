@@ -88,6 +88,7 @@ export const selectOperationSchema = z.object({
   desiredDate: z.coerce.date().optional(),
   technicianName: z.string().optional(),
   statuses: z.array(z.coerce.number()).optional(),
+  isExpiredExchange: z.boolean().optional(),
 })
 
 export const createOperationSchema = z.object(create)

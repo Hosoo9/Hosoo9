@@ -31,6 +31,7 @@ type FindOperationsInput = PaginationParams & {
   customerName?: string
   desiredDate?: Date
   technicianName?: string
+  isExpiredExchange?: boolean
 }
 
 type CompleteOperationInput = {
@@ -113,6 +114,7 @@ export const findOperations = async ({
   desiredDate,
   customerName,
   technicianName,
+  isExpiredExchange,
 }: FindOperationsInput, { includeUser } = { includeUser: true }) => {
   return await prisma.operation.findMany({
     skip: (page - 1) * limit,
@@ -127,6 +129,7 @@ export const findOperations = async ({
       customerNumber: {
         startsWith: customerNumber,
       },
+      isExpiredExchange
     },
     include: {
       createdByUser: includeUser,
