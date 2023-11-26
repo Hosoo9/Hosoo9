@@ -12,6 +12,7 @@ import '@mantine/notifications/styles.css';
 import DateProviderWrapper from "@/components/providers/DatesProviderWrapper"
 import { ModalsProvider } from "@mantine/modals"
 import { Notifications } from "@mantine/notifications"
+import { unstable_setRequestLocale } from "next-intl/server"
 
 export function generateStaticParams() {
   return [{ locale: "jp" }, { locale: "mn" }]
@@ -31,6 +32,8 @@ export default async function RootLayout({
   } catch (error) {
     notFound()
   }
+
+  unstable_setRequestLocale(locale)
 
   return (
     <html lang={locale}>

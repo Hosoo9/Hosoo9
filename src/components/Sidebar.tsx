@@ -11,6 +11,7 @@ import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 import classes from "./Sidebar.module.css"
 import { useQuery } from "@tanstack/react-query"
+import { useTranslations } from "next-intl"
 
 const managerMenu = [
   { link: "/", label: "Draft operations", icon: IconTools },
@@ -33,6 +34,8 @@ export function Sidebar() {
   const pathname = usePathname()
   const [active, setActive] = useState(pathname)
   const [currentMenu, setCurrentMenu] = useState<any>([])
+
+  const t = useTranslations("OperationForm")
 
   const {
     isLoading: isCurrentUserLoading,
@@ -92,12 +95,12 @@ export function Sidebar() {
           className={classes.link}
         >
           <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />
-          <span>Change account</span>
+          <span>{ t("changeAccount") }</span>
         </Link>
 
         <Link href="#" onClick={() => signOut()} className={classes.link}>
           <IconLogout className={classes.linkIcon} stroke={1.5} />
-          <span>Logout</span>
+          <span>{ t("logout") }</span>
         </Link>
       </div>
     </nav>

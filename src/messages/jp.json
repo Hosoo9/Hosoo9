@@ -215,6 +215,8 @@
     "reject": "却下",
     "completeOperation": "作業完了",
     "changeAccount": "アカウントを切り替える",
-    "logout": "ログアウト"
+    "logout": "ログアウト",
+    "nextStep": "次へ",
+    "back": "戻る"
   }
 }

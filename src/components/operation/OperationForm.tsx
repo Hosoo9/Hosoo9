@@ -316,7 +316,7 @@ function OperationForm({ code }: { code: string }) {
               loading={mutationLoading}
               disabled={active === 0 || isLoading}
             >
-              Back
+              { t("back") }
             </Button>
             <Button
               onClick={nextStep}
@@ -325,7 +325,7 @@ function OperationForm({ code }: { code: string }) {
               disabled={isLoading}
               loading={mutationLoading}
             >
-              {lastStep ? "Save" : "Next step"}
+              {lastStep ? t("save") : t("nextStep")}
             </Button>
 
             {lastStep && shortForm && [1, 4].includes(operation.status) && (
@@ -334,7 +334,7 @@ function OperationForm({ code }: { code: string }) {
                 onSubmit={onRequestForApproval}
                 beforeSubmit={beforeSubmit}
               >
-                Submit for approval
+                { t("submitForApproval") }
               </SubmitForApproval>
             )}
 
@@ -345,10 +345,10 @@ function OperationForm({ code }: { code: string }) {
               currentUser.role === 3 && (
                 <>
                   <ApproveOperationButton beforeSubmit={beforeSubmit} code={code}>
-                    Approve
+                    { t("approve") }
                   </ApproveOperationButton>
                   <RejectOperationButton beforeSubmit={beforeSubmit} code={code}>
-                    Reject
+                    { t("reject") }
                   </RejectOperationButton>
                 </>
               )}
@@ -359,7 +359,7 @@ function OperationForm({ code }: { code: string }) {
                 code={code}
                 onSubmit={onCompleteOperation}
               >
-                Complete operation
+                { t("completeOperation") }
               </SubmitCompleteOperation>
             )}
           </Group>

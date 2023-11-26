@@ -2,11 +2,11 @@
 
 import "dayjs/locale/ja"
 
+import { useLoadingContext } from "@/utils/loadingProvider"
 import { Button, Table } from "@mantine/core"
 import { useQuery } from "@tanstack/react-query"
+import { useTranslations } from "next-intl"
 import Link from "next/link"
-import { useEffect } from "react"
-import { useLoadingContext } from "@/utils/loadingProvider"
 import { LoaderComponent } from "../Provider"
 
 const CompanyList = () => {
@@ -16,6 +16,8 @@ const CompanyList = () => {
     queryKey: ["company"],
     queryFn: () => fetch("/api/admin/company").then((res) => res.json()),
   })
+
+  const t = useTranslations("OperationForm")
 
   console.log("company data : ", data)
 
@@ -41,7 +43,7 @@ const CompanyList = () => {
     <div className="container mx-auto">
       <h2>Company List</h2>
       <Button component="a" href="/en/company/new">
-        New
+        { t("new") }
       </Button>
 
       <Table>
