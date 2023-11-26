@@ -31,6 +31,7 @@ import { SubmitCompleteOperation } from "./SubmitCompleteOperation"
 import { ApproveOperationButton } from "./ApproveOperationButton"
 import { RejectOperationButton } from "./RejectOperationButton"
 import { notifications } from "@mantine/notifications"
+import { OperationHeader } from "./OperationHeader"
 
 const setDate = (date: Date) => {
   return date === null ? null : new Date(date)
@@ -232,6 +233,7 @@ function OperationForm({ code }: { code: string }) {
         <LoaderComponent />
       ) : (
         <form onReset={form.onReset} onSubmit={form.onSubmit(saveOperation)}>
+          <OperationHeader code={code} />
           {/* <pre>{JSON.stringify(form.values, null, 2)}</pre> */}
           {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
           {/* <ContactHistory */}

@@ -77,6 +77,7 @@ model User {
 
   companyId     String?   @db.NVarChar(10)
   company       Company?  @relation(fields: [companyId], references: [id])
+  contacts      Contact[] @ignore
   Operations    Operation[]
   role          Int       @default(1)
   createdAt     DateTime  @default(now())
@@ -135,6 +136,7 @@ model Operation {
 
   signatureImgPath             String?
 
+  contacts                     Contact[]
   createdBy                    String     @db.NVarChar(30)
   createdByUser                User      @relation(fields: [createdBy], references: [id])
 
@@ -156,3 +158,18 @@ model Company {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @default(now()) @updatedAt
 }
+
+model Contact {
+  id                  BigInt    @id @default(autoincrement())
+  operationId         BigInt
+  operation           Operation @relation(fields: [operationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  contactType         Int       @db.TinyInt
+  details             String    @default("")
+  contactedAt         DateTime  @db.DateTime
+  contactedBy         String    @db.NVarChar(30)
+  contactedByUser     User      @relation(fields: [contactedBy], references: [id])
+  createdBy           String    @db.NVarChar(30)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @default(now()) @updatedAt
+}
+
