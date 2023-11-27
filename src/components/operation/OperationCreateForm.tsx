@@ -10,7 +10,7 @@
 import "dayjs/locale/ja"
 
 import { Button, Container, Group, Stepper } from "@mantine/core"
-import { useForm } from "@mantine/form"
+import { useForm, zodResolver } from "@mantine/form"
 import { useMutation } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
 import { useRouter } from "next/navigation"
@@ -18,11 +18,13 @@ import { SetStateAction, useState } from "react"
 import { Flags } from "./Flags"
 import { WorkInformation } from "./WorkInformation"
 import { notifications } from "@mantine/notifications"
+import { createOperationSchema } from "@/contexts/operation/validation-schema"
 
 function OperationForm() {
   const router = useRouter()
 
   const form = useForm({
+    validate: zodResolver(createOperationSchema),
     initialValues: {
       isSecurityWork: false,
       changedNotificationFlag: false,
