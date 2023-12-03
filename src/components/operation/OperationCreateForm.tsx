@@ -123,7 +123,7 @@ function OperationForm() {
         </Stepper>
 
         <Group justify="center" mt="xl">
-          <Button type="submit">Next step</Button>
+          <Button type="submit">{ t("nextStep") }</Button>
         </Group>
       </form>
     </Container>

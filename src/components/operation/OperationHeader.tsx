@@ -34,7 +34,6 @@ export const OperationHeader = ({
               <Button
                 component={Link}
                 href={`/operation/${code}/contacts`}
-                className="mr-5"
                 variant="outline"
               >
                 { t("contacts") }

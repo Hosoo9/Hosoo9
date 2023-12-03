@@ -57,7 +57,7 @@ function OperationList({
       <Table.Td>
         <Link href={`/operation/${o.code}`}>{o.code}</Link>
       </Table.Td>
-      <Table.Td>{getOperationStateName(o.status)}</Table.Td>
+      <Table.Td>{t(getOperationStateName(o.status).toLowerCase())}</Table.Td>
       <Table.Td>{t(`operationType${o.operationType}`)}</Table.Td>
       <Table.Td>{o.createdByUser.name}</Table.Td>
       <Table.Td>{o.assignedWorkerId}</Table.Td>

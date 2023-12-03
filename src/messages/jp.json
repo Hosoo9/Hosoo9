@@ -221,6 +221,18 @@
     "postcardStartDate": "ハガキ出力日程開始日",
     "postcardEndDate": "ハガキ出力日程終了日",
     "contactedBy": "連絡作業員",
-    "contacts": "連絡履歴"
+    "contacts": "連絡履歴",
+    "draft": "下書き",
+    "operations": "作業リスト",
+    "pendingApproval": "承認待ち",
+    "requested": "承認待ち",
+    "approved": "承認済み",
+    "approve": "承認",
+    "completed": "完了",
+    "alarmManagement": "警報器管理",
+    "userManagement": "ユーザー管理",
+    "paymentManagement": "収納管理",
+    "rejected": "拒否された",
+    "expired": "期限切れ"
   }
 }

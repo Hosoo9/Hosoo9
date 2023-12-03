@@ -157,10 +157,10 @@ export default function UserManagament() {
         <div className="py-5">
           <div className="flex items-center justify-between pb-5">
             <Title order={1} size="h4">
-              User management
+              { t("userManagement") }
             </Title>
 
-            <Button onClick={createUser}>Create</Button>
+            <Button onClick={createUser}>{ t("create") }</Button>
           </div>
 
           <Drawer opened={opened} onClose={close} title={user ? "Edit user" : "Create user"} position="right">

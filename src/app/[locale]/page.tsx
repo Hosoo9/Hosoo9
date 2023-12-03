@@ -16,7 +16,7 @@ export default async function Home() {
 
   return (
     <div>
-      <h2>Operation list</h2>
+      <h2>{ t("operations") }</h2>
       <Button component={Link} href="/operation/new">
         {t("new")}
       </Button>
