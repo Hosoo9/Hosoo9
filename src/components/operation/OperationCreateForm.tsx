@@ -113,13 +113,13 @@ function OperationForm() {
 
           <Stepper.Step label={t("workScheduleInformation")}></Stepper.Step>
           <Stepper.Step label={t("customerInformation")}></Stepper.Step>
-          <Stepper.Step label={t("workInformation")}></Stepper.Step>
-          <Stepper.Step
-            label={t("removingMeterInformation")}
-            className="py-2"
-          ></Stepper.Step>
+          {/* <Stepper.Step label={t("workInformation")}></Stepper.Step> */}
+          {/* <Stepper.Step */}
+          {/*   label={t("removingMeterInformation")} */}
+          {/*   className="py-2" */}
+          {/* ></Stepper.Step> */}
 
-          <Stepper.Step label={t("installingMeterInformation")}></Stepper.Step>
+          {/* <Stepper.Step label={t("installingMeterInformation")}></Stepper.Step> */}
         </Stepper>
 
         <Group justify="center" mt="xl">
@@ -132,4 +132,4 @@ function OperationForm() {
 
 export default OperationForm
 
-//To do comment
+// To do comment

@@ -133,6 +133,9 @@ export const findOperations = async ({
     },
     include: {
       createdByUser: includeUser,
+    },
+    orderBy: {
+      createdBy: "desc"
     }
   })
 }

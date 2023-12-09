@@ -1,6 +1,7 @@
 import { Button } from "@mantine/core"
 import { useMutation } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
+import { useRouter } from "next/navigation"
 
 export const RejectOperationButton = ({
   code,
@@ -13,6 +14,7 @@ export const RejectOperationButton = ({
   onSubmit?: (result: any) => void,
   beforeSubmit?: () => Promise<void>
 }) => {
+  const router = useRouter()
   const t = useTranslations("OperationForm")
 
   const { isLoading, isSuccess, error, mutateAsync } = useMutation({
@@ -37,6 +39,8 @@ export const RejectOperationButton = ({
     if (onSubmit) {
       onSubmit(result)
     }
+
+    router.push("/operation/request")
   }
 
   return (
