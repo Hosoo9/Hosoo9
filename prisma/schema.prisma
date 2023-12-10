@@ -174,3 +174,18 @@ model Contact {
   updatedAt           DateTime  @default(now()) @updatedAt
 }
 
+
+model MeterManufacturerMaster {
+  id                  Int    @id @default(autoincrement())
+  code                String @db.Char(2)
+}
+
+model MeterSizeMaster {
+  id                  Int    @id @default(autoincrement())
+  code                String @db.NVarChar(15)
+}
+
+model MeterModelMaster {
+  id                  Int    @id @default(autoincrement())
+  code                String @db.Char(2)
+}

@@ -233,6 +233,17 @@
     "userManagement": "ユーザー管理",
     "paymentManagement": "収納管理",
     "rejected": "拒否された",
-    "expired": "期限切れ"
+    "expired": "期限切れ",
+    "code": "コード",
+    "meterManufacturerManagement": "メーカーの管理",
+    "meterManufacturer": "メーカーの",
+    "edit": "編集",
+    "create": "作成する",
+    "areYouSureToDelete": "消去してもよろしいですか。",
+    "delete": "消去",
+    "cancel": "キャンセル",
+    "deleted": "削除されました",
+    "deleteFailed": "削除に失敗しました",
+    "saved": "保存されました"
   }
 }
