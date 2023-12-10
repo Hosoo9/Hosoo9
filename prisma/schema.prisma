@@ -116,18 +116,24 @@ model Operation {
   operationType                Int?       @db.TinyInt
   completedAt                  DateTime?  @db.DateTime
   exchangingDate               DateTime?  @db.DateTime
-  removingMeterId              String?    @db.NVarChar(30)
+  removingMeterManufacturer    String?    @db.NVarChar(2)
+  removingMeterModel           String?    @db.NVarChar(2)
+  removingMeterSize            String?    @db.NVarChar(15)
   removingMeterNumber          String?    @db.NVarChar(20)
   removingMeterValue           Int?       @db.Int
   removingMeterInspectionDate  DateTime?  @db.DateTime
   removingMeterImagePath       String?
+  removingMeterMaximumUsage    Int?
   referenceDate                DateTime?  @db.DateTime
   position                     String?
-  installingMeterId            String?
+  installingMeterManufacturer  String?    @db.NVarChar(2)
+  installingMeterModel         String?    @db.NVarChar(2)
+  installingMeterSize          String?    @db.NVarChar(15)
   installingMeterNumber        String?
   installingMeterValue         Int?
   installingMeterReferenceDate DateTime? @db.Date
   installingMeterImagePath     String?
+  installingMeterMaximumUsage  Int?
   beforeWorkInspectionType     Int?       @db.TinyInt
   beforeWorkKpa                Int?       @db.Int
   beforeWorkResult             Boolean?
@@ -177,7 +183,7 @@ model Contact {
 
 model MeterManufacturerMaster {
   id                  Int    @id @default(autoincrement())
-  code                String @db.Char(2)
+  code                String @db.NVarChar(2)
 }
 
 model MeterSizeMaster {
@@ -187,5 +193,5 @@ model MeterSizeMaster {
 
 model MeterModelMaster {
   id                  Int    @id @default(autoincrement())
-  code                String @db.Char(2)
+  code                String @db.NVarChar(2)
 }
