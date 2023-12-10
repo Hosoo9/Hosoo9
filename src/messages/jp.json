@@ -237,6 +237,8 @@
     "code": "コード",
     "meterManufacturerManagement": "メーカーの管理",
     "meterManufacturer": "メーカーの",
+    "meterModelManagement": "メーターモデル管理",
+    "meterModel": "メーターモデル",
     "edit": "編集",
     "create": "作成する",
     "areYouSureToDelete": "消去してもよろしいですか。",
