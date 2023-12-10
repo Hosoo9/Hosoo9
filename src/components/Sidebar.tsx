@@ -59,6 +59,7 @@ export function Sidebar({ onBurgerClick, opened }: { onBurgerClick: () => void, 
     { link: "/users", label: t("userManagement"), icon: IconTools },
     { link: "/meter_manufacturers", label: t("meterManufacturerManagement"), icon: IconTools },
     { link: "/meter_models", label: t("meterModelManagement"), icon: IconTools },
+    { link: "/meter_sizes", label: t("meterSizeManagement"), icon: IconTools },
   ]
 
   const {

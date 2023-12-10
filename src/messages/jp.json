@@ -246,6 +246,8 @@
     "cancel": "キャンセル",
     "deleted": "削除されました",
     "deleteFailed": "削除に失敗しました",
-    "saved": "保存されました"
+    "saved": "保存されました",
+    "meterSizeManagement": "メーターサイズ管理",
+    "meterSize": "メーターサイズ"
   }
 }
