@@ -40,13 +40,13 @@ test('operation create', async ({ page }) => {
 
   await page.getByLabel('Propane').click()
   await page.getByLabel('Cash').click()
-  
+
   await page.getByTestId('applicationDate').click()
   await page.locator(`[data-today="true"]`).last().click()
 
   await page.getByTestId('desiredDate').click()
   await page.locator(`[data-today="true"]`).last().click()
-  
+
   await page.getByLabel("Remarks").fill('some remark')
   await page.getByTestId("customerNumber").fill("CN1234")
 
@@ -96,7 +96,7 @@ test('operation reset', async ({ page }) => {
 
   await page.getByLabel('Propane').click()
   await page.getByLabel('Cash').click()
-  
+
   await page.getByTestId('applicationDate').click()
   await page.locator(`[data-today="true"]`).click()
 

@@ -18,8 +18,8 @@ export const authOptions: NextAuthOptions = {
       // You can specify whatever fields you are expecting to be submitted.
       // e.g. domain, username, password, 2FA token, etc.
       credentials: {
-        username: { label: "Id", type: "text", placeholder: "manager" },
-        password: { label: "Password", type: "password" },
+        username: { label: "ログインID", type: "text", placeholder: "" },
+        password: { label: "パスワード", type: "password" },
       },
       async authorize(credentials, req) {
         // You need to provide your own logic here that takes the credentials

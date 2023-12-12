@@ -19,16 +19,16 @@ export default function Welcome({ users }: WelcomeProps) {
   return (
     <div>
       <div>
-        <h1 className="text-center text-6xl font-bold">Garudahashira</h1>
+        <h1 className="text-center text-6xl font-bold">ホーム画面</h1>
         <div>
-          Signed in as {session.user?.email} <br />
-          Signed in as {getRoleName(session.user?.role)} <br />
+          ユーザー： {session.user?.name} <br />
+          役職： {getRoleName(session.user?.role)} <br />
         </div>
         <div>
           <Button variant="filled">Button</Button>
         </div>
 
-        <Button variant="outline" onClick={() => signOut()}>Sign out</Button>
+        <Button variant="outline" onClick={() => signOut()}>ログアウト</Button>
       </div>
     </div>
   )
