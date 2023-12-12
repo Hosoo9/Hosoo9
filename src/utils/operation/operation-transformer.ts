@@ -9,7 +9,7 @@ export const transformOperation = (data: any) => {
   return {
     ...data,
     // scheduledDatetime: setDate(data.scheduledDatetime),
-    postcardOutputTimestamp: setDate(data.postcardOutputTimestamp),
+    // postcardOutputTimestamp: setDate(data.postcardOutputTimestamp),
     absenceNoticeDeliveryDate: setDate(data.absenceNoticeDeliveryDate),
     footprint: data.footprint ? data.footprint.toString() : null,
     operationType: data.operationType ? data.operationType.toString() : null,

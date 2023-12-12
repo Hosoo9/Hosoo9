@@ -30,6 +30,8 @@ import { SubmitForApproval } from "./SubmitForApproval"
 import { SubmitCompleteOperation } from "./SubmitCompleteOperation"
 import { ApproveOperationButton } from "./ApproveOperationButton"
 import { RejectOperationButton } from "./RejectOperationButton"
+import { notifications } from "@mantine/notifications"
+import { OperationHeader } from "./OperationHeader"
 
 const setDate = (date: Date) => {
   return date === null ? null : new Date(date)
@@ -49,7 +51,15 @@ const transformData = (data: any) => {
   return {
     ...data,
     scheduledDate: setDate(data.scheduledDate),
-    postcardOutputTimestamp: setDate(data.postcardOutputTimestamp),
+    postcardStartDate: setDate(data.postcardStartDate),
+    postcardEndDate: setDate(data.postcardEndDate),
+    // postcardOutputTimestamp: setDate(data.postcardOutputTimestamp),
+    installingMeterModel: data.installingMeterModel ? data.installingMeterModel.toString() : null,
+    removingMeterModel: data.removingMeterModel ? data.removingMeterModel.toString() : null,
+    installingMeterManufacturer: data.installingMeterManufacturer ? data.installingMeterManufacturer.toString() : null,
+    removingMeterManufacturer: data.removingMeterManufacturer ? data.removingMeterManufacturer.toString() : null,
+    installingMeterSize: data.installingMeterSize ? data.installingMeterSize.toString() : null,
+    removingMeterSize: data.removingMeterSize ? data.removingMeterSize.toString() : null,
     absenceNoticeDeliveryDate: setDate(data.absenceNoticeDeliveryDate),
     footprint: data.footprint ? data.footprint.toString() : null,
     operationType: data.operationType ? data.operationType.toString() : null,
@@ -57,6 +67,8 @@ const transformData = (data: any) => {
     referenceDate: setDate(data.referenceDate),
     removingMeterInspectionDate: setDate(data.removingMeterInspectionDate),
     installingMeterReferenceDate: setDate(data.installingMeterReferenceDate),
+    installingMeterMaximumUsage: data.installingMeterMaximumUsage || "",
+    removingMeterMaximumUsage: data.removingMeterMaximumUsage || "",
     beforeWorkResult: setBoolean(data.beforeWorkResult),
     afterWorkResult: setBoolean(data.afterWorkResult),
     position: data.position === null ? "" : data.position,
@@ -154,20 +166,31 @@ function OperationForm({ code }: { code: string }) {
     error: mutationError,
     mutateAsync,
   } = useMutation({
-    mutationFn: (newOperation: FormValues) => {
-      return fetch(`/api/operation/${code}`, {
+    mutationFn: async (newOperation: FormValues) => {
+      const result = await fetch(`/api/operation/${code}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(newOperation),
       })
-    },
-  })
 
-  if (error) {
-    console.log(error)
-  }
+      return result.json()
+    },
+    onSuccess: () => {
+      notifications.show({
+        title: 'Save success',
+        message: 'Operation has been saved',
+      })
+    },
+    onError: () => {
+      notifications.show({
+        title: 'Save failed',
+        message: 'Operation has not been saved',
+        color: 'red',
+      })
+    }
+  })
 
   const t = useTranslations("OperationForm")
 
@@ -218,6 +241,7 @@ function OperationForm({ code }: { code: string }) {
         <LoaderComponent />
       ) : (
         <form onReset={form.onReset} onSubmit={form.onSubmit(saveOperation)}>
+          <OperationHeader code={code} />
           {/* <pre>{JSON.stringify(form.values, null, 2)}</pre> */}
           {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
           {/* <ContactHistory */}
@@ -304,7 +328,7 @@ function OperationForm({ code }: { code: string }) {
               loading={mutationLoading}
               disabled={active === 0 || isLoading}
             >
-              Back
+              { t("back") }
             </Button>
             <Button
               onClick={nextStep}
@@ -313,7 +337,7 @@ function OperationForm({ code }: { code: string }) {
               disabled={isLoading}
               loading={mutationLoading}
             >
-              {lastStep ? "Save" : "Next step"}
+              {lastStep ? t("save") : t("nextStep")}
             </Button>
 
             {lastStep && shortForm && [1, 4].includes(operation.status) && (
@@ -322,7 +346,7 @@ function OperationForm({ code }: { code: string }) {
                 onSubmit={onRequestForApproval}
                 beforeSubmit={beforeSubmit}
               >
-                Submit for approval
+                { t("submitForApproval") }
               </SubmitForApproval>
             )}
 
@@ -333,10 +357,10 @@ function OperationForm({ code }: { code: string }) {
               currentUser.role === 3 && (
                 <>
                   <ApproveOperationButton beforeSubmit={beforeSubmit} code={code}>
-                    Approve
+                    { t("approve") }
                   </ApproveOperationButton>
                   <RejectOperationButton beforeSubmit={beforeSubmit} code={code}>
-                    Reject
+                    { t("reject") }
                   </RejectOperationButton>
                 </>
               )}
@@ -347,7 +371,7 @@ function OperationForm({ code }: { code: string }) {
                 code={code}
                 onSubmit={onCompleteOperation}
               >
-                Complete operation
+                { t("completeOperation") }
               </SubmitCompleteOperation>
             )}
           </Group>

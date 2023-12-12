@@ -77,6 +77,7 @@ model User {
 
   companyId     String?   @db.NVarChar(10)
   company       Company?  @relation(fields: [companyId], references: [id])
+  contacts      Contact[] @ignore
   Operations    Operation[]
   role          Int       @default(1)
   createdAt     DateTime  @default(now())
@@ -90,6 +91,7 @@ model Operation {
   isSecurityWork               Boolean    @default(false)
   changedNotificationFlag      Boolean
   valveOpenFlag                Boolean
+  isExpiredExchange            Boolean    @default(false)
   status                       Int        @db.TinyInt @default(1)
   prePauseStatus               Int?       @db.TinyInt
   pauseTimestamp               DateTime?
@@ -105,6 +107,8 @@ model Operation {
   assignedWorkerId             String?    @db.NVarChar(30)
   memo                         String?    @db.NVarChar(500)
   scheduledDate                DateTime?  @db.Date
+  postcardStartDate            DateTime?  @db.Date
+  postcardEndDate              DateTime?  @db.Date
   scheduledTime                String?
   footprint                    Int?       @db.TinyInt
   postcardOutputTimestamp      DateTime?  @db.DateTime
@@ -112,18 +116,24 @@ model Operation {
   operationType                Int?       @db.TinyInt
   completedAt                  DateTime?  @db.DateTime
   exchangingDate               DateTime?  @db.DateTime
-  removingMeterId              String?    @db.NVarChar(30)
+  removingMeterManufacturer    String?    @db.NVarChar(2)
+  removingMeterModel           String?    @db.NVarChar(2)
+  removingMeterSize            String?    @db.NVarChar(15)
   removingMeterNumber          String?    @db.NVarChar(20)
   removingMeterValue           Int?       @db.Int
   removingMeterInspectionDate  DateTime?  @db.DateTime
   removingMeterImagePath       String?
+  removingMeterMaximumUsage    Int?
   referenceDate                DateTime?  @db.DateTime
   position                     String?
-  installingMeterId            String?
+  installingMeterManufacturer  String?    @db.NVarChar(2)
+  installingMeterModel         String?    @db.NVarChar(2)
+  installingMeterSize          String?    @db.NVarChar(15)
   installingMeterNumber        String?
   installingMeterValue         Int?
   installingMeterReferenceDate DateTime? @db.Date
   installingMeterImagePath     String?
+  installingMeterMaximumUsage  Int?
   beforeWorkInspectionType     Int?       @db.TinyInt
   beforeWorkKpa                Int?       @db.Int
   beforeWorkResult             Boolean?
@@ -133,6 +143,7 @@ model Operation {
 
   signatureImgPath             String?
 
+  contacts                     Contact[]
   createdBy                    String     @db.NVarChar(30)
   createdByUser                User      @relation(fields: [createdBy], references: [id])
 
@@ -153,4 +164,34 @@ model Company {
   users       User[]       @ignore
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @default(now()) @updatedAt
+}
+
+model Contact {
+  id                  BigInt    @id @default(autoincrement())
+  operationId         BigInt
+  operation           Operation @relation(fields: [operationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  contactType         Int       @db.TinyInt
+  details             String    @default("")
+  contactedAt         DateTime  @db.DateTime
+  contactedBy         String    @db.NVarChar(30)
+  contactedByUser     User      @relation(fields: [contactedBy], references: [id])
+  createdBy           String    @db.NVarChar(30)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @default(now()) @updatedAt
+}
+
+
+model MeterManufacturerMaster {
+  id                  Int    @id @default(autoincrement())
+  code                String @db.NVarChar(2)
+}
+
+model MeterSizeMaster {
+  id                  Int    @id @default(autoincrement())
+  code                String @db.NVarChar(15)
+}
+
+model MeterModelMaster {
+  id                  Int    @id @default(autoincrement())
+  code                String @db.NVarChar(2)
 }

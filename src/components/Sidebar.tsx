@@ -1,41 +1,66 @@
-"use client"
-
-import {
-    IconLogout,
-    IconSwitchHorizontal,
-    IconTools
-} from "@tabler/icons-react"
+import { IconLogout, IconSwitchHorizontal, IconTools } from "@tabler/icons-react"
 import { signOut } from "next-auth/react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import classes from "./Sidebar.module.css"
 import { useQuery } from "@tanstack/react-query"
+import { useTranslations } from "next-intl"
+import { Burger } from "@mantine/core"
 
-const menuData = [
-  { link: "/", label: "Draft operations", icon: IconTools },
-  { link: "/operation/request", label: "Operation requests", icon: IconTools },
-  { link: "/operation/approved", label: "Approved operations", icon: IconTools },
-  { link: "/operation/completed", label: "Completed operations", icon: IconTools },
-  // { link: "", label: "Billing", icon: IconReceipt2 },
-  // { link: "", label: "Security", icon: IconFingerprint },
-  // { link: "", label: "SSH Keys", icon: IconKey },
-  // { link: "", label: "Databases", icon: IconDatabaseImport },
-  // { link: "", label: "Authentication", icon: Icon2fa },
-  // { link: "", label: "Other Settings", icon: IconSettings },
-]
+export function Sidebar({ onBurgerClick, opened }: { onBurgerClick: () => void, opened: boolean }) {
+  const router = useRouter()
 
-const technicianMenu = [
-  { link: "/operation/approved", label: "Approved operations", icon: IconTools },
-  { link: "/operation/completed", label: "Completed operations", icon: IconTools },
-]
-
-const paths = menuData.map((item) => item.link)
-
-export function Sidebar() {
   const pathname = usePathname()
   const [active, setActive] = useState(pathname)
   const [currentMenu, setCurrentMenu] = useState<any>([])
+
+  const t = useTranslations("OperationForm")
+
+  const managerMenu = [
+    { link: "/jp", label: `${t("draft")}${t("operations")}`, icon: IconTools },
+    {
+      link: "/jp/operation/expired",
+      label: `${t("expired")}${t("operations")}`,
+      icon: IconTools,
+    },
+    {
+      link: "/jp/operation/request",
+      label: `${t("pendingApproval")}${t("operations")}`,
+      icon: IconTools,
+    },
+    {
+      link: "/jp/operation/approved",
+      label: `${t("approved")}${t("operations")}`,
+      icon: IconTools,
+    },
+    {
+      link: "/jp/operation/completed",
+      label: `${t("completed")}${t("operations")}`,
+      icon: IconTools,
+    },
+  ]
+
+  const technicianMenu = [
+    {
+      link: "/jp/operation/approved",
+      label: `${t("approved")}${t("operations")}`,
+      icon: IconTools,
+    },
+    {
+      link: "/jp/operation/completed",
+      label: `${t("completed")}${t("operations")}`,
+      icon: IconTools,
+    },
+  ]
+
+  const bureauMenu = [
+    ...managerMenu,
+    { link: "/jp/users", label: t("userManagement"), icon: IconTools },
+    { link: "/jp/meter_manufacturers", label: t("meterManufacturerManagement"), icon: IconTools },
+    { link: "/jp/meter_models", label: t("meterModelManagement"), icon: IconTools },
+    { link: "/jp/meter_sizes", label: t("meterSizeManagement"), icon: IconTools },
+  ]
 
   const {
     isLoading: isCurrentUserLoading,
@@ -49,20 +74,31 @@ export function Sidebar() {
     },
     onSettled: (data: any) => {
       if (data) {
-        if (data.role === 2) {
-          setCurrentMenu(technicianMenu)
+        if (data.role === 3) {
+          setCurrentMenu(bureauMenu)
+        } else if (data.role === 1) {
+          setCurrentMenu(managerMenu)
         } else {
-          setCurrentMenu(menuData)
+          setCurrentMenu(technicianMenu)
         }
       }
-    }
+    },
   })
 
   useEffect(() => {
-    if (paths.includes(pathname)) {
+    if (currentMenu.map((m: any) => m.link).includes(pathname)) {
       setActive(pathname)
     }
-  }, [pathname])
+  }, [pathname, currentMenu])
+
+  const onLinkClick = (link: string) => {
+    setActive(link)
+
+    if (opened) {
+      router.push(link)
+      onBurgerClick()
+    }
+  }
 
   const links = currentMenu.map((item: any) => (
     <Link
@@ -70,6 +106,7 @@ export function Sidebar() {
       data-active={item.link === active || undefined}
       href={item.link}
       key={item.label}
+      onClick={() => onLinkClick(item.link)}
     >
       <item.icon className={classes.linkIcon} stroke={1.5} />
       <span>{item.label}</span>
@@ -78,7 +115,18 @@ export function Sidebar() {
 
   return (
     <nav className={classes.navbar}>
-      <div className={classes.navbarMain}>
+      { opened &&
+        <div className={classes.burger}>
+          <Burger
+            color="white"
+            opened={opened}
+            onClick={onBurgerClick}
+            hiddenFrom="sm"
+            size="sm"
+          />
+        </div>
+      }
+      <div className={classes.navbarMain} style={{ paddingTop: opened ? "12px" : "0px" }}>
         {/* <Group className={classes.header} justify="space-between"> */}
         {/*  <Code fw={700} className={classes.version}> */}
         {/*     v3.1.2 */}
@@ -88,17 +136,14 @@ export function Sidebar() {
       </div>
 
       <div className={classes.footer}>
-        <Link
-          href={`/api/auth/signin?callbackUrl=/`}
-          className={classes.link}
-        >
+        <Link href={`/api/auth/signin?callbackUrl=/`} className={classes.link}>
           <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />
-          <span>Change account</span>
+          <span>{t("changeAccount")}</span>
         </Link>
 
         <Link href="#" onClick={() => signOut()} className={classes.link}>
           <IconLogout className={classes.linkIcon} stroke={1.5} />
-          <span>Logout</span>
+          <span>{t("logout")}</span>
         </Link>
       </div>
     </nav>

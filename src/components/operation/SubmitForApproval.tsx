@@ -1,6 +1,7 @@
 import { Button } from "@mantine/core"
 import { useMutation } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
+import { useRouter } from "next/navigation"
 
 export const SubmitForApproval = ({
   code,
@@ -13,11 +14,12 @@ export const SubmitForApproval = ({
   beforeSubmit?: () => Promise<void>,
   onSubmit?: (result: any) => void
 }) => {
+  const router = useRouter()
   const t = useTranslations("OperationForm")
 
   const { isLoading, isSuccess, error, mutateAsync } = useMutation({
-    mutationFn: async (operation: any) => {
-      const result = await fetch(`/api/operation/${code}/request`, {
+    mutationFn: (operation: any) => {
+      const result = fetch(`/api/operation/${code}/request`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -25,7 +27,7 @@ export const SubmitForApproval = ({
         body: JSON.stringify(operation),
       })
 
-      return result.json()
+      return result
     },
   })
 
@@ -40,6 +42,8 @@ export const SubmitForApproval = ({
       if (onSubmit) {
         onSubmit(result)
       }
+
+      router.push("/operation/request")
     }
   }
 

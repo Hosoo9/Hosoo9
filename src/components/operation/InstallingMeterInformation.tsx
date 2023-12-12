@@ -1,8 +1,10 @@
-import { Input, NumberInput, Radio, Select, Title } from "@mantine/core"
+import { Input, NumberInput, Radio, Select, TextInput, Title } from "@mantine/core"
 import { MonthPickerInput } from "@mantine/dates"
 import { useTranslations } from "next-intl"
-import { MeterSelect } from "./MeterSelect"
+import { MeterModelSelect } from "./MeterModelSelect"
+import { MeterManufacturerSelect } from "./MeterManufacturerSelect"
 import { TakePicture } from "./TakePicture"
+import { MeterSizeSelect } from "./MeterSizeSelect"
 
 export const InstallingMeterInformation = ({
   form,
@@ -91,7 +93,17 @@ export const InstallingMeterInformation = ({
         </div>
       </div>
 
-      <MeterSelect form={form} name="installingMeterId" />
+      <div className="grid grid-cols-5 gap-3 py-5">
+        <MeterModelSelect form={form} name="installingMeterModel" />
+        <MeterManufacturerSelect form={form} name="installingMeterManufacturer" />
+        <MeterSizeSelect form={form} name="installingMeterSize" />
+        <NumberInput
+          label={t("meterMaximumUsage")}
+          data-testid="meterMaximumUsage"
+          name="installingMeterMaximumUsage"
+          {...form.getInputProps("installingMeterMaximumUsage")}
+        />
+      </div>
 
       <div className="grid grid-cols-5 gap-3 pb-5">
         <div>
