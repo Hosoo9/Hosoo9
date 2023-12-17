@@ -42,21 +42,40 @@ export const CustomerSearch = ({ onSuccess }: { onSuccess: (data: any) => void }
     data,
     refetch,
   } = useQuery({
-    queryKey: [`customer-search`, customerNumber, meterNumber, phoneNumber],
+    queryKey: [`customer-search`, customerNumber, meterNumber, phoneNumber, code],
     queryFn: async () => {
-      if (customerNumber === "") {
+      if (customerNumber === "" && meterNumber === "" && phoneNumber === "" && code === "") {
         return null
       }
 
-      const result = await fetch(`/api/customer-search?customerNumber=${customerNumber}`)
+      const params = new URLSearchParams()
+
+      if (customerNumber) {
+        params.append("customerNumber", customerNumber)
+      }
+
+      if (meterNumber) {
+        params.append("meterNumber", meterNumber)
+      }
+
+      if (phoneNumber) {
+        params.append("phoneNumber", phoneNumber)
+      }
+
+      if (code) {
+        params.append("code", code)
+      }
+
+      const result = await fetch(`/api/customer-search?${params.toString()}`)
       return result.json()
     },
     cacheTime: 0,
     onSuccess: (data) => {
       if (data) {
-        if (data.length === 1) {
+        if (data.length <= 1) {
           onSuccess(transformCustomerData(data[0]))
           reset()
+          close()
         } else {
           setSelectionData(data)
           setSelectionProcess(true)
@@ -86,13 +105,10 @@ export const CustomerSearch = ({ onSuccess }: { onSuccess: (data: any) => void }
   }
 
   const handleSearchClick = () => {
-    if (customerNumberInput === "") {
-      return
-    }
-
     setCustomerNumber(customerNumberInput)
-    setMeterNumber(customerNumberInput)
-    setPhoneNumber(customerNumberInput)
+    setMeterNumber(meterNumberInput)
+    setPhoneNumber(phoneNumberInput)
+    setCode(codeInput)
   }
 
   const reset = () => {

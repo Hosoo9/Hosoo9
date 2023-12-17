@@ -14,17 +14,9 @@ export async function GET(request: NextRequest) {
   const customerNumber = request.nextUrl.searchParams.get("customerNumber")
   const operationCode = request.nextUrl.searchParams.get("operationCode")
 
-  if (customerNumber === null && operationCode === null) {
-    return NextResponse.json({ errors: "customerNumber or operationCode is required" }, { status: 400 })
-  }
+  const number = operationCode ? (await findOperation(operationCode as string))?.customerNumber : customerNumber
 
-  const number = customerNumber ? customerNumber : (await findOperation(operationCode as string))?.customerNumber
-
-  if (!number) {
-    return NextResponse.json({ errors: "customer not found" }, { status: 422 })
-  }
-
-  const result = await searchCustomer(number)
+  const result = await searchCustomer({ customerNumber: number })
 
   return NextResponse.json(result, { status: 200 })
 }

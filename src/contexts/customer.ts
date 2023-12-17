@@ -1,11 +1,25 @@
-import { randEmail, randFutureDate, randHexaDecimal, randNumber, randPhoneNumber } from "@ngneat/falso"
+import {
+  randEmail,
+  randFutureDate,
+  randHexaDecimal,
+  randNumber,
+  randPhoneNumber,
+} from "@ngneat/falso"
 import dayjs from "dayjs"
 
-export const searchCustomer = async (customerNumber: string) => {
-  return [
-    generateCustomer(customerNumber),
-    generateCustomer(randNumber({ min: 10000, max: 99999 }).toString()),
-  ]
+type SearchCustomerInput = {
+  customerNumber?: string | null
+  meterNumber?: string | null
+  phoneNumber?: string | null
+  code?: string | null
+}
+
+export const searchCustomer = async (searchInput: SearchCustomerInput) => {
+  if (searchInput.customerNumber) {
+    return [generateCustomer(searchInput)]
+  }
+
+  return [generateCustomer(searchInput), generateCustomer(searchInput)]
 }
 
 const names = [
@@ -60,9 +74,10 @@ const addresses = [
   "宮城県仙台市土のアベニュー28-29-30, 980-0000",
 ]
 
-const generateCustomer = (customerNumber: string) => {
+const generateCustomer = (searchInput: SearchCustomerInput) => {
   return {
-    customerNumber,
+    customerNumber:
+      searchInput.customerNumber ?? randNumber({ min: 1000000, max: 9999999 }).toString(),
     housingType: randNumber({ min: 1, max: 2 }),
     postalCode: randNumber({ min: 1000000, max: 9999999 }).toString(),
     municipality: municipalities[randNumber({ min: 0, max: 9 })],
@@ -70,10 +85,11 @@ const generateCustomer = (customerNumber: string) => {
     buildingNameRoomNumber: buildingNameRoomNumbers[randNumber({ min: 0, max: 9 })],
     name: names[randNumber({ min: 0, max: 9 })],
     nameKana: null,
-    phoneNumber: randPhoneNumber(),
+    phoneNumber: searchInput.phoneNumber ?? randPhoneNumber(),
     phoneNumberType: randNumber({ min: 1, max: 3 }),
     mailAddress: randEmail(),
-    meterNo: randNumber({ min: 1000000, max: 9999999 }).toString(),
+    meterNo:
+      searchInput.meterNumber ?? randNumber({ min: 1000000, max: 9999999 }).toString(),
     patNo: `${randHexaDecimal()}${randHexaDecimal()}`.toUpperCase(),
     meterNumber: `${randNumber({ min: 10, max: 99 })}.0`,
     meterYmd: dayjs(randFutureDate()).format("YYYY/MM"),
