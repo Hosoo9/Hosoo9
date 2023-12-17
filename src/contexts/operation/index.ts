@@ -1,8 +1,10 @@
 import prisma from "@/utils/prisma"
+import { sortExtractor } from "@/utils/sort"
 import { ContextOptions, PaginationParams } from "@/utils/types"
 import { Prisma } from "@prisma/client"
 import crypto from "crypto"
 
+export type OperationWorkType = 1 | 2 | 3 | 4 | 5
 export type OperationState = 1 | 2 | 3 | 4 | 5 | 6
 export type OperationType = 1 | 2 | 3 | 4 | 5
 export type GasType = 1 | 2
@@ -22,9 +24,10 @@ type CreateOperationInput = {
   operationType: OperationType
 }
 
-type FindOperationsInput = PaginationParams & {
+export type FindOperationsInput = PaginationParams & {
   page: number
   limit: number
+  sort: string
   customerNumber?: string
   address?: string
   statuses?: number[]
@@ -32,6 +35,10 @@ type FindOperationsInput = PaginationParams & {
   desiredDate?: Date
   technicianName?: string
   isExpiredExchange?: boolean
+  assignedWorkerId?: string
+  createdAtFrom?: Date
+  createdAtTo?: Date
+  operationTypes?: OperationWorkType[]
 }
 
 type CompleteOperationInput = {
@@ -105,37 +112,121 @@ export const findOperation = async (
   })
 }
 
-export const findOperations = async ({
-  page,
-  limit,
+// export const findOperations = async ({
+//   page,
+//   limit,
+//   address,
+//   statuses,
+//   customerNumber,
+//   desiredDate,
+//   customerName,
+//   technicianName,
+//   isExpiredExchange,
+//   assignedWorkerId
+// }: FindOperationsInput, { includeUser } = { includeUser: true }) => {
+//   return await prisma.operation.findMany({
+//     skip: (page - 1) * limit,
+//     take: limit,
+//     where: {
+//       status: {
+//         in: statuses,
+//       },
+//       address: {
+//         startsWith: address,
+//       },
+//       customerNumber: {
+//         startsWith: customerNumber,
+//       },
+//       isExpiredExchange,
+//       assignedWorkerId: {
+//         startsWith: assignedWorkerId
+//       }
+//     },
+//     include: {
+//       createdByUser: includeUser,
+//     },
+//     orderBy: {
+//       createdBy: "desc"
+//     }
+//   })
+// }
+
+
+const constructWhere = ({
   address,
   statuses,
   customerNumber,
   desiredDate,
   customerName,
   technicianName,
-  isExpiredExchange,
-}: FindOperationsInput, { includeUser } = { includeUser: true }) => {
+  assignedWorkerId,
+  createdAtFrom,
+  createdAtTo,
+  operationTypes,
+  isExpiredExchange
+}: FindOperationsInput): Prisma.OperationWhereInput => {
+  const conditionalOptions: Prisma.OperationWhereInput = {}
+
+  if (assignedWorkerId) {
+    conditionalOptions.assignedWorkerId = {
+      startsWith: assignedWorkerId,
+    }
+  }
+
+  if (createdAtFrom) {
+    conditionalOptions.createdAt = {
+      gte: createdAtFrom,
+      lte: createdAtTo,
+    }
+  }
+
+  if (operationTypes && operationTypes.length > 0) {
+    conditionalOptions.operationType = {
+      in: operationTypes,
+    }
+  }
+
+  if (isExpiredExchange) {
+    conditionalOptions.isExpiredExchange = isExpiredExchange
+  }
+
+  return {
+    status: {
+      in: statuses,
+    },
+    address: {
+      startsWith: address,
+    },
+    customerNumber: {
+      startsWith: customerNumber,
+    },
+    ...conditionalOptions,
+  }
+}
+
+export const findOperations = async (
+  findOptions: FindOperationsInput,
+  { includeUser } = { includeUser: true },
+) => {
+  const { page, limit, sort } = findOptions
+  const { field, order } = sortExtractor(sort)
+  const where = constructWhere(findOptions)
+
   return await prisma.operation.findMany({
     skip: (page - 1) * limit,
     take: limit,
-    where: {
-      status: {
-        in: statuses,
-      },
-      address: {
-        startsWith: address,
-      },
-      customerNumber: {
-        startsWith: customerNumber,
-      },
-      isExpiredExchange
-    },
+    where,
     include: {
       createdByUser: includeUser,
     },
     orderBy: {
-      createdBy: "desc"
-    }
+      [field]: order,
+    },
+  })
+}
+
+export const countOperations = async (findOptions: FindOperationsInput) => {
+  return await prisma.operation.count({
+    where: constructWhere(findOptions),
   })
 }

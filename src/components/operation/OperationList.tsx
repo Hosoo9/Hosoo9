@@ -9,29 +9,112 @@
 
 import "dayjs/locale/ja"
 
-import { Box, Grid, LoadingOverlay, Table } from "@mantine/core"
-import { useQuery } from "@tanstack/react-query"
-import Link from "next/link"
+import { type OperationType } from "@/contexts/operation"
 import { getOperationStateName } from "@/lib/enum/operation-state"
-import { useTranslations } from "next-intl"
 import { formatDate } from "@/utils/date-helper"
+import {
+  ActionIcon,
+  Box,
+  Button,
+  Center,
+  Grid,
+  LoadingOverlay,
+  MultiSelect,
+  Paper,
+  Stack,
+  TextInput,
+} from "@mantine/core"
+import { DatePicker, type DatesRangeValue } from "@mantine/dates"
+import { useDebouncedValue } from "@mantine/hooks"
+import { IconSearch, IconX } from "@tabler/icons-react"
+import { useQuery } from "@tanstack/react-query"
+import { DataTable, DataTableColumn, type DataTableSortStatus } from "mantine-datatable"
+import { useTranslations } from "next-intl"
+import Link from "next/link"
+import { useState } from "react"
+import { getOperationType } from "@/lib/enum/operation-type"
+
+const PAGE_SIZES = [10, 15, 20]
+
+type Operation = {
+  code: string
+  status: string
+  operationType: OperationType
+  createdAt: string
+}
 
 function OperationList({
   statuses,
   className,
-  isExpired,
+  actionTitle,
+  onAction,
+  onSecondAction,
+  secondActionTitle,
+  isExpired = false
 }: {
   statuses?: number[]
   className?: string
+  actionTitle?: string
+  onAction?: () => Promise<void>
+  secondActionTitle?: string
+  onSecondAction?: () => Promise<void>
   isExpired?: boolean
 }) {
+  const [sorting, setSorting] = useState<DataTableSortStatus<Operation>>({
+    columnAccessor: "createdAt",
+    direction: "desc",
+  })
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+  const [assignedWorkerFilter, setAssignedWorkerFilter] = useState("")
+  const [debouncedAssignedWorker] = useDebouncedValue(assignedWorkerFilter, 300)
+  const [createdAtRange, setCreatedAtRange] = useState<DatesRangeValue>()
+  const [operationTypes, setOperationTypes] = useState<string[] | undefined>()
+  const [selectedRecords, setSelectedRecords] = useState<Operation[]>([])
+
   const { isLoading, error, data } = useQuery({
-    queryKey: [`operations${(statuses || [[]]).sort().join(",")}`],
+    queryKey: [
+      `operations`,
+      statuses,
+      page,
+      pageSize,
+      `${sorting.columnAccessor}-${sorting.direction}`,
+      debouncedAssignedWorker,
+      createdAtRange,
+      operationTypes,
+    ],
     queryFn: () => {
       const params = new URLSearchParams()
 
       for (const status of statuses || []) {
         params.append("statuses", status.toString())
+      }
+
+      // if (sorting.length > 0) {
+      //   params.set('sort', JSON.stringify(sorting))
+      // }
+
+      params.set("page", page.toString())
+      params.set("limit", pageSize.toString())
+      params.set("sort", `${sorting.columnAccessor}-${sorting.direction}`)
+
+      if (debouncedAssignedWorker) {
+        params.set("assignedWorkerId", debouncedAssignedWorker)
+      }
+
+      if (createdAtRange) {
+        if (createdAtRange[0]) {
+          params.set("createdAtFrom", createdAtRange[0].toISOString())
+        }
+        if (createdAtRange[1]) {
+          params.set("createdAtTo", createdAtRange[1].toISOString())
+        }
+      }
+
+      if (operationTypes) {
+        for (const operationType of operationTypes) {
+          params.append("operationType", operationType)
+        }
       }
 
       if (isExpired) {
@@ -44,55 +127,190 @@ function OperationList({
 
   const t = useTranslations("OperationForm")
 
-  // const { data } = useQuery({
-  //   queryKey: ["operations"],
-  //   console.log(data);
-  //   queryFn: () => get("/api/operation").then((res) => res.json()),
-  // })
+  const columns: DataTableColumn<Operation>[] = [
+    {
+      accessor: "code",
+      title: t("id"),
+      sortable: true,
+      render: ({ code }) => <Link href={`/jp/operation/${code}`}>{code}</Link>,
+    },
+    {
+      accessor: "status",
+      title: t("status"),
+      // filter: (
+      //   <Select
+      //     placeholder={t("status")}
+      //     clearable={true}
+      //     value={status}
+      //     onChange={(e) => setStatus(e)}
+      //     data={[
+      //       { value: "1", label: t("draft") },
+      //       { value: "2", label: t("requested") },
+      //       { value: "3", label: t("approved") },
+      //       { value: "4", label: t("rejected") },
+      //       { value: "5", label: t("ongoing") },
+      //       { value: "6", label: t("completed") },
+      //     ]}
+      //   ></Select>
+      // ),
+      // filtering: assignedWorkerFilter !== "",
+    },
+    {
+      accessor: "operationType",
+      title: t("operationType"),
+      render: ({ operationType }) => operationType,
+      sortable: true,
+      filter: (
+        <MultiSelect
+          placeholder={t("operationType")}
+          clearable={true}
+          value={operationTypes}
+          onChange={(e) => setOperationTypes(e)}
+          data={[
+            { value: "1", label: t("operationType1") },
+            { value: "2", label: t("operationType2") },
+            { value: "3", label: t("operationType3") },
+            { value: "4", label: t("operationType4") },
+            { value: "5", label: t("operationType5") },
+          ]}
+        ></MultiSelect>
+      ),
+      filtering: operationTypes && operationTypes.length > 0,
+    },
+    {
+      accessor: "assignedWorkerId",
+      title: t("assignedWorker"),
+      filter: (
+        <TextInput
+          placeholder="search..."
+          leftSection={<IconSearch size={16} />}
+          rightSection={
+            <ActionIcon
+              size="sm"
+              variant="transparent"
+              c="dimmed"
+              onClick={() => setAssignedWorkerFilter("")}
+            >
+              <IconX size={14} />
+            </ActionIcon>
+          }
+          value={assignedWorkerFilter}
+          onChange={(e) => setAssignedWorkerFilter(e.currentTarget.value)}
+        />
+      ),
+      filtering: assignedWorkerFilter !== "",
+    },
+    // {
+    //   accessor: "isExpiredExchange",
+    //   title: t("isExpired"),
+    //   textAlign: "right",
+    //   sortable: true
+    // },
+    {
+      accessor: "createdAt",
+      title: t("createdAt"),
+      textAlign: "right",
+      sortable: true,
+      filter: ({ close }) => (
+        <Stack>
+          <DatePicker
+            maxDate={new Date()}
+            type="range"
+            value={createdAtRange}
+            onChange={setCreatedAtRange}
+          />
+          <Button
+            disabled={!createdAtRange}
+            variant="light"
+            onClick={() => {
+              setCreatedAtRange(undefined)
+              close()
+            }}
+          >
+            Clear
+          </Button>
+        </Stack>
+      ),
+      filtering: Boolean(createdAtRange),
+    },
+    // {
+    //   accessor: "updatedAt",
+    //   title: t("updatedAt"),
+    //   textAlign: "right",
+    //   sortable: true,
+    // },
+  ]
 
-  // if (error) return "An error has occurred: " + error.message
-
-  const rows = (data || []).map((o: any) => (
-    <Table.Tr key={o.code} className="w-100">
-      <Table.Td>
-        <Link href={`/operation/${o.code}`}>{o.code}</Link>
-      </Table.Td>
-      <Table.Td>{t(getOperationStateName(o.status).toLowerCase())}</Table.Td>
-      <Table.Td>{t(`operationType${o.operationType}`)}</Table.Td>
-      <Table.Td>{o.createdByUser.name}</Table.Td>
-      <Table.Td>{o.assignedWorkerId}</Table.Td>
-      <Table.Td>{formatDate(o.createdAt)}</Table.Td>
-    </Table.Tr>
-  ))
+  const records = (data?.data || []).map((item: any) => ({
+    code: item.code,
+    status: t(getOperationStateName(item.status).toLowerCase()),
+    assignedWorkerId: item.assignedWorkerId,
+    operationType: getOperationType(item.operationType),
+    isExpiredExchange: item.isExpiredExchange ? "✓" : "✗",
+    createdAt: formatDate(item.createdAt),
+    // updatedAt: formatDate(item.updatedAt),
+  }))
 
   return (
-    <Grid className={className}>
-      <Grid.Col span={12}>
-        <Box pos="relative">
-          <LoadingOverlay
-            visible={isLoading}
-            zIndex={1000}
-            overlayProps={{ radius: "sm", blur: 2 }}
-          />
-          <Table>
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th>ID</Table.Th>
-                <Table.Th>{t("status")}</Table.Th>
-                <Table.Th>{t("operationType")}</Table.Th>
-                <Table.Th>{t("createdBy")}</Table.Th>
-                <Table.Th>{t("assignedWorker")}</Table.Th>
-                <Table.Th>{t("createdAt")}</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <tbody>{rows}</tbody>
-          </Table>
-        </Box>
-      </Grid.Col>
-    </Grid>
+    <>
+      <Grid className={className}>
+        <Grid.Col span={12}>
+          <Box pos="relative">
+            <LoadingOverlay
+              visible={isLoading}
+              zIndex={1000}
+              overlayProps={{ radius: "sm", blur: 2 }}
+            />
+
+            <DataTable
+              idAccessor="code"
+              withColumnBorders={true}
+              withTableBorder={true}
+              striped
+              paginationActiveBackgroundColor="grape"
+              borderRadius="sm"
+              highlightOnHover
+              records={records}
+              totalRecords={data?.total || 0}
+              columns={columns}
+              page={page}
+              recordsPerPage={pageSize}
+              onPageChange={(p) => setPage(p)}
+              recordsPerPageOptions={PAGE_SIZES}
+              onRecordsPerPageChange={setPageSize}
+              sortStatus={sorting}
+              onSortStatusChange={setSorting}
+              {...(onAction && {
+                selectedRecords: selectedRecords,
+                onSelectedRecordsChange: setSelectedRecords,
+              })}
+            />
+          </Box>
+        </Grid.Col>
+      </Grid>
+
+      {onAction && (
+        <Paper withBorder={true} className="py-3">
+          <Center>
+            <div className="flex gap-3">
+              <Button disabled={selectedRecords.length === 0}>{actionTitle}</Button>
+
+              {onSecondAction && (
+                <Button
+                  disabled={selectedRecords.length === 0}
+                  variant="light"
+                  onClick={onSecondAction}
+                  color="red"
+                >
+                  {secondActionTitle}
+                </Button>
+              )}
+            </div>
+          </Center>
+        </Paper>
+      )}
+    </>
   )
 }
 
 export default OperationList
-
-//To do comment

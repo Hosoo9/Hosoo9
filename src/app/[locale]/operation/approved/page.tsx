@@ -1,4 +1,4 @@
-import OperationList from "@/components/operation/OperationList"
+import ApprovedOperationList from "@/components/operation/lists/ApprovedOperationList"
 import { getCurrentUser } from "@/lib/session"
 import { Title } from "@mantine/core"
 import { getTranslations } from "next-intl/server"
@@ -19,7 +19,7 @@ export default async function ApprovedOperationsPage() {
           { `${t("approved")}${t("operations")}` }
         </Title>
 
-        <OperationList statuses={[3, 5]} className="py-5" />
+        <ApprovedOperationList />
       </div>
     </>
   )

@@ -1,4 +1,4 @@
-import OperationList from "@/components/operation/OperationList"
+import DraftOperationList from "@/components/operation/lists/DraftOperationList"
 import { getCurrentUser } from "@/lib/session"
 import { Button } from "@mantine/core"
 import { getTranslations } from "next-intl/server"
@@ -20,7 +20,8 @@ export default async function Home() {
       <Button component={Link} href="/operation/new">
         {t("new")}
       </Button>
-      <OperationList statuses={[1]} className="py-5" />
+
+      <DraftOperationList />
     </div>
     // <Welcome users={users} />
   )
