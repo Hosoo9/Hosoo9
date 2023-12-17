@@ -28,6 +28,7 @@
     "@mantine/modals": "^7.2.1",
     "@mantine/notifications": "^7.2.1",
     "@next-auth/prisma-adapter": "^1.0.7",
+    "@ngneat/falso": "^7.1.1",
     "@prisma/client": "4.15.0",
     "@sentry/nextjs": "^7.54.0",
     "@tabler/icons-react": "^2.33.0",
@@ -41,6 +42,7 @@
     "casbin": "^5.27.1",
     "casbin-prisma-adapter": "^1.4.0",
     "dayjs": "^1.11.9",
+    "mantine-datatable": "^7.1.6",
     "mime-types": "^2.1.35",
     "next": "14.0.2",
     "next-auth": "^4.24.5",
@@ -53,8 +55,7 @@
     "tailwindcss": "3.3.2",
     "typescript": "5.0.4",
     "winston": "^3.10.0",
-    "zod": "^3.21.4",
-    "mantine-datatable": "^7.1.6"
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@mermaid-js/mermaid-cli": "^10.2.4",

@@ -33,3 +33,21 @@ export const stringToDate = (date: Date) => {
 export const stringToEmpty = (str: string | null) => {
   return str ? str : ""
 }
+
+export const transformCustomerData = (data: any) => {
+  return {
+    ...data,
+    name: stringToEmpty(data.name),
+    nameKana: stringToEmpty(data.nameKana),
+    phoneNumber: stringToEmpty(data.phoneNumber),
+    customerNumber: stringToEmpty(data.customerNumber),
+    municipality: stringToEmpty(data.municipality),
+    address: stringToEmpty(data.address),
+    phoneNumberType: data.phoneNumberType ? data.phoneNumberType.toString() : null,
+    housingType: data.housingType ? data.housingType.toString() : null,
+    postalCode: stringToEmpty(data.postalCode),
+    buildingNameRoomNumber: stringToEmpty(data.buildingNameRoomNumber),
+    mailAddress: stringToEmpty(data.mailAddress),
+  }
+}
+

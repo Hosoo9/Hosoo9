@@ -21,3 +21,37 @@
 body {
   /* color: rgb(var(--foreground-rgb)); */
 }
+
+
+:root {
+  --chip-border: calc(0.0625rem*var(--mantine-scale)) solid var(--mantine-color-gray-3);
+}
+
+@layer components {
+  .chip {
+    @apply bg-primary-blue text-center;
+    padding: var(--mantine-spacing-xs);
+    border-radius: var(--paper-radius,var(--mantine-radius-default));
+    border: var(--_paper-border,none);
+    outline: 0;
+  }
+
+  .chip__value {
+    @apply mt-1 bg-white p-1;
+    border-radius: var(--paper-radius,var(--mantine-radius-default));
+  }
+
+  .chip__header {
+    @apply text-white;
+  }
+
+  .chip-wrapper {
+    @apply flex gap-1 pt-5 flex-wrap;
+  }
+
+  .chip-wrapper__title {
+    @apply chip flex items-center;
+    justify-content: center;
+    min-width: 7rem;
+  }
+}

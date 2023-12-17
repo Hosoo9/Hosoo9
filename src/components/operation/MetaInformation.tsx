@@ -17,7 +17,7 @@ export const MetaInformation = ({ form, operation }: { form: any, operation: any
         </div>
         <div className="col-span-1">
           <Input.Wrapper label={t("status")}>
-            <Input data-testid="status" disabled value={operation ? getOperationStateName(operation.status) : ""} />{" "}
+            <Input data-testid="status" disabled value={operation ? t(getOperationStateName(operation.status).toLowerCase()) : ""} />{" "}
           </Input.Wrapper>
         </div>
         <div className="col-span-1">
