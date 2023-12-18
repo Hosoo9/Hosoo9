@@ -1,14 +1,13 @@
-import { OperationState } from "@/contexts/operation"
+import { OperationWorkType } from "@/contexts/operation"
 
-const STATE_MAPPING = {
-  1: "DRAFT",
-  2: "REQUESTED",
-  3: "APPROVED",
-  4: "REJECTED",
-  5: "ONGOING",
-  6: "COMPLETED",
+export const OPERATION_TYPE_MAPPING = {
+  1: "交換",
+  2: "取外",
+  3: "入室不要工法",
+  4: "保安閉栓",
+  5: "閉栓返却",
 }
 
-export const getOperationStateName = (state: OperationState): string => {
-  return STATE_MAPPING[state]
+export const getOperationType = (operationType: OperationWorkType) => {
+  return OPERATION_TYPE_MAPPING[operationType]
 }

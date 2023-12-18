@@ -90,11 +90,13 @@ export const selectOperationSchema = z.object({
   limit: z.coerce.number().default(10),
   customerNumber: z.string().optional(),
   address: z.string().optional(),
-  customerName: z.string().optional(),
-  desiredDate: z.coerce.date().optional(),
-  technicianName: z.string().optional(),
   statuses: z.array(z.coerce.number()).optional(),
   isExpiredExchange: z.boolean().optional(),
+  assignedWorkerId: z.string().optional(),
+  createdAtFrom: z.coerce.date().optional(),
+  createdAtTo: z.coerce.date().optional(),
+  operationTypes: z.array(z.enum(["1", "2", "3", "4", "5"])).optional(),
+  sort: z.string().optional().default("createdAt-desc"),
 })
 
 export const createOperationSchema = z.object(create)

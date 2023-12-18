@@ -1,4 +1,4 @@
-import OperationList from "@/components/operation/OperationList"
+import ExpiredOperationList from "@/components/operation/lists/ExpiredOperationList"
 import { getCurrentUser } from "@/lib/session"
 import { Title } from "@mantine/core"
 import { getTranslations } from "next-intl/server"
@@ -19,7 +19,7 @@ export default async function ExpiredOperationsPage() {
           { `${t("expired")}${t("operations")}` }
         </Title>
 
-        <OperationList statuses={[1]} className="py-5" isExpired={true} />
+        <ExpiredOperationList />
       </div>
     </>
   )

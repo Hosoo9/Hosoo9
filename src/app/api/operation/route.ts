@@ -1,4 +1,4 @@
-import { OperationType, createOperation, findOperations } from "@/contexts/operation"
+import { FindOperationsInput, OperationType, OperationWorkType, countOperations, createOperation, findOperations } from "@/contexts/operation"
 import { getCurrentUser } from "@/lib/session"
 import { NextRequest, NextResponse } from "next/server"
 import { ZodError, z } from "zod"
@@ -22,11 +22,23 @@ export async function GET(request: NextRequest) {
       request.nextUrl.searchParams.get("isExpiredExchange") === undefined
         ? undefined
         : request.nextUrl.searchParams.get("isExpiredExchange") === "true",
+    operationTypes: request.nextUrl.searchParams.has("operationType")
+      ? request.nextUrl.searchParams.getAll("operationType")
+      : undefined,
   })
 
-  const operations = await findOperations(params, { includeUser: true })
+  const options: FindOperationsInput = {
+    ...params,
+    operationTypes: (params.operationTypes || []).map(
+      (type) => parseInt(type) as OperationWorkType,
+    ),
+  }
 
-  return NextResponse.json(operations, { status: 200 })
+  const operations = await findOperations(options, { includeUser: true })
+
+  const total = await countOperations(options)
+
+  return NextResponse.json({ data: operations, total }, { status: 200 })
 }
 
 export async function POST(request: NextRequest) {

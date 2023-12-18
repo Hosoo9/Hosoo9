@@ -39,6 +39,11 @@ export function Sidebar({ onBurgerClick, opened }: { onBurgerClick: () => void, 
       label: `${t("completed")}${t("operations")}`,
       icon: IconTools,
     },
+    {
+      link: "/jp/customer-search",
+      label: t("customerSearch"),
+      icon: IconTools,
+    },
   ]
 
   const technicianMenu = [
