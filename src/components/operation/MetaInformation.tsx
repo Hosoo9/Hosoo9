@@ -1,7 +1,5 @@
 import { getOperationStateName } from "@/lib/enum/operation-state"
-import {
-    Input
-} from "@mantine/core"
+import { formatDate } from "@/utils/date-helper"
 import { useTranslations } from "next-intl"
 
 export const MetaInformation = ({ form, operation }: { form: any, operation: any }) => {
@@ -11,29 +9,38 @@ export const MetaInformation = ({ form, operation }: { form: any, operation: any
     <>
       <div className="grid grid-cols-5 gap-3 py-5">
         <div className="col-span-1">
-          <Input.Wrapper label={t("workDetails")}>
-            <Input data-testid="workDetails" disabled value=""  />
-          </Input.Wrapper>
+          <div className="flex flex-col">
+            <div className="text-sm font-semibold text-gray-700">{t("workDetails")}</div>
+            <div className="mt-1 text-gray-600">-</div>
+          </div>
         </div>
+
         <div className="col-span-1">
-          <Input.Wrapper label={t("status")}>
-            <Input data-testid="status" disabled value={operation ? t(getOperationStateName(operation.status).toLowerCase()) : ""} />{" "}
-          </Input.Wrapper>
+          <div className="flex flex-col">
+            <div className="text-sm font-semibold text-gray-700">{t("status")}</div>
+            <div className="mt-1 text-gray-600">{operation.status ? t(getOperationStateName(operation.status).toLowerCase()) : "-"}</div>
+          </div>
         </div>
+
         <div className="col-span-1">
-          <Input.Wrapper label={t("author")}>
-            <Input data-testid="author" disabled value={form.values.createdByUser?.name || ""} />{" "}
-          </Input.Wrapper>
+          <div className="flex flex-col">
+            <div className="text-sm font-semibold text-gray-700">{t("author")}</div>
+            <div className="mt-1 text-gray-600">{form.values.createdByUser?.name ? form.values.createdByUser?.name : ""}</div>
+          </div>
         </div>
+
         <div className="col-span-1">
-          <Input.Wrapper label={t("createdAt")}>
-            <Input data-testid="creationDatetime" disabled value={form.values.createdAt || ""} />{" "}
-          </Input.Wrapper>
+          <div className="flex flex-col">
+            <div className="text-sm font-semibold text-gray-700">{t("createdAt")}</div>
+            <div className="mt-1 text-gray-600">{form.values.createdAt ? formatDate(form.values.createdAt) : ""}</div>
+          </div>
         </div>
+
         <div className="col-span-1">
-          <Input.Wrapper label={t("completedAt")}>
-            <Input data-testid="completedAt" disabled value={form.values.completedAt || ""} />{" "}
-          </Input.Wrapper>
+          <div className="flex flex-col">
+            <div className="text-sm font-semibold text-gray-700">{t("completedAt")}</div>
+            <div className="mt-1 text-gray-600">{form.values.completedAt ? form.values.completedAt : "-"}</div>
+          </div>
         </div>
       </div>
     </>

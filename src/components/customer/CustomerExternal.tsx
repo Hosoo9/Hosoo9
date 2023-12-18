@@ -73,7 +73,7 @@ const CustomerExternal = ({
                   器具情報
                 </Tabs.Tab>
                 <Tabs.Tab value="alarm">
-                  營報器情報
+                  謷報器情報
                 </Tabs.Tab>
               </Tabs.List>
 

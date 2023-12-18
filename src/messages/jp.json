@@ -227,14 +227,14 @@
     "operations": "作業リスト",
     "pendingApproval": "承認待ち",
     "requested": "承認待ち",
-    "approved": "承認済み",
+    "approved": "作業予定",
     "approve": "承認",
     "completed": "完了",
     "alarmManagement": "警報器管理",
     "userManagement": "ユーザー管理",
     "paymentManagement": "収納管理",
     "rejected": "拒否された",
-    "expired": "期限切れ",
+    "expired": "期満交換",
     "code": "コード",
     "meterManufacturerManagement": "メーカーの管理",
     "meterManufacturer": "メーカーの",
@@ -252,6 +252,8 @@
     "meterSize": "メーターサイズ",
     "ongoing": "作業中",
     "contact": "連絡先",
-    "customerSearch": "需要家検索"
+    "customerSearch": "需要家検索",
+    "workSchedule": "日程調整",
+    "list": "リスト"
   }
 }
