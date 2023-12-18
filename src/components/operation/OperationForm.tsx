@@ -50,6 +50,9 @@ const setBoolean = (input: boolean | null) => {
 const transformData = (data: any) => {
   return {
     ...data,
+    buildingType: data.buildingType ? data.buildingType.toString() : null,
+    housingType: data.housingType ? data.housingType.toString() : null,
+    phoneNumberType: data.phoneNumberType ? data.phoneNumberType.toString() : null,
     scheduledDate: setDate(data.scheduledDate),
     postcardStartDate: setDate(data.postcardStartDate),
     postcardEndDate: setDate(data.postcardEndDate),
@@ -255,6 +258,10 @@ function OperationForm({ code }: { code: string }) {
           <Divider my="lg" className="pt-5" />
 
           <Stepper active={active} onStepClick={setActive} iconSize={32}>
+            <Stepper.Step label={t("customerInformation")}>
+              <CustomerInformation form={form} className="py-2" />
+            </Stepper.Step>
+
             <Stepper.Step label={t("workInformation")}>
               <div className="py-2">
                 <div className="py-5">
@@ -271,10 +278,6 @@ function OperationForm({ code }: { code: string }) {
             </Stepper.Step>
 
             {/* <Divider my="lg" /> */}
-
-            <Stepper.Step label={t("customerInformation")}>
-              <CustomerInformation form={form} className="py-2" />
-            </Stepper.Step>
 
             {/* <Divider my="lg" /> */}
             {/* <Stepper.Step label={t("workInformation")}> */}

@@ -1,10 +1,11 @@
-import { findOperation, updateOperation } from "@/contexts/operation"
+import { HousingType, PhoneNumberType, findOperation, updateOperation } from "@/contexts/operation"
 import { updateOperationSchema } from "@/contexts/operation/validation-schema"
 import { getCurrentUser } from "@/lib/session"
 import { presentOperation } from "@/utils/operation/operation-transformer"
 import { NextRequest, NextResponse } from "next/server"
 import { NOT_AUTHORIZED } from "../../constants"
 import { unauthorized } from "../../helpers"
+import { stringToNumberEnum } from "@/utils/converters"
 
 export async function GET(
   request: NextRequest,
@@ -56,6 +57,8 @@ export async function PUT(
     afterWorkInspectionType: input.afterWorkInspectionType ? parseInt(input.afterWorkInspectionType) : null,
     beforeWorkResult: toBoolean(input.beforeWorkResult),
     afterWorkResult: toBoolean(input.afterWorkResult),
+    housingType: stringToNumberEnum<HousingType>(input.housingType),
+    phoneNumberType: stringToNumberEnum<PhoneNumberType>(input.phoneNumberType),
   })
 
   return NextResponse.json(presentOperation(operation), { status: 200 })

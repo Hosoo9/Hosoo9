@@ -1,11 +1,17 @@
 import { z } from "zod"
 
 const create = {
-  isSecurityWork: z.boolean(),
-  changedNotificationFlag: z.boolean(),
-  valveOpenFlag: z.boolean(),
-  exchangingDate: z.coerce.date().nullable(),
-  operationType: z.enum(["1", "2", "3", "4", "5"]),
+  customerNumber: z.string(),
+  postalCode: z.string().nullable(),
+  municipality: z.string().nullable(),
+  address: z.string().nullable(),
+  housingType: z.enum(["1", "2"]).nullable(),
+  buildingNameRoomNumber: z.string().nullable(),
+  name: z.string().nullable(),
+  nameKana: z.string().nullable(),
+  phoneNumber: z.string().nullable(),
+  phoneNumberType: z.enum(["1", "2", "3"]).nullable(),
+  // mailAddress: z.string().nullable(),
 }
 
 const update = {
@@ -49,16 +55,10 @@ const update = {
   // postcardOutputTimestamp: z.coerce.date().nullable(),
   absenceNoticeDeliveryDate: z.coerce.date().nullable(),
   exchangingDate: z.coerce.date().nullable(),
-  operationType: z.enum(["1", "2", "3", "4", "5"]).nullable(),
-  customerNumber: z.string().nullable(),
-  name: z.string().nullable(),
-  nameKana: z.string().nullable(),
-  phoneNumber: z.string().nullable(),
-  assignedWorkerId: z.string().nullable(),
-  postalCode: z.string().nullable(),
-  municipality: z.string().nullable(),
-  address: z.string().nullable(),
-  buildingNameRoomNumber: z.string().nullable(),
+  isSecurityWork: z.boolean(),
+  changedNotificationFlag: z.boolean().nullable(),
+  valveOpenFlag: z.boolean().nullable(),
+  operationType: z.enum(["1", "2", "3", "4", "5"]),
   removingMeterNumber: z.coerce.string().nullable(),
   removingMeterValue: z.coerce.number().nullable(),
   removingMeterInspectionDate: z.coerce.date().nullable(),

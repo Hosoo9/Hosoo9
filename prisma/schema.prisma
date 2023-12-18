@@ -88,22 +88,24 @@ model User {
 model Operation {
   id                           BigInt     @id @default(autoincrement())
   code                         String     @db.NVarChar(10) @unique
-  isSecurityWork               Boolean    @default(false)
-  changedNotificationFlag      Boolean
-  valveOpenFlag                Boolean
+  isSecurityWork               Boolean?   @default(false)
+  changedNotificationFlag      Boolean?
+  valveOpenFlag                Boolean?
   isExpiredExchange            Boolean    @default(false)
   status                       Int        @db.TinyInt @default(1)
   prePauseStatus               Int?       @db.TinyInt
   pauseTimestamp               DateTime?
   pauseDuration                Int?       @db.TinyInt
-  customerNumber               String?
+  customerNumber               String?    @db.NVarChar(1000)
   postalCode                   String?    @db.NVarChar(8)
   municipality                 String?    @db.NVarChar(50)
   address                      String?    @db.NVarChar(100)
+  housingType                  Int?       @db.TinyInt
   buildingNameRoomNumber       String?    @db.NVarChar(100)
   name                         String?    @db.NVarChar(60)
   nameKana                     String?    @db.NVarChar(100)
   phoneNumber                  String?    @db.NVarChar(20)
+  phoneNumberType              Int?       @db.TinyInt
   assignedWorkerId             String?    @db.NVarChar(30)
   memo                         String?    @db.NVarChar(500)
   scheduledDate                DateTime?  @db.Date

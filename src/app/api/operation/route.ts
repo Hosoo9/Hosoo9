@@ -1,4 +1,4 @@
-import { FindOperationsInput, OperationType, OperationWorkType, countOperations, createOperation, findOperations } from "@/contexts/operation"
+import { FindOperationsInput, HousingType, OperationWorkType, PhoneNumberType, countOperations, createOperation, findOperations } from "@/contexts/operation"
 import { getCurrentUser } from "@/lib/session"
 import { NextRequest, NextResponse } from "next/server"
 import { ZodError, z } from "zod"
@@ -7,6 +7,7 @@ import {
   createOperationSchema,
   selectOperationSchema,
 } from "@/contexts/operation/validation-schema"
+import { stringToNumberEnum } from "@/utils/converters"
 
 export async function GET(request: NextRequest) {
   const user = await getCurrentUser()
@@ -58,9 +59,23 @@ export async function POST(request: NextRequest) {
 
     const operation = await createOperation({
       ...params,
+      housingType: stringToNumberEnum<HousingType>(params.housingType),
+      phoneNumberType: stringToNumberEnum<PhoneNumberType>(params.phoneNumberType),
       createdBy: user.id,
-      operationType: parseInt(params.operationType) as OperationType,
+      customerNumber: params.customerNumber,
+      // operationType: parseInt(params.operationType) as OperationWorkType,
+      // gasType: parseInt(params.gasType) as GasType,
+      // housingType: parseInt(params.housingType) as HousingType,
+      // phoneNumberType: parseInt(params.phoneNumberType) as PhoneNumberType,
+      // oneOrBulk: parseInt(params.oneOrBulk) as OneOrBulkType,
     })
+
+
+    // const operation = await createOperation({
+    //   ...params,
+    //   createdBy: user.id,
+    //   operationType: parseInt(params.operationType) as OperationType,
+    // })
 
     return NextResponse.json(operation, { status: 201 })
   } catch (e) {

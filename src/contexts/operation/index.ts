@@ -17,11 +17,18 @@ type CreateAlarmInput = {
 }
 
 type CreateOperationInput = {
+  customerNumber: string
+  postalCode: string | null
+  municipality: string | null
+  address: string | null
+  housingType: HousingType | null
+  buildingNameRoomNumber: string | null
+  name: string | null
+  nameKana: string | null
+  phoneNumber: string | null
+  phoneNumberType: PhoneNumberType | null
+  // mailAddress: string | null
   createdBy: string
-  isSecurityWork: boolean
-  changedNotificationFlag: boolean
-  valveOpenFlag: boolean
-  operationType: OperationType
 }
 
 export type FindOperationsInput = PaginationParams & {

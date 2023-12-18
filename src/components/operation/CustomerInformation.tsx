@@ -1,91 +1,99 @@
-import { Input } from "@mantine/core"
+import { Radio, Select, TextInput } from "@mantine/core"
 import { useTranslations } from "next-intl"
 import { IMaskInput } from "react-imask"
+import PostalToAddress from "./PostalToAddress"
 
 export const CustomerInformation = ({
   form,
   className,
+  noMailAddress,
+  noSearch,
+  noTitle,
 }: {
   form: any
   className?: string
+  noMailAddress?: boolean
+  noSearch?: boolean
+  noTitle?: boolean
 }) => {
   const t = useTranslations("OperationForm")
 
-  return (
-    <div className={className}>
-      {/* <Title order={2} size="h3"> */}
-      {/*   {t("customerInformation")} */}
-      {/* </Title> */}
+  const isReadOnly: boolean = false
 
-      <div className="grid grid-cols-5 gap-3 py-5">
-        <div>
-          <Input.Wrapper label={t("customerNumber")}>
-            <Input
-              data-testid="customerNumber"
-              component={IMaskInput}
-              mask="00000-000000"
-              {...form.getInputProps("customerNumber")}
-            />{" "}
-          </Input.Wrapper>
-        </div>
-        <div>
-          <Input.Wrapper label={t("postalCode")}>
-            <Input
-              data-testid="postalCode"
-              component={IMaskInput}
-              mask="00000-000000"
-              {...form.getInputProps("postalCode")}
-            />{" "}
-          </Input.Wrapper>
-        </div>
-        <div>
-          <Input.Wrapper label={t("municipality")}>
-            <Input
-              data-testid="municipality"
-              {...form.getInputProps("municipality")}
-            />{" "}
-          </Input.Wrapper>
+  return (
+    <div className="flex flex-col gap-3 mt-5">
+      <div>
+        <PostalToAddress form={form} isReadOnly={isReadOnly} />
+      </div>
+      <div>
+        <Radio.Group
+          name="housingType"
+          label={t("buildingType")}
+          // withAsterisk
+          // required
+          {...form.getInputProps("housingType")}
+        >
+          {/* <Group mt="xs"> */}
+          <Radio value="1" label={t("detachedHouse")} my="xs" disabled={isReadOnly} />
+          <Radio value="2" label={t("housingComplex")} my="xs" disabled={isReadOnly} />
+          {/* </Group> */}
+        </Radio.Group>
+      </div>
+      <div>
+        <div className="flex gap-3">
+          <TextInput
+            placeholder=""
+            label={t("nameCompanyName")}
+            {...form.getInputProps("name")}
+            disabled={isReadOnly}
+          ></TextInput>
+          <TextInput
+            placeholder=""
+            label={t("nameKana")}
+            {...form.getInputProps("nameKana")}
+            disabled={isReadOnly}
+          ></TextInput>
         </div>
       </div>
-      <div className="grid grid-cols-1 gap-3 pb-5">
-        <div>
-          <Input.Wrapper label={t("address")}>
-            <Input data-testid="address" {...form.getInputProps("address")} />{" "}
-          </Input.Wrapper>
-        </div>
-        <div>
-          <Input.Wrapper label={t("buildingNameRoomNumber")}>
-            <Input
-              data-testid="buildingNameRoomNumber"
-              {...form.getInputProps("buildingNameRoomNumber")}
-            />{" "}
-          </Input.Wrapper>
-        </div>
-        <div>
-          <Input.Wrapper label={t("nameCompanyName")}>
-            <Input
-              data-testid="nameCompanyName"
-              {...form.getInputProps("nameCompanyName")}
-            />{" "}
-          </Input.Wrapper>
-        </div>
-        <div>
-          <Input.Wrapper label={t("nameKana")}>
-            <Input data-testid="nameKana" {...form.getInputProps("nameKana")} />{" "}
-          </Input.Wrapper>
-        </div>
-        <div>
-          <Input.Wrapper label={t("phoneNumber")} maw={500}>
-            <Input
-              data-testid="phoneNumber"
-              component={IMaskInput}
-              mask="(000) 0000-0000"
-              {...form.getInputProps("phoneNumber")}
-              // {...form.getInputProps("phoneNumber")}
-            />
-          </Input.Wrapper>
-        </div>
+      <div>
+        {/* required withAsterisk> */}
+        <TextInput
+          label={t("phoneNumber")}
+          maw={500}
+          data-testid="phoneNumber"
+          component={IMaskInput}
+          mask="(000) 0000-0000"
+          placeholder=""
+          disabled={isReadOnly}
+          {...form.getInputProps("phoneNumber")}
+        />
       </div>
+      <div>
+        <Select
+          {...form.getInputProps("phoneNumberType")}
+          label={t("phoneNumberType")}
+          // required
+          // withAsterisk
+          data={[
+            { value: "1", label: t("onesHome") },
+            { value: "2", label: t("workplace") },
+            { value: "3", label: t("mobilePhone") },
+          ]}
+          disabled={isReadOnly}
+        ></Select>
+      </div>
+      { noMailAddress !== true && (
+        <div>
+          <TextInput
+            label={t("mailAddress")}
+            w={300}
+            placeholder=""
+            data-testid="mailAddress"
+            disabled={isReadOnly}
+            {...form.getInputProps("mailAddress")}
+          />
+        </div>
+      )}
     </div>
   )
 }
