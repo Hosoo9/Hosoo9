@@ -36,7 +36,7 @@ const update = {
   // desiredDate: z.coerce.date().optional(),
   // desiredTimeSlot: z.coerce.number().optional(),
   // memo: z.string().optional(),
-  // assignedWorkerId: z.string().optional(),
+  assignedWorkerId: z.string().optional(),
   // scheduledDatetime: z.coerce.date().optional(),
   // amountExcludingTax: z.coerce.number().optional(),
   // amountConsumptionTax: z.coerce.number().optional(),

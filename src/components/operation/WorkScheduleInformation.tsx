@@ -19,7 +19,7 @@ export const WorkScheduleInformation = ({
           <div className="col-span-1">
             <UserSelect
               form={form}
-              label={t("responsibleWorker")}
+              label={t("assignedWorker")}
               name={"assignedWorkerId"}
             />
           </div>

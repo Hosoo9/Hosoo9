@@ -1,3 +1,5 @@
+import dayjs from 'dayjs'
+
 export const formatDate = (isoDate: string) => {
   // format  date in japanese
   return new Intl.DateTimeFormat("ja-JP", {
@@ -10,3 +12,13 @@ export const formatDate = (isoDate: string) => {
     hour12: false, // Use 24-hour format
   }).format(new Date(isoDate))
 }
+
+export const adjustDateToTimezone = (isoDate: string | null) => {
+  if (isoDate === null) {
+    return null
+  }
+
+  return dayjs(isoDate).add(9, "hours").toDate()
+}
+
+export const cDayJs = dayjs
