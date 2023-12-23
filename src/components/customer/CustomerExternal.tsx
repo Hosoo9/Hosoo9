@@ -4,6 +4,7 @@ import { LoaderComponent } from "@/components/Provider"
 import CustomerChipTab from "./CustomerChipTab"
 import CustomerEquipmentTab from "./CustomerEquipmentTab"
 import CustomerAlarmTab from "./CustomerAlarmTab"
+import OperationHistory from "../operation/OperationHistory"
 
 const CustomerExternal = ({
   customer,
@@ -75,6 +76,12 @@ const CustomerExternal = ({
                 <Tabs.Tab value="alarm">
                   謷報器情報
                 </Tabs.Tab>
+                {/* <Tabs.Tab value="payment-history"> */}
+                {/*   TODO: Payment history */}
+                {/* </Tabs.Tab> */}
+                <Tabs.Tab value="operation-history">
+                  TODO: Operation history
+                </Tabs.Tab>
               </Tabs.List>
 
               <Tabs.Panel value="customer-info">
@@ -88,8 +95,11 @@ const CustomerExternal = ({
               <Tabs.Panel value="alarm">
                 <CustomerAlarmTab />
               </Tabs.Panel>
-            </Tabs>
 
+              <Tabs.Panel value="operation-history">
+                <OperationHistory customerNumber={customer.customerNumber} />
+              </Tabs.Panel>
+            </Tabs>
           </>
       )}
 

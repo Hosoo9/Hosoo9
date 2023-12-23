@@ -50,7 +50,8 @@ function OperationList({
   onAction,
   onSecondAction,
   secondActionTitle,
-  isExpired = false
+  isExpired = false,
+  customerNumber
 }: {
   statuses?: number[]
   className?: string
@@ -59,6 +60,7 @@ function OperationList({
   secondActionTitle?: string
   onSecondAction?: () => Promise<void>
   isExpired?: boolean
+  customerNumber?: string
 }) {
   const [sorting, setSorting] = useState<DataTableSortStatus<Operation>>({
     columnAccessor: "createdAt",
@@ -119,6 +121,10 @@ function OperationList({
 
       if (isExpired) {
         params.append("isExpiredExchange", "true")
+      }
+
+      if (customerNumber) {
+        params.append("customerNumber", customerNumber)
       }
 
       return fetch(`/api/operation?${params.toString()}`).then((res) => res.json())
