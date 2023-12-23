@@ -276,7 +276,7 @@ function OperationForm({ code }: { code: string }) {
         <LoaderComponent />
       ) : (
         <form onReset={form.onReset} onSubmit={form.onSubmit(saveOperation)}>
-          <OperationHeader code={code} />
+          <OperationHeader code={code} showContact={true} />
           {/* <pre>{JSON.stringify(form.values, null, 2)}</pre> */}
           {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
           {/* <ContactHistory */}

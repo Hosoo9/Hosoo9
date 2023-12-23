@@ -18,27 +18,7 @@ export function Sidebar({ onBurgerClick, opened }: { onBurgerClick: () => void, 
   const t = useTranslations("OperationForm")
 
   const managerMenu = [
-    { link: "/jp", label: `${t("workSchedule")}${t("list")}`, icon: IconTools },
-    {
-      link: "/jp/operation/expired",
-      label: `${t("expired")}${t("list")}`,
-      icon: IconTools,
-    },
-    {
-      link: "/jp/operation/request",
-      label: `${t("pendingApproval")}${t("list")}`,
-      icon: IconTools,
-    },
-    {
-      link: "/jp/operation/approved",
-      label: `${t("approved")}${t("list")}`,
-      icon: IconTools,
-    },
-    {
-      link: "/jp/operation/completed",
-      label: `${t("completed")}${t("list")}`,
-      icon: IconTools,
-    },
+    { link: "/jp/operations", label: `${t("operations")}`, icon: IconTools },
     {
       link: "/jp/customer-search",
       label: t("customerSearch"),
@@ -47,16 +27,7 @@ export function Sidebar({ onBurgerClick, opened }: { onBurgerClick: () => void, 
   ]
 
   const technicianMenu = [
-    {
-      link: "/jp/operation/approved",
-      label: `${t("approved")}${t("operations")}`,
-      icon: IconTools,
-    },
-    {
-      link: "/jp/operation/completed",
-      label: `${t("completed")}${t("operations")}`,
-      icon: IconTools,
-    },
+    { link: "/jp/operations", label: `${t("operations")}`, icon: IconTools },
   ]
 
   const bureauMenu = [

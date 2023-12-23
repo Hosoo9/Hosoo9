@@ -35,12 +35,12 @@ export const RejectOperationButton = ({
     }
 
     const result = await mutateAsync({})
-    
+
     if (onSubmit) {
       onSubmit(result)
     }
 
-    router.push("/operation/request")
+    router.push("/operations?tab=requested")
   }
 
   return (

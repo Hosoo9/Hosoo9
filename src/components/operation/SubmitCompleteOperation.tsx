@@ -35,12 +35,12 @@ export const SubmitCompleteOperation = ({
     }
 
     const result = await mutateAsync({})
-    
+
     if (onSubmit) {
       onSubmit(await result.json())
     }
 
-    router.push("/operation/completed")
+    router.push("/operations?tab=completed")
   }
 
   return (
