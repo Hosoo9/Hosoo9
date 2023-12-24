@@ -1,3 +1,4 @@
+import prisma from "@/utils/prisma"
 import {
   randEmail,
   randFutureDate,
@@ -5,6 +6,7 @@ import {
   randNumber,
   randPhoneNumber,
 } from "@ngneat/falso"
+import { Prisma } from "@prisma/client"
 import dayjs from "dayjs"
 
 type SearchCustomerInput = {
@@ -15,11 +17,81 @@ type SearchCustomerInput = {
 }
 
 export const searchCustomer = async (searchInput: SearchCustomerInput) => {
-  if (searchInput.customerNumber) {
-    return [generateCustomer(searchInput)]
+  // if (searchInput.customerNumber) {
+  //   return [generateCustomer(searchInput)]
+  // }
+
+  // return [generateCustomer(searchInput), generateCustomer(searchInput)]
+  const where = constructWhere(searchInput)
+
+  const customers = await prisma.customer.findMany({
+    where,
+    // include: {
+    //   createdByUser: includeUser,
+    // },
+  })
+
+  return customers.map((customer) => {
+    return {
+      ...customer,
+      phoneNumber: customer.contactTel,
+      // createdByUser: customer.createdByUser,
+    }
+  })
+}
+
+const constructWhere = ({ code, customerNumber, meterNumber, phoneNumber }: SearchCustomerInput) => {
+  const conditionalOptions: Prisma.CustomerWhereInput = {}
+
+  if (customerNumber) {
+    conditionalOptions.customerNumber = {
+      startsWith: customerNumber,
+    }
   }
 
-  return [generateCustomer(searchInput), generateCustomer(searchInput)]
+  if (meterNumber) {
+    conditionalOptions.meterNo = {
+      startsWith: meterNumber,
+    }
+  }
+
+  if (phoneNumber) {
+    conditionalOptions.contactTel = {
+      startsWith: phoneNumber,
+    }
+  }
+
+  if (code) {
+    let [adminCd, townCd] = [code.substring(0, 2), code.substring(2)];
+
+    if (adminCd) {
+      conditionalOptions.userAdminCd = {
+        equals: adminCd,
+      }
+    }
+
+    if (townCd) {
+      conditionalOptions.userTownCd = {
+        equals: townCd,
+      }
+    }
+  }
+
+  // if (createdAtFrom) {
+  //   conditionalOptions.createdAt = {
+  //     gte: createdAtFrom,
+  //     lte: createdAtTo,
+  //   }
+  // }
+
+  // if (operationTypes && operationTypes.length > 0) {
+  //   conditionalOptions.operationType = {
+  //     in: operationTypes,
+  //   }
+  // }
+
+
+  return conditionalOptions
 }
 
 const names = [

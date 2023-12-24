@@ -13,13 +13,37 @@ import { createOperationSchema } from "@/contexts/operation/validation-schema"
 import { Button, Container } from "@mantine/core"
 import { useForm, zodResolver } from "@mantine/form"
 import { notifications } from "@mantine/notifications"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { CustomerInformation } from "./CustomerInformation"
+import { transformCustomerData } from "@/utils/converters"
 
-function OperationForm() {
+function OperationCreateForm() {
+  const searchParams = useSearchParams()
   const router = useRouter()
+
+  const { isLoading: isCustomerLoading, isError, data, refetch } = useQuery({
+    queryKey: [`customer-search`, searchParams],
+    queryFn: async () => {
+      if (!searchParams.has("customerNumber")) {
+        return []
+      }
+
+      const result = await fetch(`/api/customer-search?${searchParams.toString()}`)
+      return result.json()
+    },
+    cacheTime: 0,
+    onSuccess: (data) => {
+      if (data) {
+        if (data.length > 0) {
+          form.setValues({ ...transformCustomerData(data[0]) })
+        }
+      }
+    },
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  })
 
   const form = useForm({
     validate: zodResolver(createOperationSchema),
@@ -104,6 +128,4 @@ function OperationForm() {
   )
 }
 
-export default OperationForm
-
-// To do comment
+export default OperationCreateForm

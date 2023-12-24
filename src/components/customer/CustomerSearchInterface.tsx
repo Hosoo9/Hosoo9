@@ -9,7 +9,10 @@ export default function CustomerSearchInterface({}: {}) {
 
   return (
     <div>
-      <CustomerSearch onSuccess={(data) => setCustomerInfo(data)} />
+      <CustomerSearch
+        onSuccess={(data) => setCustomerInfo(data)}
+        selectedCustomerNumber={customerInfo?.customerNumber}
+      />
 
       {customerInfo && <CustomerExternal customer={customerInfo} isLoading={false} />}
     </div>

@@ -5,8 +5,9 @@ import { useQuery } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
 import { SetStateAction, useState } from "react"
 import { DataTable } from "mantine-datatable"
+import Link from "next/link"
 
-export const CustomerSearch = ({ onSuccess }: { onSuccess: (data: any) => void }) => {
+export const CustomerSearch = ({ onSuccess, selectedCustomerNumber }: { selectedCustomerNumber?: string, onSuccess: (data: any) => void }) => {
   const t = useTranslations("OperationForm")
   const [selectionProcess, setSelectionProcess] = useState(false)
 
@@ -19,8 +20,7 @@ export const CustomerSearch = ({ onSuccess }: { onSuccess: (data: any) => void }
   const [meterNumber, setMeterNumber] = useState("")
   const [phoneNumber, setPhoneNumber] = useState("")
   const [code, setCode] = useState("")
-  const [opened, { open, close }] = useDisclosure(false);
-
+  const [opened, { open, close }] = useDisclosure(false)
 
   const columns = [
     {
@@ -33,18 +33,25 @@ export const CustomerSearch = ({ onSuccess }: { onSuccess: (data: any) => void }
     },
   ]
 
-
   const [selectionData, setSelectionData] = useState([])
 
-  const {
-    isLoading,
-    isError,
-    data,
-    refetch,
-  } = useQuery({
+  const successWrapper = (data: any) => {
+    if (data === null) {
+      onSuccess(null)
+    } else {
+      onSuccess(transformCustomerData(data))
+    }
+  }
+
+  const { isLoading, isError, data, refetch } = useQuery({
     queryKey: [`customer-search`, customerNumber, meterNumber, phoneNumber, code],
     queryFn: async () => {
-      if (customerNumber === "" && meterNumber === "" && phoneNumber === "" && code === "") {
+      if (
+        customerNumber === "" &&
+        meterNumber === "" &&
+        phoneNumber === "" &&
+        code === ""
+      ) {
         return null
       }
 
@@ -73,9 +80,15 @@ export const CustomerSearch = ({ onSuccess }: { onSuccess: (data: any) => void }
     onSuccess: (data) => {
       if (data) {
         if (data.length <= 1) {
-          onSuccess(transformCustomerData(data[0]))
-          reset()
-          close()
+          if (data.length === 0) {
+            successWrapper(null)
+            reset()
+            close()
+          } else {
+            successWrapper(data[0])
+            reset()
+            close()
+          }
         } else {
           setSelectionData(data)
           setSelectionProcess(true)
@@ -124,8 +137,8 @@ export const CustomerSearch = ({ onSuccess }: { onSuccess: (data: any) => void }
     <div className="pt-5">
       <Modal opened={opened} onClose={close} title={t("customerSearch")}>
         <>
-          { selectionProcess === false && (
-            <div className="flex gap-3 flex-col">
+          {selectionProcess === false && (
+            <div className="flex flex-col gap-3">
               <TextInput
                 value={customerNumberInput}
                 onChange={handleCustomerNumberChange}
@@ -152,10 +165,9 @@ export const CustomerSearch = ({ onSuccess }: { onSuccess: (data: any) => void }
                 {t("search")}
               </Button>
             </div>
-            )
-          }
+          )}
 
-          { selectionProcess === true && (
+          {selectionProcess === true && (
             <div>
               <DataTable
                 idAccessor={"customerNumber"}
@@ -165,8 +177,10 @@ export const CustomerSearch = ({ onSuccess }: { onSuccess: (data: any) => void }
                 highlightOnHover
                 records={selectionData || []}
                 columns={columns}
-                onRowClick={({ record }) => {
-                  onSuccess(transformCustomerData(record))
+                onRowClick={({ record }: { record: any }) => {
+                  onSuccess(() => {
+                    successWrapper(record)
+                  })
                   reset()
                   close()
                 }}
@@ -176,7 +190,19 @@ export const CustomerSearch = ({ onSuccess }: { onSuccess: (data: any) => void }
         </>
       </Modal>
 
-      <Button onClick={open}>{ t("customerSearch") }</Button>
+      <div className="flex justify-between">
+        <Button onClick={open}>{t("customerSearch")}</Button>
+
+        {selectedCustomerNumber !== "" && selectedCustomerNumber !== undefined && (
+          <Button
+            color="violet"
+            component={Link}
+            href={`/operation/new?customerNumber=${selectedCustomerNumber}`}
+          >
+            {t("create")}
+          </Button>
+        )}
+      </div>
       {/* <CustomerFirst /> */}
     </div>
   )
