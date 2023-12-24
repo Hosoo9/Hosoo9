@@ -11,7 +11,7 @@ export default async function Home() {
     redirect("/api/auth/signin?callbackUrl=/")
   }
 
-  redirect("/operations")
+  redirect("/customer-search")
 
   // return (
   //   <div>
