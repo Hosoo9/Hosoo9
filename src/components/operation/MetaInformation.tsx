@@ -18,7 +18,7 @@ export const MetaInformation = ({ form, operation }: { form: any, operation: any
         <div className="col-span-1">
           <div className="flex flex-col">
             <div className="text-sm font-semibold text-gray-700">{t("status")}</div>
-            <div className="mt-1 text-gray-600">{operation?.status ? t(getOperationStateName(operation.status).toLowerCase()) : "-"}</div>
+            <div className="mt-1 text-gray-600">{operation?.status ? t(getOperationStateName(operation.status)?.toLowerCase()) : "-"}</div>
           </div>
         </div>
 

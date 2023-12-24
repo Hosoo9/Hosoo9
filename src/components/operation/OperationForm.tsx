@@ -9,7 +9,7 @@
 
 import "dayjs/locale/ja"
 
-import { Button, Container, Divider, Group, Stepper, Title } from "@mantine/core"
+import { Button, Container, Group, Stepper, Title } from "@mantine/core"
 import { useForm } from "@mantine/form"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
@@ -19,8 +19,6 @@ import SignatureCanvas from "react-signature-canvas"
 import { CustomerInformation } from "./CustomerInformation"
 import { Flags } from "./Flags"
 import { InstallingMeterInformation } from "./InstallingMeterInformation"
-import { MetaInformation } from "./MetaInformation"
-import { Pause } from "./Pause"
 import { RemovingMeterInformation } from "./RemovingMeterInformation"
 import { WorkInformation } from "./WorkInformation"
 import { WorkScheduleInformation } from "./WorkScheduleInformation"
@@ -32,8 +30,13 @@ import { ApproveOperationButton } from "./ApproveOperationButton"
 import { RejectOperationButton } from "./RejectOperationButton"
 import { notifications } from "@mantine/notifications"
 import { OperationHeader } from "./OperationHeader"
-import { stringToEmpty, transformCustomerData } from "@/utils/converters"
+import {
+  getCustomerDataFrom,
+  stringToEmpty,
+  transformCustomerData,
+} from "@/utils/converters"
 import { adjustDateToTimezone } from "@/utils/date-helper"
+import CustomerStaticHeader from "../customer/CustomerStaticHeader"
 
 const setDate = (date: Date) => {
   return date === null ? null : new Date(date)
@@ -104,6 +107,7 @@ const transformData = (data: any) => {
 function OperationForm({ code }: { code: string }) {
   const router = useRouter()
   const [operation, setOperation] = useState<any>(null)
+  const [customer, setCustomer] = useState<any>(null)
 
   const {
     isLoading: isCurrentUserLoading,
@@ -128,6 +132,7 @@ function OperationForm({ code }: { code: string }) {
       form.setInitialValues(transformed)
       form.setValues(transformed)
 
+      setCustomer({ ...getCustomerDataFrom(data) })
       setOperation({ ...data })
     },
     refetchOnWindowFocus: false,
@@ -212,7 +217,9 @@ function OperationForm({ code }: { code: string }) {
 
       return result.json()
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      setCustomer({ ...getCustomerDataFrom(data) })
+
       notifications.show({
         title: "Save success",
         message: "Operation has been saved",
@@ -284,10 +291,14 @@ function OperationForm({ code }: { code: string }) {
           {/*   onNewContact={(contacts) => form.insertListItem("ContactOperation", contacts)} */}
           {/* /> */}
 
-          <MetaInformation form={form} operation={operation} />
-          <Pause />
+          {/* { JSON.stringify(customer, null, 2) } */}
+          {customer && customer.customerNumber && (
+            <CustomerStaticHeader customer={customer} />
+          )}
+          {/* <MetaInformation form={form} operation={operation} /> */}
+          {/* <Pause /> */}
 
-          <Divider my="lg" className="pt-5" />
+          {/* <Divider my="lg" className="pt-5" /> */}
 
           <Stepper active={active} onStepClick={setActive} iconSize={32}>
             <Stepper.Step label={t("customerInformation")}>

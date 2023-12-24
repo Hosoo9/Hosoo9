@@ -199,3 +199,60 @@ model MeterModelMaster {
   id                  Int    @id @default(autoincrement())
   code                String @db.NVarChar(2)
 }
+
+model Customer {
+  customerNumber                String    @id @db.VarChar(12)
+  postalCode                    String?   @db.VarChar(8)
+  municipality                  String?   @db.VarChar(50)
+  address                       String?   @db.VarChar(100)
+  housingType                   Int?      @db.TinyInt
+  buildingNameRoomNumber        String?   @db.VarChar(100)
+  name                          String?   @db.VarChar(60)
+  nameKana                      String?   @db.VarChar(100)
+  gasSupKeiCd                   String?   @db.VarChar(1)
+  standYmd                      Int?      @db.SmallInt
+  gyoshuCd                      String?   @db.VarChar(3)
+  userAdminCd                   String?   @db.Char
+  userTownCd                    String?   @db.Char
+  userStreetNo                  Int?      @db.SmallInt
+  userHouseNo                   Int?      @db.SmallInt
+  userSpecialNo                 Int?      @db.SmallInt
+  userKataKNm                   String?   @db.VarChar(20)
+  userKataNm                    String?   @db.VarChar(40)
+  userKNm                       String?   @db.VarChar(20)
+  userNm                        String?   @db.VarChar(40)
+  telKbn                        String?   @db.VarChar(1)
+  userTel                       String?   @db.VarChar(12)
+  kaiSu                         Int?      @db.SmallInt
+  posCd                         String?   @db.VarChar(1)
+  makerCd                       String?   @db.VarChar(1)
+  patNo                         String?   @db.VarChar(2)
+  meterNumber                   Int?      @db.Int
+  meterNo                       String?   @db.VarChar(7)
+  meterYmd                      DateTime? @db.DateTime
+  usedSu                        Int?      @db.Int
+  meterPutKbn                   String?   @db.VarChar(1)
+  meterPutYmd                   DateTime? @db.DateTime
+  meterInfoKbn                  String?   @db.VarChar(1)
+  meterTurnOnKbn                String?   @db.VarChar(1)
+  meterTurnOnYmd                DateTime? @db.DateTime
+  meterTurnOffKbn               String?   @db.VarChar(1)
+  meterTurnOffYmd               DateTime? @db.DateTime
+  meterRemoveKbn                String?   @db.VarChar(1)
+  meterRemoveYmd                DateTime? @db.DateTime
+  meterReadKbn                  String?   @db.VarChar(1)
+  meterReadYmd                  DateTime? @db.DateTime
+  noteCd                        String?   @db.VarChar(1)
+  keyNo                         Int?      @db.SmallInt
+  supplyNo                      String?   @db.VarChar(6)
+  contactTel                    String?   @db.VarChar(12)
+  pastMeterSu1                  Int?      @db.Int
+  pastMeterSu2                  Int?      @db.Int
+  pastSupKei3                   String?   @db.VarChar(1)
+  pastMeterSu3                  Int?      @db.Int
+  pastMeterSu4                  Int?      @db.Int
+  disaReblkCd                   String?   @db.VarChar(1)
+  jigyoshaCd                    String?   @db.Char(5)
+  kiguChosaYmd                  DateTime? @db.DateTime
+  tatemonoKbn                   String?   @db.Char(2)
+}

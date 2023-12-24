@@ -37,6 +37,12 @@ export const stringToEmpty = (str: string | null) => {
 export const transformCustomerData = (data: any) => {
   return {
     ...data,
+    ...getCustomerDataFrom(data),
+  }
+}
+
+export const getCustomerDataFrom = (data: any) => {
+  return {
     name: stringToEmpty(data.name),
     nameKana: stringToEmpty(data.nameKana),
     phoneNumber: stringToEmpty(data.phoneNumber),
@@ -50,4 +56,3 @@ export const transformCustomerData = (data: any) => {
     mailAddress: stringToEmpty(data.mailAddress),
   }
 }
-

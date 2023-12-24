@@ -34,8 +34,8 @@ export const CustomerInformation = ({
           {...form.getInputProps("housingType")}
         >
           {/* <Group mt="xs"> */}
-          <Radio value="1" label={t("detachedHouse")} my="xs" disabled={isReadOnly} />
-          <Radio value="2" label={t("housingComplex")} my="xs" disabled={isReadOnly} />
+          <Radio value="1" label={t("housingType1")} my="xs" disabled={isReadOnly} />
+          <Radio value="2" label={t("housingType2")} my="xs" disabled={isReadOnly} />
           {/* </Group> */}
         </Radio.Group>
       </div>

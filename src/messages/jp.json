@@ -39,12 +39,15 @@
     "address" : "番地",
     "buildingNameRoomNumber" : "建物名・部屋番号",
     "buildingType": "建物形態",
-    "detachedHouse":"一戸建て",
-    "housingComplex" : "集合住宅",
+    "housingType1":"一戸建て",
+    "housingType2" : "集合住宅",
     "nameCompanyName": "氏名・法人名",
     "nameKana": "フリガナ",
     "phoneNumber": "電話番号",
     "phoneNumberType": "電話番号種別",
+    "phoneNumberType1":"自宅",
+    "phoneNumberType2":"勤務先",
+    "phoneNumberType3":"携帯電話",
     "workInformation": "作業情報",
     "removingMeterInformation": "取外メーター情報",
     "meterInspectionDate": "検定年月",
@@ -254,6 +257,8 @@
     "contact": "連絡先",
     "customerSearch": "需要家検索",
     "workSchedule": "日程調整",
-    "list": "リスト"
+    "list": "リスト",
+    "operationHistory": "作業履歴",
+    "paymentHistory": "収納状況"
   }
 }

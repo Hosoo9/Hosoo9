@@ -5,6 +5,7 @@ import CustomerChipTab from "./CustomerChipTab"
 import CustomerEquipmentTab from "./CustomerEquipmentTab"
 import CustomerAlarmTab from "./CustomerAlarmTab"
 import OperationHistory from "../operation/OperationHistory"
+import CustomerStaticHeader from "./CustomerStaticHeader"
 
 const CustomerExternal = ({
   customer,
@@ -21,49 +22,7 @@ const CustomerExternal = ({
         <LoaderComponent />
       ) : (
           <>
-            <Paper withBorder shadow="xs" p="lg" mb="lg">
-              <div className="mb-2">
-                <span className="font-semibold">{t("customerNumber")}:</span>{" "}
-                {customer.customerNumber}
-              </div>
-              <div className="mb-2">
-                <span className="font-semibold">{t("postalCode")}:</span>{" "}
-                {customer.postalCode}
-              </div>
-              <div className="mb-2">
-                <span className="font-semibold">{t("municipalities")}:</span>{" "}
-                {customer.municipality}
-              </div>
-              <div className="mb-2">
-                <span className="font-semibold">{t("address")}:</span> {customer.address}
-              </div>
-              <div className="mb-2">
-                <span className="font-semibold">{t("buildingNameRoomNumber")}:</span>{" "}
-                {customer.buildingNameRoomNumber}
-              </div>
-              <div className="mb-2">
-                <span className="font-semibold">{t("buildingType")}:</span>{" "}
-                {customer.housingType}
-              </div>
-              <div className="mb-2">
-                <span className="font-semibold">{t("nameCompanyName")}:</span> {customer.name}
-              </div>
-              <div className="mb-2">
-                <span className="font-semibold">{t("nameKana")}:</span> {customer.nameKana}
-              </div>
-              <div className="mb-2">
-                <span className="font-semibold">{t("phoneNumber")}:</span>{" "}
-                {customer.phoneNumber}
-              </div>
-              <div className="mb-2">
-                <span className="font-semibold">{t("phoneNumberType")}:</span>{" "}
-                {customer.phoneNumberType}
-              </div>
-              <div className="mb-2">
-                <span className="font-semibold">{t("mailAddress")}:</span>{" "}
-                {customer.mailAddress}
-              </div>
-            </Paper>
+            <CustomerStaticHeader customer={customer} />
 
             <Tabs defaultValue="customer-info">
               <Tabs.List>
@@ -80,7 +39,7 @@ const CustomerExternal = ({
                 {/*   TODO: Payment history */}
                 {/* </Tabs.Tab> */}
                 <Tabs.Tab value="operation-history">
-                  TODO: Operation history
+                  { t("operationHistory") }
                 </Tabs.Tab>
               </Tabs.List>
 
