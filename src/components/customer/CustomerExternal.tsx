@@ -1,10 +1,10 @@
-import { useTranslations } from "next-intl"
-import { Paper, Tabs } from "@mantine/core"
 import { LoaderComponent } from "@/components/Provider"
+import { Tabs } from "@mantine/core"
+import { useTranslations } from "next-intl"
+import OperationHistory from "../operation/OperationHistory"
+import CustomerAlarmTab from "./CustomerAlarmTab"
 import CustomerChipTab from "./CustomerChipTab"
 import CustomerEquipmentTab from "./CustomerEquipmentTab"
-import CustomerAlarmTab from "./CustomerAlarmTab"
-import OperationHistory from "../operation/OperationHistory"
 import CustomerStaticHeader from "./CustomerStaticHeader"
 
 const CustomerExternal = ({

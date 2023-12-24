@@ -18,12 +18,27 @@ export function Sidebar({ onBurgerClick, opened }: { onBurgerClick: () => void, 
   const t = useTranslations("OperationForm")
 
   const managerMenu = [
-    { link: "/jp/operations", label: `${t("operations")}`, icon: IconTools },
     {
       link: "/jp/customer-search",
       label: t("customerSearch"),
       icon: IconTools,
     },
+    { link: "/jp/operations", label: `${t("operations")}`, icon: IconTools },
+    {
+      link: "/jp/operation-aggregation",
+      label: "作業集計",
+      icon: IconTools,
+    },
+    {
+      link: "/jp/cost-calculator",
+      label: "労務費算出",
+      icon: IconTools,
+    },
+    {
+      link: "/jp/changed-list",
+      label: "変更リスト",
+      icon: IconTools,
+    }
   ]
 
   const technicianMenu = [
@@ -32,10 +47,7 @@ export function Sidebar({ onBurgerClick, opened }: { onBurgerClick: () => void, 
 
   const bureauMenu = [
     ...managerMenu,
-    { link: "/jp/users", label: t("userManagement"), icon: IconTools },
-    { link: "/jp/meter_manufacturers", label: t("meterManufacturerManagement"), icon: IconTools },
-    { link: "/jp/meter_models", label: t("meterModelManagement"), icon: IconTools },
-    { link: "/jp/meter_sizes", label: t("meterSizeManagement"), icon: IconTools },
+    { link: "/jp/maintenance", label: "保守メニュー", icon: IconTools },
   ]
 
   const {
