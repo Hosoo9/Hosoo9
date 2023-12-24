@@ -3,7 +3,7 @@ import { Title } from "@mantine/core"
 export default function CostCalculatorPage({}: {}) {
   return (
     <div>
-      <Title>変更リスト</Title>
+      <Title>労務費算出</Title>
     </div>
   )
 }

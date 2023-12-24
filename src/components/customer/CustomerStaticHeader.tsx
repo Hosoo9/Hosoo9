@@ -16,8 +16,10 @@ export default function CustomerStaticHeader({
     <Paper withBorder shadow="xs" p="lg" mb="xl">
       <div className="flex">
         <div className="flex flex-grow flex-col gap-2">
-          <div className="mb-2">
-            <span className="font-semibold">{customer.customerNumber}</span>
+          <div className="mb-2 flex gap-3">
+            <span className="font-semibold">{t("customerNumber")}: {customer.customerNumber}</span>
+            |
+            <span className="font-semibold">事業者: 10000</span>
           </div>
           <div className="flex gap-3">
             <div>{customer.postalCode}</div>
