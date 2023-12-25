@@ -24,21 +24,6 @@ export function Sidebar({ onBurgerClick, opened }: { onBurgerClick: () => void, 
       icon: IconTools,
     },
     { link: "/jp/operations", label: `${t("operations")}`, icon: IconTools },
-    {
-      link: "/jp/operation-aggregation",
-      label: "作業集計",
-      icon: IconTools,
-    },
-    {
-      link: "/jp/cost-calculator",
-      label: "労務費算出",
-      icon: IconTools,
-    },
-    {
-      link: "/jp/changed-list",
-      label: "変更リスト",
-      icon: IconTools,
-    }
   ]
 
   const technicianMenu = [

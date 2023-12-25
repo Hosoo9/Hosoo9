@@ -1,41 +1,35 @@
 import { Card } from "@mantine/core"
-import { IconBuildingFactory, IconGauge, IconRuler, IconUsers } from "@tabler/icons-react"
+import {
+  IconCalculator,
+  IconExchange,
+  IconGauge,
+  IconStack,
+  IconUsers,
+} from "@tabler/icons-react"
 import { useTranslations } from "next-intl"
 import Link from "next/link"
 
 export default function MaintenancePage({}: {}) {
   const t = useTranslations("OperationForm")
 
+  const cards = [
+    { link: "/jp/users", label: t("userManagement"), icon: IconUsers },
+    { link: "/jp/meter_management", label: "メーター情報管理", icon: IconGauge },
+    { link: "/jp/operation-aggregation", label: "作業集計", icon: IconStack },
+    { link: "/jp/cost-calculator", label: "労務費算出", icon: IconCalculator },
+    { link: "/jp/changed-list", label: "変更リスト", icon: IconExchange },
+  ]
+
   return (
     <div className="mt-5 grid grid-cols-3 gap-3">
-      <Card component={Link} href="/jp/users" withBorder={true}>
-        <div className="flex flex-col items-center justify-center gap-5 py-5">
-          <IconUsers />
-          <div className="text-base text-gray-700">{t("userManagement")}</div>
-        </div>
-      </Card>
-      <Card component={Link} href="/jp/meter_manufacturers" withBorder={true}>
-        <div className="flex flex-col items-center justify-center gap-5 py-5">
-          <IconBuildingFactory />
-          <div className="text-base text-gray-700">
-            {t("meterManufacturerManagement")}
+      {cards.map((card) => (
+        <Card component={Link} href={card.link} withBorder={true} key={card.link}>
+          <div className="flex flex-col items-center justify-center gap-5 py-5">
+            <card.icon />
+            <div className="text-base text-gray-700">{card.label}</div>
           </div>
-        </div>
-      </Card>
-      <Card component={Link} href="/jp/meter_models" withBorder={true}>
-        <div className="flex flex-col items-center justify-center gap-5 py-5">
-          <IconGauge />
-          <div className="text-base text-gray-700">
-            {t("meterModelManagement")}
-          </div>
-        </div>
-      </Card>
-      <Card component={Link} href="/jp/meter_sizes" withBorder={true}>
-        <div className="flex flex-col items-center justify-center gap-5 py-5">
-          <IconRuler />
-          <div className="text-base text-gray-700">{t("meterSizeManagement")}</div>
-        </div>
-      </Card>
+        </Card>
+      ))}
     </div>
   )
 }
