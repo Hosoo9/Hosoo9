@@ -32,7 +32,7 @@ export function Sidebar({ onBurgerClick, opened }: { onBurgerClick: () => void, 
 
   const bureauMenu = [
     ...managerMenu,
-    { link: "/jp/maintenance", label: "保守メニュー", icon: IconTools },
+    { link: "/jp/management", label: "保守メニュー", icon: IconTools },
   ]
 
   const {

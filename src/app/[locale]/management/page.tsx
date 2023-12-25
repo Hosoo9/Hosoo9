@@ -10,7 +10,7 @@ import {
 import { getTranslations } from "next-intl/server"
 import Link from "next/link"
 
-export default async function MaintenancePage({}: {}) {
+export default async function ManagementPage({}: {}) {
   await protectPage()
 
   const t = await getTranslations("OperationForm")
