@@ -25,6 +25,7 @@ function UserForm({
   const form = useForm({
     initialValues: {
       id: user?.id ||"",
+      loginId: user?.loginId || "",
       name: user?.name || "",
       nameKana: user?.nameKana || "",
       role: user?.role ? user.role.toString() : null,
@@ -76,6 +77,11 @@ function UserForm({
         <div>
           <Input.Wrapper label={t("id")}>
             <Input data-testid="id" {...form.getInputProps("id")} disabled={!!user} />{" "}
+          </Input.Wrapper>
+        </div>
+        <div>
+          <Input.Wrapper label={t("loginId")}>
+            <Input data-testid="loginId" {...form.getInputProps("loginId")} />{" "}
           </Input.Wrapper>
         </div>
         <div>

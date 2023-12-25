@@ -113,6 +113,10 @@ export default function UserManagament() {
       title: t("username"),
     },
     {
+      accessor: "loginId",
+      title: t("loginId"),
+    },
+    {
       accessor: "name",
       title: t("name"),
     },

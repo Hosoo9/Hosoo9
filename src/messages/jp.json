@@ -259,6 +259,7 @@
     "workSchedule": "日程調整",
     "list": "リスト",
     "operationHistory": "作業履歴",
-    "paymentHistory": "収納状況"
+    "paymentHistory": "収納状況",
+    "loginId": "ログインID"
   }
 }

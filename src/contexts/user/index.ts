@@ -76,8 +76,17 @@ export const findById = async (id: string) => {
   })
 }
 
+export const findByLoginId = async (loginId: string) => {
+  return await prisma.user.findUnique({
+    where: {
+      loginId,
+    },
+  })
+}
+
 type RegisterUserInput = {
   id: string
+  loginId: string
   role: number
 }
 
@@ -85,6 +94,7 @@ export const createUser = async (input: RegisterUserInput) => {
   return await prisma.user.create({
     data: {
       id: input.id,
+      loginId: input.loginId,
       password: await defaultPassword(),
       role: input.role,
     },

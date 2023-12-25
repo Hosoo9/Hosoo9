@@ -1,3 +1,4 @@
+import { protectPage } from "@/lib/session"
 import { Card } from "@mantine/core"
 import {
   IconCalculator,
@@ -6,11 +7,13 @@ import {
   IconStack,
   IconUsers,
 } from "@tabler/icons-react"
-import { useTranslations } from "next-intl"
+import { getTranslations } from "next-intl/server"
 import Link from "next/link"
 
-export default function MaintenancePage({}: {}) {
-  const t = useTranslations("OperationForm")
+export default async function MaintenancePage({}: {}) {
+  await protectPage()
+
+  const t = await getTranslations("OperationForm")
 
   const cards = [
     { link: "/jp/users", label: t("userManagement"), icon: IconUsers },

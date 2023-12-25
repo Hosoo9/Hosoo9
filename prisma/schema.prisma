@@ -67,7 +67,8 @@ model ResetCode {
 
 model User {
   id            String    @id @db.NVarChar(30)
-  name          String?
+  loginId       String    @db.NVarChar(30) @unique
+  name          String? 
   nameKana      String?
   image         String?
   accounts      Account[]
