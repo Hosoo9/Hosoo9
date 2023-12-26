@@ -11,10 +11,12 @@ import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { useSearchParams } from 'next/navigation'
 
+const DEFAULT_TAB = "expired"
+
 export default function RootPage({}: {}) {
   const t = useTranslations("OperationForm")
   const router = useRouter()
-  const [activeTab, setActiveTab] = useState('draft');
+  const [activeTab, setActiveTab] = useState(DEFAULT_TAB)
   const searchParams = useSearchParams()
 
   useEffect(() => {
@@ -22,7 +24,7 @@ export default function RootPage({}: {}) {
     if (searchParams.has('tab')) {
       setActiveTab(searchParams.get('tab') as string)
     } else {
-      setActiveTab('draft')
+      setActiveTab(DEFAULT_TAB)
     }
   }, [searchParams]);
 
@@ -30,18 +32,22 @@ export default function RootPage({}: {}) {
     <Tabs 
       // value={router.query.activeTab as string}
       // onChange={(value) => router.push(`/tabs/${value}`)}
-      defaultValue="draft"
+      defaultValue={DEFAULT_TAB}
       value={activeTab}
       onChange={(value) => router.push(`?tab=${value}`)}
       keepMounted={false}
     >
       <Tabs.List>
+        <Tabs.Tab value="expired">{`${t("expired")}${t("list")}`}</Tabs.Tab>
         <Tabs.Tab value="draft">{`${t("workSchedule")}${t("list")}`}</Tabs.Tab>
         <Tabs.Tab value="requested">{`${t("pendingApproval")}${t("list")}`}</Tabs.Tab>
         <Tabs.Tab value="approved">{`${t("approved")}${t("list")}`}</Tabs.Tab>
         <Tabs.Tab value="completed">{`${t("completed")}${t("list")}`}</Tabs.Tab>
-        <Tabs.Tab value="expired">{`${t("expired")}${t("list")}`}</Tabs.Tab>
       </Tabs.List>
+
+      <Tabs.Panel value="expired">
+        <ExpiredOperationList />
+      </Tabs.Panel>
 
       <Tabs.Panel value="draft">
         <DraftOperationList />
@@ -57,10 +63,6 @@ export default function RootPage({}: {}) {
 
       <Tabs.Panel value="completed">
         <OperationList statuses={[6]} className="py-5" />
-      </Tabs.Panel>
-
-      <Tabs.Panel value="expired">
-        <ExpiredOperationList />
       </Tabs.Panel>
     </Tabs>
   )

@@ -1,18 +1,18 @@
 import { protectPage } from "@/lib/session"
 import { Card } from "@mantine/core"
-import { IconCalculator, IconExchange, IconStack } from "@tabler/icons-react"
+import { IconGauge, IconTools, IconUsers } from "@tabler/icons-react"
 import { getTranslations } from "next-intl/server"
 import Link from "next/link"
 
-export default async function ManagementPage({}: {}) {
+export default async function MaintenancePage({}: {}) {
   await protectPage()
 
   const t = await getTranslations("OperationForm")
 
   const cards = [
-    { link: "/jp/operation-aggregation", label: "作業集計", icon: IconStack },
-    { link: "/jp/cost-calculator", label: "労務費算出", icon: IconCalculator },
-    { link: "/jp/changed-list", label: "変更リスト", icon: IconExchange },
+    { link: "/jp/users", label: t("userManagement"), icon: IconUsers },
+    { link: "/jp/meter_management", label: "メーター情報管理", icon: IconGauge },
+    { link: "/jp/labor-cost-management", label: "労務費単価管理", icon: IconTools },
   ]
 
   return (

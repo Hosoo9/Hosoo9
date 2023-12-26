@@ -37,7 +37,7 @@ export default function CustomerChipTab({ customer }: { customer: any }) {
           </div>
 
           <div className="chip-wrapper">
-            <DataChipGroupTitle title="復1日ブロック番号" />
+            <DataChipGroupTitle title="復旧ブロック番号" />
 
             <DataChip
               value={customer.supplyNo}
@@ -71,14 +71,14 @@ export default function CustomerChipTab({ customer }: { customer: any }) {
             />
           </div>
           <div className="chip-wrapper">
-            <DataChipGroupTitle title="検針情報" />
+            <DataChipGroupTitle title="指針情報" />
 
             <DataChip
               header={"指針情報"}
               value={"検読日"}
             />
             <DataChip
-              header={"指針］"}
+              header={"指針"}
               value={"10572"}
             />
           </div>

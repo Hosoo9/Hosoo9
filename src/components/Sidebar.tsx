@@ -24,6 +24,8 @@ export function Sidebar({ onBurgerClick, opened }: { onBurgerClick: () => void, 
       icon: IconTools,
     },
     { link: "/jp/operations", label: `${t("operations")}`, icon: IconTools },
+    { link: "/jp/management", label: "統括管理メニュー", icon: IconTools },
+    { link: "/jp/maintenance", label: "保守メニュー", icon: IconTools },
   ]
 
   const technicianMenu = [
@@ -32,7 +34,6 @@ export function Sidebar({ onBurgerClick, opened }: { onBurgerClick: () => void, 
 
   const bureauMenu = [
     ...managerMenu,
-    { link: "/jp/management", label: "保守メニュー", icon: IconTools },
   ]
 
   const {
