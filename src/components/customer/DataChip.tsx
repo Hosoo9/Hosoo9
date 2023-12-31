@@ -1,7 +1,7 @@
-export const DataChip = ({ header, value }: { header?: string, value: string }) => {
+export const DataChip = ({ header, value }: { header?: string | null, value: string | null }) => {
   return (
     <div className="chip">
-      { header && <div className="chip__header">{header}</div> }
+      <div className="chip__header">{header}</div>
       <div className="chip__value">{value}</div>
     </div>
   )

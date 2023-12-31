@@ -29,7 +29,7 @@ body {
 
 @layer components {
   .chip {
-    @apply bg-primary-blue text-center;
+    @apply bg-primary-blue text-center flex flex-col gap-1 justify-between;
     padding: var(--mantine-spacing-xs);
     border-radius: var(--paper-radius,var(--mantine-radius-default));
     border: var(--_paper-border,none);
@@ -37,7 +37,7 @@ body {
   }
 
   .chip__value {
-    @apply mt-1 bg-white p-1;
+    @apply bg-white p-1;
     border-radius: var(--paper-radius,var(--mantine-radius-default));
   }
 
@@ -55,3 +55,4 @@ body {
     min-width: 7rem;
   }
 }
+

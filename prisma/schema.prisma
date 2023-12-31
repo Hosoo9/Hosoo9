@@ -219,8 +219,8 @@ model Customer {
   gasSupKeiCd                   String?   @db.NVarChar(1)
   standYmd                      Int?      @db.SmallInt
   gyoshuCd                      String?   @db.NVarChar(3)
-  userAdminCd                   String?   @db.Char(3)
-  userTownCd                    String?   @db.Char(2)
+  userAdminCd                   String?   @db.Char(2)
+  userTownCd                    String?   @db.Char(3)
   userStreetNo                  Int?      @db.SmallInt
   userHouseNo                   Int?      @db.SmallInt
   userSpecialNo                 Int?      @db.SmallInt
@@ -255,11 +255,75 @@ model Customer {
   contactTel                    String?   @db.NVarChar(12)
   pastMeterSu1                  Int?      @db.Int
   pastMeterSu2                  Int?      @db.Int
-  pastSupKei3                   String?   @db.NVarChar(1)
   pastMeterSu3                  Int?      @db.Int
   pastMeterSu4                  Int?      @db.Int
+  pastSupKei1                   String?  @db.NVarChar(1)
+  pastSupKei2                   String?  @db.NVarChar(1)
+  pastSupKei3                   String?   @db.NVarChar(1)
+  pastSupKei4                   String?   @db.NVarChar(1)
   disaReblkCd                   String?   @db.NVarChar(1)
   jigyoshaCd                    String?   @db.Char(5)
   kiguChosaYmd                  DateTime? @db.DateTime
   tatemonoKbn                   String?   @db.Char(2)
+  kenKbn                        String?   @db.NVarChar(1)
+
+  createdAt                     DateTime  @default(now())
+  updatedAt                     DateTime  @default(now()) @updatedAt
 }
+
+model CustomerAlarm {
+  kyakuNo               String   @db.Char(11)
+  regNo                 String   @db.Char(3)
+  systemKbn             String?  @db.NChar(2)
+  alarmModel            String?  @db.NVarChar(15)
+  seizouNo              String?  @db.NChar(11)
+  toritsukePos          String?  @db.NChar(10)
+  setterNm              String?  @db.NChar(1)
+  alarmEndYm            String?  @db.NChar(6)
+  alarmLeaseCash        String?  @db.NChar(1)
+  indvBatch             String?  @db.NChar(1)
+  toritsukeYmd          String?  @db.NChar(8)
+  alarmContractReason   String?  @db.NChar(1)
+  alarmContractYmd      String?  @db.NChar(8)
+  cancelReason          String?  @db.NChar(1)
+  cancelYmd             String?  @db.NChar(8)
+  exchangeReason        String?  @db.NChar(1)
+  exchangeYmd           String?  @db.NChar(8)
+  alarmRemoveReason     String?  @db.NChar(1)
+  alarmRemoveYmd        String?  @db.NChar(8)
+  endNoticeYmd          String?  @db.NChar(8)
+  mkYmd                 String?  @db.NVarChar(30)
+  upYmd                 String?  @db.NVarChar(30)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @default(now()) @updatedAt
+
+  @@id([kyakuNo, regNo])
+}
+
+
+model CustomerEquipment {
+  kyakuNo       String    @db.Char(11) // Primary Key
+  machinNo      Int       @db.SmallInt
+  modelCd       String?   @db.NVarChar(2)
+  makerCd       String?   @db.NVarChar(2)
+  modelNm       String?   @db.NVarChar(20)
+  seizouYm      String?   @db.NVarChar(6)
+  bashoCd       String?   @db.NVarChar(1)
+  kyuhiCd       String?   @db.NVarChar(2)
+  caloreiSu     Int?
+  unfitCd       String?   @db.NVarChar(2)
+  badCd         String?   @db.NVarChar(2)
+  daisu         Int?      @db.SmallInt
+  jointCd       String?   @db.NVarChar(1)
+  chousaYmd     DateTime?
+  chousaTanto   String?   @db.NVarChar(2)
+  meterNo       String?   @db.NVarChar(3)
+  displayFlg    String?   @db.NVarChar(1)
+  mkYmd         DateTime
+  upYmd         DateTime
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @default(now()) @updatedAt
+
+  @@id([kyakuNo, machinNo])
+}
+

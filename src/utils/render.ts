@@ -1,3 +1,3 @@
-export const tp = (input: string | null) => {
+export const tp = (input?: string | null) => {
   return input ? input : "-"
 }

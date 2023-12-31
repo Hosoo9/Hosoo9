@@ -17,7 +17,11 @@ export const formatDate = (isoDate: string) => {
   }).format(new Date(isoDate))
 }
 
-export const formatDay = (isoDate: string) => {
+export const formatDay = (isoDate?: string | null) => {
+  if (!isoDate) {
+    return null
+  }
+
   return dayjs(isoDate).format("YYYY/MM/DD")
 }
 

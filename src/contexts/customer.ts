@@ -14,14 +14,17 @@ type SearchCustomerInput = {
   meterNumber?: string | null
   phoneNumber?: string | null
   code?: string | null
+  userKataNm?: string | null
+  userKataKNm?: string | null
+  address?: string | null
+  municipality?: string | null
+  streetNo?: string | null
+  houseNo?: string | null
+  userSpecialNo?: string | null
+  disaReblkCd?: string | null
 }
 
 export const searchCustomer = async (searchInput: SearchCustomerInput) => {
-  // if (searchInput.customerNumber) {
-  //   return [generateCustomer(searchInput)]
-  // }
-
-  // return [generateCustomer(searchInput), generateCustomer(searchInput)]
   const where = constructWhere(searchInput)
 
   const customers = await prisma.customer.findMany({
@@ -34,13 +37,25 @@ export const searchCustomer = async (searchInput: SearchCustomerInput) => {
   return customers.map((customer) => {
     return {
       ...customer,
-      phoneNumber: customer.contactTel,
+      phoneNumber: customer.userTel,
       // createdByUser: customer.createdByUser,
     }
   })
 }
 
-const constructWhere = ({ code, customerNumber, meterNumber, phoneNumber }: SearchCustomerInput) => {
+const constructWhere = ({
+  customerNumber,
+  meterNumber,
+  phoneNumber,
+  userKataNm,
+  userKataKNm,
+  address,
+  houseNo,
+  municipality,
+  streetNo,
+  userSpecialNo,
+  disaReblkCd
+}: SearchCustomerInput) => {
   const conditionalOptions: Prisma.CustomerWhereInput = {}
 
   if (customerNumber) {
@@ -61,19 +76,45 @@ const constructWhere = ({ code, customerNumber, meterNumber, phoneNumber }: Sear
     }
   }
 
-  if (code) {
-    let [adminCd, townCd] = [code.substring(0, 2), code.substring(2)];
-
-    if (adminCd) {
-      conditionalOptions.userAdminCd = {
-        equals: adminCd,
-      }
+  if (userKataNm) {
+    conditionalOptions.userKataNm = {
+      startsWith: userKataNm,
     }
+  }
 
-    if (townCd) {
-      conditionalOptions.userTownCd = {
-        equals: townCd,
-      }
+  if (userKataKNm) {
+    conditionalOptions.userKataKNm = {
+      startsWith: userKataKNm,
+    }
+  }
+
+  if (address) {
+    conditionalOptions.address = {
+      contains: address,
+    }
+  }
+
+  if (houseNo) {
+    conditionalOptions.userHouseNo = parseInt(houseNo)
+  }
+
+  if (municipality) {
+    conditionalOptions.municipality = {
+      contains: municipality,
+    }
+  }
+
+  if (streetNo) {
+    conditionalOptions.userStreetNo = parseInt(streetNo)
+  }
+
+  if (userSpecialNo) {
+    conditionalOptions.userSpecialNo = parseInt(userSpecialNo)
+  }
+
+  if (disaReblkCd) {
+    conditionalOptions.disaReblkCd = {
+      startsWith: disaReblkCd,
     }
   }
 
@@ -89,7 +130,6 @@ const constructWhere = ({ code, customerNumber, meterNumber, phoneNumber }: Sear
   //     in: operationTypes,
   //   }
   // }
-
 
   return conditionalOptions
 }

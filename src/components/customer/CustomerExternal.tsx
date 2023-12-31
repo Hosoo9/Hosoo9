@@ -1,11 +1,11 @@
-import { LoaderComponent } from "@/components/Provider"
-import { Tabs } from "@mantine/core"
 import { useTranslations } from "next-intl"
-import OperationHistory from "../operation/OperationHistory"
-import CustomerAlarmTab from "./CustomerAlarmTab"
+import { Tabs } from "@mantine/core"
+import { LoaderComponent } from "@/components/Provider"
 import CustomerChipTab from "./CustomerChipTab"
 import CustomerEquipmentTab from "./CustomerEquipmentTab"
+import CustomerAlarmTab from "./CustomerAlarmTab"
 import CustomerStaticHeader from "./CustomerStaticHeader"
+import OperationHistory from "../operation/OperationHistory"
 
 const CustomerExternal = ({
   customer,
@@ -24,7 +24,7 @@ const CustomerExternal = ({
           <>
             <CustomerStaticHeader customer={customer} />
 
-            <Tabs defaultValue="customer-info">
+            <Tabs defaultValue="customer-info" keepMounted={false}>
               <Tabs.List>
                 <Tabs.Tab value="customer-info">
                   基本情報
@@ -48,11 +48,11 @@ const CustomerExternal = ({
               </Tabs.Panel>
 
               <Tabs.Panel value="equipment">
-                <CustomerEquipmentTab />
+                <CustomerEquipmentTab customerNumber={customer.customerNumber} />
               </Tabs.Panel>
 
               <Tabs.Panel value="alarm">
-                <CustomerAlarmTab />
+                <CustomerAlarmTab customerNumber={customer.customerNumber} />
               </Tabs.Panel>
 
               <Tabs.Panel value="operation-history">

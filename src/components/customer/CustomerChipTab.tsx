@@ -14,6 +14,25 @@ export default function CustomerChipTab({ customer }: { customer: any }) {
             <DataChip header="型" value={customer.patNo} />
             <DataChip header="号数" value={customer.meterNumber} />
             <DataChip header="検定" value={formatDay(customer.meterYmd)} />
+            <DataChip header="メーカー" value={customer.makerCd} />
+          </div>
+
+          <div className="chip-wrapper">
+            <DataChipGroupTitle title="管理情報" />
+            <DataChip
+              header={"用途"}
+              value={`${customer.gyoshuCd}-${customer.kenKbn}`}
+            />
+          </div>
+
+          <div className="chip-wrapper">
+            <DataChipGroupTitle title="復旧ブロック番号" />
+            <DataChip value={customer.supplyNo}
+            />
+            <DataChip
+              header={"災害対応ブロック復旧フラグ"}
+              value={customer.disaReblkCd}
+            />
           </div>
 
           <div className="chip-wrapper">
@@ -31,20 +50,32 @@ export default function CustomerChipTab({ customer }: { customer: any }) {
               value={customer.pastMeterSu3}
             />
             <DataChip
-              header={dayjs().subtract(12, "month").format("YYYY/MM")}
+              header={dayjs().subtract(4, "month").format("YYYY/MM")}
               value={customer.pastMeterSu4}
             />
+
           </div>
-
           <div className="chip-wrapper">
-            <DataChipGroupTitle title="復旧ブロック番号" />
-
+            <DataChipGroupTitle title="供給履歴" />
             <DataChip
-              value={customer.supplyNo}
+              header={dayjs().subtract(1, "month").format("YYYY/MM")}
+              value={customer.pastSupKei1}
             />
+            <DataChip
+              header={dayjs().subtract(2, "month").format("YYYY/MM")}
+              value={customer.pastSupKei2}
+            />
+            <DataChip
+              header={dayjs().subtract(3, "month").format("YYYY/MM")}
+              value={customer.pastSupKei3}
+            />
+            <DataChip
+              header={dayjs().subtract(4, "month").format("YYYY/MM")}
+              value={customer.pastSupKei4}
+            />
+
           </div>
         </div>
-
         <div>
           <div className="chip-wrapper">
             <DataChipGroupTitle title="検針情報" />
@@ -74,12 +105,12 @@ export default function CustomerChipTab({ customer }: { customer: any }) {
             <DataChipGroupTitle title="指針情報" />
 
             <DataChip
-              header={"指針情報"}
-              value={"検読日"}
+              header={"検読日"}
+              value={formatDay(customer.meterReadYmd)}
             />
             <DataChip
-              header={"指針"}
-              value={"10572"}
+              header={"検読区分"}
+              value={customer.meterReadKbn}
             />
           </div>
         </div>
