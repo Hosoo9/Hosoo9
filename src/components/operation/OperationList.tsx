@@ -11,16 +11,15 @@ import "dayjs/locale/ja"
 
 import { type OperationType } from "@/contexts/operation"
 import { getOperationStateName } from "@/lib/enum/operation-state"
+import { getOperationType } from "@/lib/enum/operation-type"
 import { formatDate } from "@/utils/date-helper"
 import {
   ActionIcon,
   Box,
   Button,
-  Center,
   Grid,
   LoadingOverlay,
   MultiSelect,
-  Paper,
   Stack,
   TextInput,
 } from "@mantine/core"
@@ -32,11 +31,10 @@ import { DataTable, DataTableColumn, type DataTableSortStatus } from "mantine-da
 import { useTranslations } from "next-intl"
 import Link from "next/link"
 import { useState } from "react"
-import { getOperationType } from "@/lib/enum/operation-type"
 
 const PAGE_SIZES = [10, 15, 20]
 
-type Operation = {
+export type Operation = {
   code: string
   status: string
   operationType: OperationType
@@ -46,21 +44,17 @@ type Operation = {
 function OperationList({
   statuses,
   className,
-  actionTitle,
-  onAction,
-  onSecondAction,
-  secondActionTitle,
   isExpired = false,
-  customerNumber
+  customerNumber,
+  selectedRecords,
+  setSelectedRecords,
 }: {
   statuses?: number[]
   className?: string
-  actionTitle?: string
-  onAction?: () => Promise<void>
-  secondActionTitle?: string
-  onSecondAction?: () => Promise<void>
   isExpired?: boolean
   customerNumber?: string
+  setSelectedRecords?: (selectedRecords: Operation[]) => void
+  selectedRecords?: Operation[]
 }) {
   const [sorting, setSorting] = useState<DataTableSortStatus<Operation>>({
     columnAccessor: "createdAt",
@@ -72,7 +66,6 @@ function OperationList({
   const [debouncedAssignedWorker] = useDebouncedValue(assignedWorkerFilter, 300)
   const [createdAtRange, setCreatedAtRange] = useState<DatesRangeValue>()
   const [operationTypes, setOperationTypes] = useState<string[] | undefined>()
-  const [selectedRecords, setSelectedRecords] = useState<Operation[]>([])
 
   const { isLoading, error, data } = useQuery({
     queryKey: [
@@ -285,8 +278,7 @@ function OperationList({
               recordsPerPageOptions={PAGE_SIZES}
               onRecordsPerPageChange={setPageSize}
               sortStatus={sorting}
-              onSortStatusChange={setSorting}
-              {...(onAction && {
+              {...(selectedRecords && {
                 selectedRecords: selectedRecords,
                 onSelectedRecordsChange: setSelectedRecords,
               })}
@@ -294,27 +286,6 @@ function OperationList({
           </Box>
         </Grid.Col>
       </Grid>
-
-      {onAction && (
-        <Paper withBorder={true} className="py-3">
-          <Center>
-            <div className="flex gap-3">
-              <Button disabled={selectedRecords.length === 0}>{actionTitle}</Button>
-
-              {onSecondAction && (
-                <Button
-                  disabled={selectedRecords.length === 0}
-                  variant="light"
-                  onClick={onSecondAction}
-                  color="red"
-                >
-                  {secondActionTitle}
-                </Button>
-              )}
-            </div>
-          </Center>
-        </Paper>
-      )}
     </>
   )
 }

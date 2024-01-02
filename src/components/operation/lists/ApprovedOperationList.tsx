@@ -1,22 +1,13 @@
 "use client"
 
 import { useTranslations } from "next-intl"
-import OperationList from "../OperationList"
+import OperationList, { Operation } from "../OperationList"
+import { Button, Center, Paper } from "@mantine/core"
+import { useState } from "react"
 
 export default function ApprovedOperationList({}: {}) {
   const t = useTranslations("OperationForm")
-
-  const onApprove = async () => {
-    console.log(`-------------"batchUpdate"---------------`)
-    console.log("batchUpdate")
-    console.log(`----------------------------`)
-  }
-
-  const onReject = async () => {
-    console.log(`-------------"batchUpdate"---------------`)
-    console.log("batchUpdate")
-    console.log(`----------------------------`)
-  }
+  const [selectedRecords, setSelectedRecords] = useState<Operation[]>([])
 
   const onComplete = async () => {
     console.log(`-------------"batchUpdate"---------------`)
@@ -25,15 +16,25 @@ export default function ApprovedOperationList({}: {}) {
   }
 
   return (
-    <OperationList
-      statuses={[3, 5]}
-      className="py-5"
-      actionTitle={t("completeOperation")}
-      onAction={onComplete}
-      // onAction={onApprove}
-      // actionTitle={t("approve")}
-      // secondActionTitle={t("reject")}
-      // onSecondAction={onReject}
-    />
+    <>
+      <OperationList
+        statuses={[3, 5]}
+        className="py-5"
+        selectedRecords={selectedRecords}
+        setSelectedRecords={setSelectedRecords}
+      />
+      <Paper withBorder={true} className="py-3">
+        <Center>
+          <div className="flex gap-3">
+            <Button
+              onClick={onComplete}
+              disabled={selectedRecords.length === 0}
+            >
+              {t("completeOperation")}
+            </Button>
+          </div>
+        </Center>
+      </Paper>
+    </>
   )
 }
