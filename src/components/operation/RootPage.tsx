@@ -6,11 +6,9 @@ import ExpiredOperationList from "@/components/operation/lists/ExpiredOperationL
 import RequestedOperationList from "@/components/operation/lists/RequestedOperationList"
 import { Tabs } from "@mantine/core"
 import { useTranslations } from "next-intl"
-import OperationList from "./OperationList"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
-import { useSearchParams } from 'next/navigation'
-import RejectedOperationList from "./lists/RejectedOperationList"
+import OperationList from "./OperationList"
 
 const DEFAULT_TAB = "expired"
 
@@ -42,7 +40,6 @@ export default function RootPage({}: {}) {
         <Tabs.Tab value="expired">{`${t("expired")}${t("list")}`}</Tabs.Tab>
         <Tabs.Tab value="draft">{`${t("workSchedule")}${t("list")}`}</Tabs.Tab>
         <Tabs.Tab value="requested">{`${t("pendingApproval")}${t("list")}`}</Tabs.Tab>
-        <Tabs.Tab value="rejected">{`${t("rejected")}${t("list")}`}</Tabs.Tab>
         <Tabs.Tab value="approved">{`${t("approved")}${t("list")}`}</Tabs.Tab>
         <Tabs.Tab value="completed">{`${t("completed")}${t("list")}`}</Tabs.Tab>
       </Tabs.List>
@@ -57,10 +54,6 @@ export default function RootPage({}: {}) {
 
       <Tabs.Panel value="requested">
         <RequestedOperationList />
-      </Tabs.Panel>
-
-      <Tabs.Panel value="rejected">
-        <RejectedOperationList />
       </Tabs.Panel>
 
       <Tabs.Panel value="approved">

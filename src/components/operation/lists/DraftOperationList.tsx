@@ -38,7 +38,7 @@ export default function DraftOperationList({}: {}) {
     },
   })
 
-  const onAction = async (selectedRecords: Operation[]) => {
+  const onAction = async () => {
     await mutateAsync({ codes: selectedRecords.map((r) => r.code), newStatus: "2" })
     setCount(count + 1)
   }
@@ -47,7 +47,7 @@ export default function DraftOperationList({}: {}) {
     <>
       <OperationList
         count={count}
-        statuses={[1]}
+        statuses={[1, 4]}
         className="py-5"
         selectedRecords={selectedRecords}
         setSelectedRecords={setSelectedRecords}
@@ -57,7 +57,7 @@ export default function DraftOperationList({}: {}) {
           <div className="flex gap-3">
             <Button
               loading={isLoading}
-              onClick={() => onAction(selectedRecords)}
+              onClick={onAction}
               disabled={selectedRecords.length === 0}
             >
               {t("submitForApproval")}
