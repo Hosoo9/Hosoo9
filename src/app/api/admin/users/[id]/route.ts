@@ -44,6 +44,7 @@ export async function PUT(
   const result = await upsertUser(params.id, {
     ...input,
     role: stringToNumberEnum(input.role),
+    technicianType: stringToNumberEnum(input.technicianType),
     password: dbUser.password || await defaultPassword(),
   })
 

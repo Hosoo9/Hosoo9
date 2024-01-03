@@ -260,6 +260,10 @@
     "list": "リスト",
     "operationHistory": "作業履歴",
     "paymentHistory": "収納状況",
-    "loginId": "ログインID"
+    "loginId": "ログインID",
+    "company": "会社",
+    "technicianType": "技術員区分",
+    "technicianType1": "技術員B",
+    "technicianType2": "技術員C"
   }
 }

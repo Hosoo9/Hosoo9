@@ -71,6 +71,7 @@ model User {
   name          String? 
   nameKana      String?
   image         String?
+
   accounts      Account[]
   sessions      Session[]
   // schedule      Schedule[] @ignore
@@ -78,6 +79,10 @@ model User {
 
   companyId     String?   @db.NVarChar(10)
   company       Company?  @relation(fields: [companyId], references: [id])
+
+  technicianType Int?     @db.TinyInt
+  phoneNumber   String?   @db.NVarChar(30)
+
   contacts      Contact[] @ignore
   Operations    Operation[]
   role          Int       @default(1)

@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
 import { useRouter } from "next/navigation"
 
-function UserSelect({
+function CompanySelect({
   form,
   className,
   label,
@@ -18,17 +18,15 @@ function UserSelect({
 
   const router = useRouter()
   const { isLoading, isError, data, error } = useQuery({
-    queryKey: ["users"],
+    queryKey: ["companies"],
     queryFn: async () => {
-      const result = await fetch(`/api/users?role=technician`)
+      const result = await fetch(`/api/companies`)
       return result.json()
-    },
-    onSettled: (data: any) => {
     },
   })
 
-  const selectData = data?.map((user: any) => {
-    return { value: user.id, label: user.name }
+  const selectData = data?.map((company: any) => {
+    return { value: company.id, label: company.name }
   })
 
   return (
@@ -39,4 +37,4 @@ function UserSelect({
     ></Select>
   )
 }
-export default UserSelect
+export default CompanySelect
