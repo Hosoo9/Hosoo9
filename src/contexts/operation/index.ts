@@ -3,6 +3,7 @@ import { sortExtractor } from "@/utils/sort"
 import { ContextOptions, PaginationParams } from "@/utils/types"
 import { Prisma } from "@prisma/client"
 import crypto from "crypto"
+import { OperationStateMachine } from "./state-machine"
 
 export type OperationWorkType = 1 | 2 | 3 | 4 | 5
 export type OperationState = 1 | 2 | 3 | 4 | 5 | 6
@@ -15,6 +16,8 @@ export type OneOrBulkType = 1 | 2
 type CreateAlarmInput = {
   modelNumber: string
 }
+
+class StateTransitionError extends Error {}
 
 type CreateOperationInput = {
   customerNumber: string
@@ -158,7 +161,6 @@ export const findOperation = async (
 //   })
 // }
 
-
 const constructWhere = ({
   address,
   statuses,
@@ -170,7 +172,7 @@ const constructWhere = ({
   createdAtFrom,
   createdAtTo,
   operationTypes,
-  isExpiredExchange
+  isExpiredExchange,
 }: FindOperationsInput): Prisma.OperationWhereInput => {
   const conditionalOptions: Prisma.OperationWhereInput = {}
 
@@ -208,6 +210,55 @@ const constructWhere = ({
       startsWith: customerNumber,
     },
     ...conditionalOptions,
+  }
+}
+
+export const updateOperationStatusByCodes = async ({
+  codes,
+  newStatus,
+}: {
+  codes: string[]
+  newStatus: OperationState
+}) => {
+  const operations = await prisma.operation.findMany({
+    where: {
+      code: {
+        in: codes,
+      },
+    },
+  })
+
+  const results = operations.map((operation) => {
+    const machine = new OperationStateMachine(
+      operation.code,
+      operation.status as OperationState,
+    )
+
+    return machine.isValidTransition(newStatus)
+      ? { status: "ok", machine }
+      : { status: "error", machine }
+  })
+
+  // collect errors
+  const errors = results.filter((result) => result.status === "error")
+
+  if (errors.length > 0) {
+    throw new StateTransitionError(
+      `Invalid transition for operation ${errors
+        .map((error) => error.machine.code)
+        .join(", ")}`,
+    )
+  } else {
+    await prisma.operation.updateMany({
+      where: {
+        code: {
+          in: codes,
+        },
+      },
+      data: {
+        status: newStatus,
+      },
+    })
   }
 }
 

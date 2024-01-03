@@ -30,7 +30,7 @@ import { useQuery } from "@tanstack/react-query"
 import { DataTable, DataTableColumn, type DataTableSortStatus } from "mantine-datatable"
 import { useTranslations } from "next-intl"
 import Link from "next/link"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 const PAGE_SIZES = [10, 15, 20]
 
@@ -48,13 +48,15 @@ function OperationList({
   customerNumber,
   selectedRecords,
   setSelectedRecords,
+  count
 }: {
   statuses?: number[]
   className?: string
   isExpired?: boolean
   customerNumber?: string
   setSelectedRecords?: (selectedRecords: Operation[]) => void
-  selectedRecords?: Operation[]
+  selectedRecords?: Operation[],
+  count: number
 }) {
   const [sorting, setSorting] = useState<DataTableSortStatus<Operation>>({
     columnAccessor: "createdAt",
@@ -67,7 +69,13 @@ function OperationList({
   const [createdAtRange, setCreatedAtRange] = useState<DatesRangeValue>()
   const [operationTypes, setOperationTypes] = useState<string[] | undefined>()
 
-  const { isLoading, error, data } = useQuery({
+  useEffect(() => {
+    if (count > 0) {
+      refetch()
+    }
+  }, [count])
+
+  const { isLoading, error, data, refetch } = useQuery({
     queryKey: [
       `operations`,
       statuses,

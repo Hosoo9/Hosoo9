@@ -10,6 +10,7 @@ import OperationList from "./OperationList"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { useSearchParams } from 'next/navigation'
+import RejectedOperationList from "./lists/RejectedOperationList"
 
 const DEFAULT_TAB = "expired"
 
@@ -41,6 +42,7 @@ export default function RootPage({}: {}) {
         <Tabs.Tab value="expired">{`${t("expired")}${t("list")}`}</Tabs.Tab>
         <Tabs.Tab value="draft">{`${t("workSchedule")}${t("list")}`}</Tabs.Tab>
         <Tabs.Tab value="requested">{`${t("pendingApproval")}${t("list")}`}</Tabs.Tab>
+        <Tabs.Tab value="rejected">{`${t("rejected")}${t("list")}`}</Tabs.Tab>
         <Tabs.Tab value="approved">{`${t("approved")}${t("list")}`}</Tabs.Tab>
         <Tabs.Tab value="completed">{`${t("completed")}${t("list")}`}</Tabs.Tab>
       </Tabs.List>
@@ -57,12 +59,16 @@ export default function RootPage({}: {}) {
         <RequestedOperationList />
       </Tabs.Panel>
 
+      <Tabs.Panel value="rejected">
+        <RejectedOperationList />
+      </Tabs.Panel>
+
       <Tabs.Panel value="approved">
         <ApprovedOperationList />
       </Tabs.Panel>
 
       <Tabs.Panel value="completed">
-        <OperationList statuses={[6]} className="py-5" />
+        <OperationList statuses={[6]} className="py-5" count={0} />
       </Tabs.Panel>
     </Tabs>
   )

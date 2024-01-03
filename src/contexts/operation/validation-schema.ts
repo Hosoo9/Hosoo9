@@ -99,5 +99,10 @@ export const selectOperationSchema = z.object({
   sort: z.string().optional().default("createdAt-desc"),
 })
 
+export const batchUpdateOperationSchema = z.object({
+  codes: z.array(z.string()),
+  newStatus: z.enum(["1", "2", "3", "4", "5", "6"]),
+})
+
 export const createOperationSchema = z.object(create)
 export const updateOperationSchema = z.object(update)

@@ -29,6 +29,7 @@ export default function ExpiredOperationList({}: {}) {
         <Center>
           <div className="flex gap-3">
             <Button disabled={selectedRecords.length === 0}>{ t("submitForApproval") }</Button>
+            <Button disabled={selectedRecords.length === 0}>帳票出力</Button>
           </div>
         </Center>
       </Paper>
