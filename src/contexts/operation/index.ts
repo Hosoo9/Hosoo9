@@ -213,6 +213,28 @@ const constructWhere = ({
   }
 }
 
+export const batchAssignWorkers = async ({
+  codes,
+  assignedWorkerId,
+  scheduledDate,
+}: {
+  codes: string[]
+  assignedWorkerId: string
+  scheduledDate: Date
+}) => {
+  await prisma.operation.updateMany({
+    where: {
+      code: {
+        in: codes,
+      },
+    },
+    data: {
+      assignedWorkerId,
+      scheduledDate,
+    },
+  })
+}
+
 export const updateOperationStatusByCodes = async ({
   codes,
   newStatus,

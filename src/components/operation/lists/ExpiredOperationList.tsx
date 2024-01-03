@@ -11,6 +11,7 @@ import { Modal } from "@mantine/core"
 import UserSelect from "@/components/form/UserSelect"
 import { useForm } from "@mantine/form"
 import { DatePickerInput, TimeInput } from "@mantine/dates"
+import { adjustDateToTimezone } from "@/utils/date-helper"
 
 export default function ExpiredOperationList({}: {}) {
   const t = useTranslations("OperationForm")
@@ -52,15 +53,45 @@ export default function ExpiredOperationList({}: {}) {
     },
   })
 
+  const { mutateAsync: batchAssignAsync } = useMutation({
+    mutationFn: async (values: any) => {
+      let result = await fetch(`/api/operation/batch/assign`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      })
+
+      return result.json()
+    },
+    onSuccess: () => {
+      notifications.show({
+        // title: 'Save success',
+        message: t("saved"),
+      })
+    },
+    onError: () => {
+      notifications.show({
+        message: "error",
+        color: "red",
+      })
+    },
+  })
+
   const onAction = async () => {
     await mutateAsync({ codes: selectedRecords.map((r) => r.code), newStatus: "2" })
     setCount(count + 1)
   }
 
-  const batchAssign = async () => {
-    console.log(`-------------"assign"---------------`)
-    console.log("assign")
-    console.log(`----------------------------`)
+  const batchAssign = async (formValues: any) => {
+    await batchAssignAsync({
+      codes: selectedRecords.map((r) => r.code),
+      assignedWorkerId: formValues.assignedWorkerId,
+      scheduledDate: adjustDateToTimezone(formValues.scheduledDate),
+    })
+
+    close()
   }
 
   return (
@@ -98,12 +129,12 @@ export default function ExpiredOperationList({}: {}) {
               name="scheduledDate"
               {...form.getInputProps("scheduledDate")}
             />
-            <TimeInput
-              data-testid="scheduledTime"
-              label={t("scheduledTime")}
-              name="scheduledTime"
-              {...form.getInputProps("scheduledTime")}
-            />
+            {/* <TimeInput */}
+            {/*   data-testid="scheduledTime" */}
+            {/*   label={t("scheduledTime")} */}
+            {/*   name="scheduledTime" */}
+            {/*   {...form.getInputProps("scheduledTime")} */}
+            {/* /> */}
 
             <Button className="mt-2" type="submit">{ t("save") }</Button>
           </div>

@@ -1,9 +1,6 @@
+import { batchAssignWorkers } from "@/contexts/operation"
 import {
-  OperationState,
-  updateOperationStatusByCodes
-} from "@/contexts/operation"
-import {
-  batchUpdateOperationSchema
+    batchAssign
 } from "@/contexts/operation/validation-schema"
 import { getCurrentUser } from "@/lib/session"
 import { NextRequest, NextResponse } from "next/server"
@@ -23,15 +20,13 @@ export async function POST(request: NextRequest) {
 
     const bodyParams = await request.json()
 
-    const params = batchUpdateOperationSchema.parse({
+    const params = batchAssign.parse({
       codes: bodyParams.codes,
-      newStatus: bodyParams.newStatus,
+      assignedWorkerId: bodyParams.assignedWorkerId,
+      scheduledDate: bodyParams.scheduledDate,
     })
 
-    await updateOperationStatusByCodes({
-      ...params,
-      newStatus: parseInt(params.newStatus) as OperationState,
-    })
+    await batchAssignWorkers(params)
 
     return NextResponse.json({ status: "success" }, { status: 200 })
   } catch (e) {

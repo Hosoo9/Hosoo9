@@ -104,5 +104,11 @@ export const batchUpdateOperationSchema = z.object({
   newStatus: z.enum(["1", "2", "3", "4", "5", "6"]),
 })
 
+export const batchAssign = z.object({
+  codes: z.array(z.string()),
+  assignedWorkerId: z.string(),
+  scheduledDate: z.coerce.date(),
+})
+
 export const createOperationSchema = z.object(create)
 export const updateOperationSchema = z.object(update)
