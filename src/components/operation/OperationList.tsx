@@ -12,7 +12,7 @@ import "dayjs/locale/ja"
 import { type OperationType } from "@/contexts/operation"
 import { getOperationStateName } from "@/lib/enum/operation-state"
 import { getOperationType } from "@/lib/enum/operation-type"
-import { formatDate } from "@/utils/date-helper"
+import { formatDate, formatDay } from "@/utils/date-helper"
 import {
   ActionIcon,
   Box,
@@ -208,12 +208,10 @@ function OperationList({
       ),
       filtering: assignedWorkerFilter !== "",
     },
-    // {
-    //   accessor: "isExpiredExchange",
-    //   title: t("isExpired"),
-    //   textAlign: "right",
-    //   sortable: true
-    // },
+    {
+      accessor: "createdBy",
+      title: t("createdBy"),
+    },
     {
       accessor: "createdAt",
       title: t("createdAt"),
@@ -241,21 +239,71 @@ function OperationList({
       ),
       filtering: Boolean(createdAtRange),
     },
-    // {
-    //   accessor: "updatedAt",
-    //   title: t("updatedAt"),
-    //   textAlign: "right",
-    //   sortable: true,
-    // },
+    {
+      accessor: "customerNumber",
+      title: t("customerNumber"),
+    },
+    {
+      accessor: "memo",
+      title: t("memo"),
+    },
+    {
+      accessor: "scheduledDate",
+      title: t("scheduledDate"),
+    },
+    {
+      accessor: "scheduledTime",
+      title: t("scheduledTime"),
+    },
+    {
+      accessor: "postcardStartDate",
+      title: t("postcardStartDate")
+    },
+    {
+      accessor: "postcardEndDate",
+      title: t("postcardEndDate")
+    },
+    {
+      accessor: "attendance",
+      title: t("attendance"),
+    },
+    {
+      accessor: "removingMeterNumber",
+      title: t("removingMeterNumber"),
+    },
+    {
+      accessor: "removingMeterInspectionDate",
+      title: t("removingMeterInspectionDate"),
+    },
+    {
+      accessor: "referenceDate",
+      title: t("referenceDate"),
+    },
+    {
+      accessor: "installingMeterSize",
+      title: t("installingMeterSize"),
+    },
+    {
+      accessor: "installingMeterModel",
+      title: t("installingMeterModel"),
+    },
+    {
+      accessor: "installingMeterNumber",
+      title: t("installingMeterNumber"),
+    },
   ]
 
   const records = (data?.data || []).map((item: any) => ({
+    ...item,
     code: item.code,
     status: t(getOperationStateName(item.status).toLowerCase()),
     assignedWorkerId: item.assignedWorkerId,
     operationType: getOperationType(item.operationType),
     isExpiredExchange: item.isExpiredExchange ? "✓" : "✗",
     createdAt: formatDate(item.createdAt),
+    scheduledDate: formatDay(item.scheduledDate),
+    postcardStartDate: formatDay(item.postcardStartDate),
+    postcardEndDate: formatDay(item.postcardEndDate),
     // updatedAt: formatDate(item.updatedAt),
   }))
 

@@ -264,6 +264,12 @@
     "company": "会社",
     "technicianType": "技術員区分",
     "technicianType1": "技術員B",
-    "technicianType2": "技術員C"
+    "technicianType2": "技術員C",
+    "removingMeterNumber": "取外メーター番号",
+    "removingMeterInspectionDate": "取外検定年月",
+    "installingMeterSize": "取付メーター号数",
+    "installingMeterModel": "取付メーター型式",
+    "installingMeterNumber": "取付メーター番号",
+    "attendance": "立ち合い有り無し"
   }
 }
