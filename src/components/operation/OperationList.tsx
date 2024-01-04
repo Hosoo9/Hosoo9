@@ -69,12 +69,6 @@ function OperationList({
   const [createdAtRange, setCreatedAtRange] = useState<DatesRangeValue>()
   const [operationTypes, setOperationTypes] = useState<string[] | undefined>()
 
-  useEffect(() => {
-    if (count > 0) {
-      refetch()
-    }
-  }, [count])
-
   const { isLoading, error, data, refetch } = useQuery({
     queryKey: [
       `operations`,
@@ -131,6 +125,13 @@ function OperationList({
       return fetch(`/api/operation?${params.toString()}`).then((res) => res.json())
     },
   })
+
+  useEffect(() => {
+    if (count > 0) {
+      refetch()
+    }
+  }, [count, refetch])
+
 
   const t = useTranslations("OperationForm")
 
