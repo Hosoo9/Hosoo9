@@ -48,14 +48,14 @@ function OperationList({
   customerNumber,
   selectedRecords,
   setSelectedRecords,
-  count
+  count,
 }: {
   statuses?: number[]
   className?: string
   isExpired?: boolean
   customerNumber?: string
   setSelectedRecords?: (selectedRecords: Operation[]) => void
-  selectedRecords?: Operation[],
+  selectedRecords?: Operation[]
   count: number
 }) {
   const [sorting, setSorting] = useState<DataTableSortStatus<Operation>>({
@@ -131,7 +131,6 @@ function OperationList({
       refetch()
     }
   }, [count, refetch])
-
 
   const t = useTranslations("OperationForm")
 
@@ -257,11 +256,11 @@ function OperationList({
     },
     {
       accessor: "postcardStartDate",
-      title: t("postcardStartDate")
+      title: t("postcardStartDate"),
     },
     {
       accessor: "postcardEndDate",
-      title: t("postcardEndDate")
+      title: t("postcardEndDate"),
     },
     {
       accessor: "attendance",
