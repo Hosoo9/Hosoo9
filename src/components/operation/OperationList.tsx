@@ -303,6 +303,7 @@ function OperationList({
     scheduledDate: formatDay(item.scheduledDate),
     postcardStartDate: formatDay(item.postcardStartDate),
     postcardEndDate: formatDay(item.postcardEndDate),
+    removingMeterInspectionDate: formatDay(item.removingMeterInspectionDate),
     // updatedAt: formatDate(item.updatedAt),
   }))
 

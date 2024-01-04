@@ -264,9 +264,7 @@ export const CustomerSearch = ({
                 records={selectionData || []}
                 columns={columns}
                 onRowClick={({ record }: { record: any }) => {
-                  onSuccess(() => {
-                    successWrapper(record)
-                  })
+                  successWrapper(record)
                   reset()
                   close()
                 }}
