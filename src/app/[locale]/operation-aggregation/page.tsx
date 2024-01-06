@@ -18,7 +18,7 @@ export default function OperationAggregationPage({}: {}) {
 
       <div className="flex gap-5">
         <div className="flex-grow">
-          <Table highlightOnHover withTableBorder={true}>
+          <Table highlightOnHover withTableBorder={true} withColumnBorders={true}>
             <Table.Thead>
               <Table.Tr>
                 <Table.Th colSpan={4}>区 分</Table.Th>
@@ -79,6 +79,31 @@ export default function OperationAggregationPage({}: {}) {
                 <Table.Td>17,480</Table.Td>
                 <Table.Td>0</Table.Td>
                 <Table.Td>5</Table.Td>
+              </Table.Tr>
+
+              <Table.Tr>
+                <Table.Td className="text-center" colSpan={4}>作業統括者</Table.Td>
+                <Table.Td>22</Table.Td>
+                <Table.Td>12,390</Table.Td>
+                <Table.Td>272.580</Table.Td>
+                <Table.Td>91</Table.Td>
+              </Table.Tr>
+              <Table.Tr>
+                <Table.Td colSpan={3}></Table.Td>
+                <Table.Td className="text-center">交換件数</Table.Td>
+                <Table.Td>1268</Table.Td>
+                <Table.Td>税抜合計</Table.Td>
+                <Table.Td colSpan={2}>¥5,402,880</Table.Td>
+              </Table.Tr>
+              <Table.Tr>
+                <Table.Td colSpan={5} className="border-b-0 border-l-0"></Table.Td>
+                <Table.Td>消費税</Table.Td>
+                <Table.Td colSpan={2}>¥540,288</Table.Td>
+              </Table.Tr>
+              <Table.Tr>
+                <Table.Td colSpan={5}></Table.Td>
+                <Table.Td>合計額</Table.Td>
+                <Table.Td colSpan={2}>¥5,943,168</Table.Td>
               </Table.Tr>
             </Table.Tbody>
           </Table>
@@ -199,6 +224,27 @@ export default function OperationAggregationPage({}: {}) {
                 <Table.Td>マイコン計</Table.Td>
                 <Table.Td>0</Table.Td>
                 <Table.Td></Table.Td>
+              </Table.Tr>
+            </Table.Tbody>
+          </Table>
+
+          <Table highlightOnHover withTableBorder={true}>
+            <Table.Tbody>
+              <Table.Tr>
+                <Table.Td>取外件数</Table.Td>
+                <Table.Td>0</Table.Td>
+                <Table.Td>税抜合計</Table.Td>
+                <Table.Td>¥0</Table.Td>
+              </Table.Tr>
+              <Table.Tr>
+                <Table.Td colSpan={2}></Table.Td>
+                <Table.Td>消費税</Table.Td>
+                <Table.Td>¥0</Table.Td>
+              </Table.Tr>
+              <Table.Tr>
+                <Table.Td colSpan={2}></Table.Td>
+                <Table.Td>合計額</Table.Td>
+                <Table.Td>¥0</Table.Td>
               </Table.Tr>
             </Table.Tbody>
           </Table>
