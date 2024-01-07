@@ -12,21 +12,21 @@ export const createManufacturer = async (
 }
 
 export const updateManufacturer = async (
-  id: number,
+  code: string,
   data: Prisma.MeterManufacturerMasterUpdateInput,
 ) => {
   return await prisma.meterManufacturerMaster.update({
     where: {
-      id
+      code
     },
     data,
   })
 }
 
-export const deleteManufacturer = async (id: number) => {
+export const deleteManufacturer = async (code: string) => {
   return await prisma.meterManufacturerMaster.delete({
     where: {
-      id
+      code
     }
   })
 }

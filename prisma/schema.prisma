@@ -197,18 +197,18 @@ model Contact {
 
 
 model MeterManufacturerMaster {
-  id                  Int    @id @default(autoincrement())
-  code                String @db.NVarChar(2)
+  code                  String @id @db.Char(1)
+  name                  String @db.NVarChar(60)
 }
 
 model MeterSizeMaster {
-  id                  Int    @id @default(autoincrement())
-  code                String @db.NVarChar(15)
+  size                String @id @db.NVarChar(10)
 }
 
 model MeterModelMaster {
   id                  Int    @id @default(autoincrement())
-  code                String @db.NVarChar(2)
+  code                String @db.Char(2)
+  name                String @db.NVarChar(1000)
 }
 
 //  kaiSu                         Int?      @db.SmallInt

@@ -19,13 +19,14 @@ function MeterManufacturerForm({
   meterManufacturer,
   onSave,
 }: {
-  id?: string
+  code?: string
   meterManufacturer?: any
   onSave?: (data: any) => void
 }) {
   const form = useForm({
     initialValues: {
       code: meterManufacturer?.code || "",
+      name: meterManufacturer?.name || "",
     },
   })
 
@@ -44,7 +45,7 @@ function MeterManufacturerForm({
           body: JSON.stringify(formValues),
         })
       } else {
-        result = await fetch(`/api/meter_manufacturers/${meterManufacturer.id}`, {
+        result = await fetch(`/api/meter_manufacturers/${meterManufacturer.code}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -64,10 +65,10 @@ function MeterManufacturerForm({
     onError: () => {
       notifications.show({
         // title: 'Save failed',
-        message: 'MeterManufacturer has not been saved',
-        color: 'red',
+        message: "MeterManufacturer has not been saved",
+        color: "red",
       })
-    }
+    },
   })
 
   const t = useTranslations("OperationForm")
@@ -84,10 +85,25 @@ function MeterManufacturerForm({
     <form onReset={form.onReset} onSubmit={form.onSubmit(saveMeterManufacturer)}>
       <div className="flex flex-col gap-3">
         <div>
-          <TextInput label={t("code")} data-testid="code" {...form.getInputProps("code")} maxLength={2} width={100} />
+          <TextInput
+            label={t("code")}
+            data-testid="code"
+            {...form.getInputProps("code")}
+            maxLength={1}
+            width={100}
+          />
+        </div>
+        <div>
+          <TextInput
+            label={t("name")}
+            data-testid="name"
+            {...form.getInputProps("name")}
+            maxLength={60}
+            width={100}
+          />
         </div>
         <Button className="mt-5" type="submit" disabled={isLoading}>
-          { t("save") }
+          {t("save")}
         </Button>
       </div>
     </form>

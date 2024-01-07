@@ -5,7 +5,8 @@ import { ZodError, z } from "zod"
 import { unauthorized } from "../../helpers"
 
 const updateSchema = z.object({
-  code: z.string().min(1).max(2),
+  code: z.string().min(1).max(1),
+  name: z.string().min(1).max(60),
 })
 
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
@@ -19,7 +20,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     const body = await request.json()
     const input = updateSchema.parse(body)
 
-    const manufacturer = await updateManufacturer(parseInt(params.id), input)
+    const manufacturer = await updateManufacturer(params.id, input)
 
     return NextResponse.json(manufacturer, { status: 200 })
   } catch (e) {
@@ -39,7 +40,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       return unauthorized()
     }
 
-    await deleteManufacturer(parseInt(params.id))
+    await deleteManufacturer(params.id)
 
     return NextResponse.json({}, { status: 200 })
   } catch (e) {

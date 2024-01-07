@@ -6,7 +6,8 @@ import { NOT_AUTHORIZED } from "../constants"
 import { unauthorized } from "../helpers"
 
 const updateSchema = z.object({
-  code: z.string().min(1).max(2),
+  code: z.string().min(1).max(1),
+  name: z.string().min(1).max(60),
 })
 
 export async function GET(request: NextRequest) {
