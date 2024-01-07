@@ -1,11 +1,12 @@
-import { deleteModel, updateModel } from "@/contexts/meter_model"
+import { deleteModel } from "@/contexts/meter_model"
+import { deleteSize, updateSize } from "@/contexts/meter_size"
 import { getCurrentUser } from "@/lib/session"
 import { NextRequest, NextResponse } from "next/server"
 import { ZodError, z } from "zod"
 import { unauthorized } from "../../helpers"
 
 const updateSchema = z.object({
-  code: z.string().min(1).max(2),
+  size: z.string().min(1).max(10),
 })
 
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
@@ -19,7 +20,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     const body = await request.json()
     const input = updateSchema.parse(body)
 
-    const model = await updateModel(parseInt(params.id), input)
+    const model = await updateSize(params.id, input)
 
     return NextResponse.json(model, { status: 200 })
   } catch (e) {
@@ -39,7 +40,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       return unauthorized()
     }
 
-    await deleteModel(parseInt(params.id))
+    await deleteSize(params.id)
 
     return NextResponse.json({}, { status: 200 })
   } catch (e) {

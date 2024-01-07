@@ -12,21 +12,21 @@ export const createSize = async (
 }
 
 export const updateSize = async (
-  id: number,
+  size: string,
   data: Prisma.MeterSizeMasterUpdateInput,
 ) => {
   return await prisma.meterSizeMaster.update({
     where: {
-      id
+      size
     },
     data,
   })
 }
 
-export const deleteSize = async (id: number) => {
+export const deleteSize = async (size: string) => {
   return await prisma.meterSizeMaster.delete({
     where: {
-      id
+      size
     }
   })
 }
