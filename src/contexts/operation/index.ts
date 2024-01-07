@@ -255,7 +255,8 @@ export const batchAssignCompany = async ({
       }
     },
     data: {
-      companyId
+      companyId,
+      isExpiredExchange: false,
     },
   })
 }

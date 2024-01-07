@@ -96,6 +96,7 @@ export default function DraftOperationList({}: {}) {
     })
 
     close()
+    setCount(count + 1)
   }
 
   return (
@@ -110,6 +111,7 @@ export default function DraftOperationList({}: {}) {
       <Paper withBorder={true} className="py-3">
         <Center>
           <div className="flex gap-3">
+            <Button onClick={() => open()} disabled={selectedRecords.length === 0}>括日程調整</Button>
             <Button onClick={onAction} disabled={selectedRecords.length === 0}>{ t("submitForApproval") }</Button>
           </div>
         </Center>
