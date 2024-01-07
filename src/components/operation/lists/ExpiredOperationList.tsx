@@ -81,8 +81,9 @@ export default function ExpiredOperationList({}: {}) {
               onClick={() => open()}
               disabled={selectedRecords.length === 0}
             >
-              Assign company
+              会社割当
             </Button>
+            <Button disabled={selectedRecords.length === 0}>帳票出力</Button>
           </div>
         </Center>
       </Paper>
@@ -96,7 +97,7 @@ export default function ExpiredOperationList({}: {}) {
               name={"companyId"}
             />
             <Button className="mt-2" type="submit" loading={batchAssignLoading}>
-              {t("save")}
+              { t("saved") }
             </Button>
           </div>
         </form>

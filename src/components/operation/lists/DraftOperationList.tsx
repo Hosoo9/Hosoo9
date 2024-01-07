@@ -111,8 +111,6 @@ export default function DraftOperationList({}: {}) {
         <Center>
           <div className="flex gap-3">
             <Button onClick={onAction} disabled={selectedRecords.length === 0}>{ t("submitForApproval") }</Button>
-            <Button disabled={selectedRecords.length === 0}>会社割当</Button>
-            <Button onClick={() => open()} disabled={selectedRecords.length === 0}>帳票出力</Button>
           </div>
         </Center>
       </Paper>
