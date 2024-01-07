@@ -105,11 +105,11 @@ export default function MeterModelManagament() {
   const columns = [
     {
       accessor: "code",
-      title: t("code"),
+      title: t("meterModelCode"),
     },
     {
       accessor: "name",
-      title: t("name"),
+      title: t("meterModelName"),
     },
     {
       accessor: "actions",
