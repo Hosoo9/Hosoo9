@@ -235,6 +235,25 @@ export const batchAssignWorkers = async ({
   })
 }
 
+export const batchAssignCompany = async ({
+  codes,
+  companyId
+}: {
+  codes: string[]
+  companyId: string
+}) => {
+  await prisma.operation.updateMany({
+    where: {
+      code: {
+        in: codes,
+      }
+    },
+    data: {
+      companyId
+    },
+  })
+}
+
 export const updateOperationStatusByCodes = async ({
   codes,
   newStatus,

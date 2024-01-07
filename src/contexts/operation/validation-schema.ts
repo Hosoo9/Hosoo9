@@ -110,5 +110,10 @@ export const batchAssign = z.object({
   scheduledDate: z.coerce.date(),
 })
 
+export const batchAssignCompanySchema = z.object({
+  codes: z.array(z.string()),
+  companyId: z.string(),
+})
+
 export const createOperationSchema = z.object(create)
 export const updateOperationSchema = z.object(update)

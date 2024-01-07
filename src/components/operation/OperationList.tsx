@@ -208,6 +208,10 @@ function OperationList({
       filtering: assignedWorkerFilter !== "",
     },
     {
+      accessor: "companyId",
+      title: t("company"),
+    },
+    {
       accessor: "createdBy",
       title: t("createdBy"),
     },

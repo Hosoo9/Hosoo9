@@ -2,6 +2,7 @@ import { Select } from "@mantine/core"
 import { useQuery } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
 import { useRouter } from "next/navigation"
+import { Loader } from "@mantine/core"
 
 function CompanySelect({
   form,
@@ -30,11 +31,13 @@ function CompanySelect({
   })
 
   return (
-    <Select
-      label={label}
-      data={selectData}
-      {...form.getInputProps(name)}
-    ></Select>
+    <>
+      {isLoading ? (
+        <Loader></Loader>
+      ) : (
+        <Select label={label} data={selectData} {...form.getInputProps(name)}></Select>
+      )}
+    </>
   )
 }
 export default CompanySelect

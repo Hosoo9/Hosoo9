@@ -226,8 +226,7 @@
     "postcardEndDate": "ハガキ出力日程終了日",
     "contactedBy": "連絡作業員",
     "contacts": "連絡履歴",
-    "draft": "下書き",
-    "draftOperations": "日程調整待ち",
+    "draft": "日程調整待ち",
     "operations": "作業リスト",
     "pendingApproval": "承認待ち",
     "requested": "承認待ち",
@@ -237,7 +236,7 @@
     "alarmManagement": "警報器管理",
     "userManagement": "ユーザー管理",
     "paymentManagement": "収納管理",
-    "rejected": "拒否された",
+    "rejected": "日程再調整",
     "expired": "期満交換",
     "code": "コード",
     "meterManufacturerManagement": "メーカー",
@@ -271,6 +270,8 @@
     "installingMeterSize": "取付メーター号数",
     "installingMeterModel": "取付メーター型式",
     "installingMeterNumber": "取付メーター番号",
-    "attendance": "立ち合い有り無し"
+    "attendance": "立ち合い有り無し",
+    "footprint1": "午前",
+    "footprint2": "午後"
   }
 }
