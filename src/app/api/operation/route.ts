@@ -1,4 +1,12 @@
-import { FindOperationsInput, HousingType, OperationWorkType, PhoneNumberType, countOperations, createOperation, findOperations } from "@/contexts/operation"
+import {
+  FindOperationsInput,
+  HousingType,
+  OperationWorkType,
+  PhoneNumberType,
+  countOperations,
+  createOperation,
+  findOperations,
+} from "@/contexts/operation"
 import { getCurrentUser } from "@/lib/session"
 import { NextRequest, NextResponse } from "next/server"
 import { ZodError, z } from "zod"
@@ -35,7 +43,10 @@ export async function GET(request: NextRequest) {
     ),
   }
 
-  const operations = await findOperations(options, { includeUser: true })
+  const operations = await findOperations(options, {
+    includeUser: true,
+    includeCompany: true,
+  })
 
   const total = await countOperations(options)
 
@@ -69,7 +80,6 @@ export async function POST(request: NextRequest) {
       // phoneNumberType: parseInt(params.phoneNumberType) as PhoneNumberType,
       // oneOrBulk: parseInt(params.oneOrBulk) as OneOrBulkType,
     })
-
 
     // const operation = await createOperation({
     //   ...params,

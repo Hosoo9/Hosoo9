@@ -31,6 +31,7 @@ import { DataTable, DataTableColumn, type DataTableSortStatus } from "mantine-da
 import { useTranslations } from "next-intl"
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import CompanySelectNoForm from "../form/CompanySelectNoForm"
 
 const PAGE_SIZES = [10, 15, 20]
 
@@ -65,6 +66,7 @@ function OperationList({
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
   const [assignedWorkerFilter, setAssignedWorkerFilter] = useState("")
+  const [companyIdFilter, setCompanyIdFilter] = useState<string | null>(null)
   const [debouncedAssignedWorker] = useDebouncedValue(assignedWorkerFilter, 300)
   const [createdAtRange, setCreatedAtRange] = useState<DatesRangeValue>()
   const [operationTypes, setOperationTypes] = useState<string[] | undefined>()
@@ -79,6 +81,7 @@ function OperationList({
       debouncedAssignedWorker,
       createdAtRange,
       operationTypes,
+      companyIdFilter,
     ],
     queryFn: () => {
       const params = new URLSearchParams()
@@ -120,6 +123,10 @@ function OperationList({
 
       if (customerNumber) {
         params.append("customerNumber", customerNumber)
+      }
+
+      if (companyIdFilter) {
+        params.append("companyId", companyIdFilter)
       }
 
       return fetch(`/api/operation?${params.toString()}`).then((res) => res.json())
@@ -208,8 +215,19 @@ function OperationList({
       filtering: assignedWorkerFilter !== "",
     },
     {
-      accessor: "companyId",
+      accessor: "company.name",
       title: t("company"),
+      filter: ({ close }) => (
+        <Stack>
+          <CompanySelectNoForm
+            name={"companyId"}
+            value={companyIdFilter}
+            onChange={(value) => setCompanyIdFilter(value)}
+            label={t("company")}
+          />
+        </Stack>
+      ),
+      filtering: companyIdFilter !== null,
     },
     {
       accessor: "createdBy",

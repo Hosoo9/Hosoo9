@@ -97,6 +97,7 @@ export const selectOperationSchema = z.object({
   createdAtTo: z.coerce.date().optional(),
   operationTypes: z.array(z.enum(["1", "2", "3", "4", "5"])).optional(),
   sort: z.string().optional().default("createdAt-desc"),
+  companyId: z.string().optional(),
 })
 
 export const batchUpdateOperationSchema = z.object({

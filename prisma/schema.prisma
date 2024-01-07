@@ -154,6 +154,7 @@ model Operation {
   contacts                     Contact[]
   createdBy                    String     @db.NVarChar(30)
   createdByUser                User      @relation(fields: [createdBy], references: [id])
+  company                      Company?  @relation(fields: [companyId], references: [id], onDelete: NoAction, onUpdate: NoAction) 
 
   reportIssueDate              DateTime?  @db.DateTime
   companyId                    String?    @db.NVarChar(10)
@@ -175,6 +176,7 @@ model Company {
   id          String       @id @db.NVarChar(10)
   name        String       @db.NVarChar(60)
   users       User[]       @ignore
+  Operations  Operation[]
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @default(now()) @updatedAt
 }

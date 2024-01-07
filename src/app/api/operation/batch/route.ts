@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
     ),
   }
 
-  const operations = await findOperations(options, { includeUser: true })
+  const operations = await findOperations(options, { includeUser: true, includeCompany: true })
 
   const total = await countOperations(options)
 

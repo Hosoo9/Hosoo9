@@ -49,6 +49,7 @@ export type FindOperationsInput = PaginationParams & {
   createdAtFrom?: Date
   createdAtTo?: Date
   operationTypes?: OperationWorkType[]
+  companyId?: string
 }
 
 type CompleteOperationInput = {
@@ -173,6 +174,7 @@ const constructWhere = ({
   createdAtTo,
   operationTypes,
   isExpiredExchange,
+  companyId
 }: FindOperationsInput): Prisma.OperationWhereInput => {
   const conditionalOptions: Prisma.OperationWhereInput = {}
 
@@ -197,6 +199,10 @@ const constructWhere = ({
 
   if (isExpiredExchange) {
     conditionalOptions.isExpiredExchange = isExpiredExchange
+  }
+
+  if (companyId) {
+    conditionalOptions.companyId = companyId
   }
 
   return {
@@ -305,7 +311,7 @@ export const updateOperationStatusByCodes = async ({
 
 export const findOperations = async (
   findOptions: FindOperationsInput,
-  { includeUser } = { includeUser: true },
+  { includeUser, includeCompany } = { includeUser: true, includeCompany: true },
 ) => {
   const { page, limit, sort } = findOptions
   const { field, order } = sortExtractor(sort)
@@ -317,6 +323,7 @@ export const findOperations = async (
     where,
     include: {
       createdByUser: includeUser,
+      company: includeCompany,
     },
     orderBy: {
       [field]: order,
