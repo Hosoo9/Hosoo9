@@ -60,6 +60,7 @@ export default function MeterModelManagament() {
     },
     onSuccess: async () => {
       await refetch()
+
       notifications.show({
         message: t("deleted"),
       })
@@ -105,6 +106,10 @@ export default function MeterModelManagament() {
     {
       accessor: "code",
       title: t("code"),
+    },
+    {
+      accessor: "name",
+      title: t("name"),
     },
     {
       accessor: "actions",

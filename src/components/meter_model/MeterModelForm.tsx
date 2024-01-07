@@ -26,6 +26,7 @@ function MeterModelForm({
   const form = useForm({
     initialValues: {
       code: meterModel?.code || "",
+      name: meterModel?.name || "",
     },
   })
 
@@ -64,10 +65,10 @@ function MeterModelForm({
     onError: () => {
       notifications.show({
         // title: 'Save failed',
-        message: 'MeterModel has not been saved',
-        color: 'red',
+        message: "MeterModel has not been saved",
+        color: "red",
       })
-    }
+    },
   })
 
   const t = useTranslations("OperationForm")
@@ -83,11 +84,22 @@ function MeterModelForm({
   return (
     <form onReset={form.onReset} onSubmit={form.onSubmit(saveMeterModel)}>
       <div className="flex flex-col gap-3">
-        <div>
-          <TextInput label={t("code")} data-testid="code" {...form.getInputProps("code")} maxLength={2} width={100} />
-        </div>
+        <TextInput
+          label={t("code")}
+          data-testid="code"
+          {...form.getInputProps("code")}
+          maxLength={2}
+          width={100}
+        />
+        <TextInput
+          label={t("name")}
+          data-testid="name"
+          {...form.getInputProps("name")}
+          maxLength={1000}
+          width={100}
+        />
         <Button className="mt-5" type="submit" disabled={isLoading}>
-          { t("save") }
+          {t("save")}
         </Button>
       </div>
     </form>

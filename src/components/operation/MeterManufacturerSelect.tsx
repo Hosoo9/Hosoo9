@@ -18,7 +18,7 @@ export const MeterManufacturerSelect = ({ form, name }: { form: any, name: strin
   })
 
   const selectData = data?.map((item: any) => {
-    return { value: item.id.toString(), label: item.code }
+    return { value: item.code.toString(), label: item.name }
   })
 
   return (

@@ -6,6 +6,7 @@ import { unauthorized } from "../../helpers"
 
 const updateSchema = z.object({
   code: z.string().min(1).max(2),
+  name: z.string().min(1).max(1000),
 })
 
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
