@@ -104,11 +104,11 @@ export default function MeterManufacturerManagament() {
   const columns = [
     {
       accessor: "code",
-      title: t("code"),
+      title: "メーカーコード"
     },
     {
       accessor: "name",
-      title: t("name"),
+      title: "メーカー名"
     },
     {
       accessor: "actions",

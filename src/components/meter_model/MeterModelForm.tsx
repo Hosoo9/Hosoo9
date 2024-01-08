@@ -85,14 +85,14 @@ function MeterModelForm({
     <form onReset={form.onReset} onSubmit={form.onSubmit(saveMeterModel)}>
       <div className="flex flex-col gap-3">
         <TextInput
-          label={t("code")}
+          label={"型式コード"}
           data-testid="code"
           {...form.getInputProps("code")}
           maxLength={2}
           width={100}
         />
         <TextInput
-          label={t("name")}
+          label={"型式名"}
           data-testid="name"
           {...form.getInputProps("name")}
           maxLength={1000}

@@ -86,7 +86,7 @@ function MeterManufacturerForm({
       <div className="flex flex-col gap-3">
         <div>
           <TextInput
-            label={t("code")}
+            label={"メーカーコード"}
             data-testid="code"
             {...form.getInputProps("code")}
             maxLength={1}
@@ -95,7 +95,7 @@ function MeterManufacturerForm({
         </div>
         <div>
           <TextInput
-            label={t("name")}
+            label={"メーカー名"}
             data-testid="name"
             {...form.getInputProps("name")}
             maxLength={60}
