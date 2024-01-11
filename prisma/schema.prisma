@@ -337,3 +337,26 @@ model CustomerEquipment {
   @@id([kyakuNo, machinNo])
 }
 
+model BasicLaborRate {
+  code            String     @id @db.Char(4) @unique
+  operationType   Int        @db.TinyInt
+  meterType       Int?       @db.TinyInt
+  exchangeType    Int?       @db.TinyInt
+  workingTime     Int?       @db.TinyInt
+  meterSizeType   Int?       @db.TinyInt
+  districtType    Int?       @db.TinyInt
+  rate            Int        @db.Int
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @default(now()) @updatedAt
+}
+
+model AdditionalLaborRate {
+  code          String   @id @db.Char(4) @unique
+  operationType Int      @db.TinyInt
+  workingTime   Int?     @db.TinyInt
+  workerType    Int?     @db.TinyInt
+  districtType  Int?     @db.TinyInt
+  rate          Int      @db.Int
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now()) @updatedAt
+}

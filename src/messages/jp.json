@@ -276,6 +276,18 @@
     "installingMeterNumber": "取付メーター番号",
     "attendance": "立ち合い有り無し",
     "footprint1": "午前",
-    "footprint2": "午後"
+    "footprint2": "午後",
+    "blrOperationType": "作業区分",
+    "blrMeterType": "メーター区分",
+    "blrExchangeType": "交換区分",
+    "blrWorkingTime": "作業時間",
+    "blrMeterSizeType": "型号",
+    "blrDistrictType": "地区区分",
+    "blrRate": "単価",
+    "alrOperationType": "作業区分",
+    "alrWorkingTime": "メーター区分",
+    "alrWorkerType": "作業時間",
+    "alrDistrictType": "地区区分",
+    "alrRate": "単価"
   }
 }
