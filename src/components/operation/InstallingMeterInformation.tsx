@@ -1,19 +1,25 @@
-import { Input, NumberInput, Radio, Select, Title } from "@mantine/core"
+import { Button, Input, Modal, NumberInput, Radio, Select, Title } from "@mantine/core"
 import { MonthPickerInput } from "@mantine/dates"
+import { useDisclosure } from "@mantine/hooks"
 import { useTranslations } from "next-intl"
-import { MeterModelSelect } from "./MeterModelSelect"
+import CalculateSection from "../customer/CalculateSection"
 import { MeterManufacturerSelect } from "./MeterManufacturerSelect"
-import { TakePicture } from "./TakePicture"
+import { MeterModelSelect } from "./MeterModelSelect"
 import { MeterSizeSelect } from "./MeterSizeSelect"
+import { TakePicture } from "./TakePicture"
 
 export const InstallingMeterInformation = ({
   form,
+  customerNumber,
   className,
 }: {
   form: any
   className?: string
+  customerNumber: string
 }) => {
   const t = useTranslations("OperationForm")
+
+  const [opened, { open, close }] = useDisclosure(false)
 
   return (
     <div className={className}>
@@ -103,7 +109,15 @@ export const InstallingMeterInformation = ({
           name="installingMeterMaximumUsage"
           {...form.getInputProps("installingMeterMaximumUsage")}
         />
+
+        <Button className="self-end" color="violet" onClick={() => open()}>
+          {t("calculate")}
+        </Button>
       </div>
+
+      <Modal size="lg" opened={opened} onClose={close} title={t("calculate")}>
+        <CalculateSection customerNumber={customerNumber} />
+      </Modal>
 
       <div className="grid grid-cols-5 gap-3 pb-5">
         <div>

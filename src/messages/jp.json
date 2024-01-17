@@ -288,6 +288,7 @@
     "alrWorkingTime": "メーター区分",
     "alrWorkerType": "作業時間",
     "alrDistrictType": "地区区分",
-    "alrRate": "単価"
+    "alrRate": "単価",
+    "calculate": "号数計算"
   }
 }

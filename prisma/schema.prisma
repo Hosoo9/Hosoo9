@@ -207,7 +207,7 @@ model MeterSizeMaster {
 
 model MeterModelMaster {
   id                  Int    @id @default(autoincrement())
-  code                String @db.NChar(2)
+  code                String @db.NChar(2) @unique
   name                String @db.NVarChar(1000)
 }
 

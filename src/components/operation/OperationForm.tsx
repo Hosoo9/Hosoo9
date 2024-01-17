@@ -336,7 +336,7 @@ function OperationForm({ code }: { code: string }) {
 
             {isFullForm(operation?.status) && (
               <Stepper.Step label={t("installingMeterInformation")}>
-                <InstallingMeterInformation form={form} className="py-2" />
+                <InstallingMeterInformation form={form} customerNumber={operation.customerNumber} className="py-2" />
                 {/* <pre>{ JSON.stringify(form.values, null, 2) }</pre> */}
               </Stepper.Step>
             )}

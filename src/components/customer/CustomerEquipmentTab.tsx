@@ -2,15 +2,14 @@ import { formatDay } from "@/utils/date-helper"
 import { useQuery } from "@tanstack/react-query"
 import { DataTable } from "mantine-datatable"
 import { useTranslations } from "next-intl"
-import { useState } from "react"
 
 export default function CustomerEquipmentTab({
   customerNumber,
 }: {
   customerNumber: string
 }) {
-  const [page, setPage] = useState(1)
-  const pageSize = 10
+  // const [page, setPage] = useState(1)
+  // const pageSize = 10
 
   const { isLoading, error, data, refetch } = useQuery<{ total: number, data: any[] }>({
     queryKey: ["equipment", customerNumber],
@@ -57,15 +56,15 @@ export default function CustomerEquipmentTab({
     <div className="pt-5">
       <DataTable
         idAccessor={(record) => `${record.kyakuNo}-${record.machinNo}`}
-        totalRecords={data?.total || 0}
+        // totalRecords={data?.total || 0}
         withTableBorder={false}
         striped
         borderRadius="sm"
-        page={page}
-        recordsPerPage={pageSize}
-        highlightOnHover
+        // page={page}
+        // recordsPerPage={pageSize}
+        // highlightOnHover
         records={mappedData}
-        onPageChange={setPage}
+        // onPageChange={setPage}
         columns={columns}
       />
     </div>
