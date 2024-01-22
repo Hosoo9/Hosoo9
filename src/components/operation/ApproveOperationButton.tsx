@@ -40,7 +40,7 @@ export const ApproveOperationButton = ({
       onSubmit(result)
     }
 
-    router.push("/operation/approved")
+    router.push("/operations?tab=approved")
   }
 
   return (

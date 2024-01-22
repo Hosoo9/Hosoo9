@@ -1,11 +1,30 @@
+import { formatDay } from "@/utils/date-helper"
+import { useQuery } from "@tanstack/react-query"
 import { DataTable } from "mantine-datatable"
 import { useTranslations } from "next-intl"
 
-export default function CustomerEquipmentTab({}: {}) {
+export default function CustomerEquipmentTab({
+  customerNumber,
+}: {
+  customerNumber: string
+}) {
+  // const [page, setPage] = useState(1)
+  // const pageSize = 10
+
+  const { isLoading, error, data, refetch } = useQuery<{ total: number, data: any[] }>({
+    queryKey: ["equipment", customerNumber],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/customer-search/equipment?customerNumber=${customerNumber}`,
+      )
+      return response.json()
+    },
+  })
+
   const t = useTranslations("OperationForm")
 
   const columns = [
-    { accessor: "kaykuNo", title: t("customerNumber") },
+    { accessor: "kyakuNo", title: t("customerNumber") },
     { accessor: "machinNo", title: "機器番号" },
     { accessor: "modelCd", title: "機種ｺｰﾄﾞ" },
     { accessor: "makerCd", title: "ﾒｰｶｰ" },
@@ -26,14 +45,26 @@ export default function CustomerEquipmentTab({}: {}) {
     { accessor: "upYmd", title: "更新日" },
   ]
 
+  const mappedData = (data?.data || []).map((item) => ({
+    ...item,
+    chousaYmd: item.chousaYmd ? formatDay(item.chousaYmd) : "",
+    mkYmd: item.mkYmd ? formatDay(item.mkYmd) : "",
+    upYmd: item.mkYmd ? formatDay(item.mkYmd) : "",
+  }))
+
   return (
     <div className="pt-5">
       <DataTable
+        idAccessor={(record) => `${record.kyakuNo}-${record.machinNo}`}
+        // totalRecords={data?.total || 0}
         withTableBorder={false}
         striped
         borderRadius="sm"
-        highlightOnHover
-        records={[]}
+        // page={page}
+        // recordsPerPage={pageSize}
+        // highlightOnHover
+        records={mappedData}
+        // onPageChange={setPage}
         columns={columns}
       />
     </div>

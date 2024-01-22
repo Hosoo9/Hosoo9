@@ -19,7 +19,7 @@ export const WorkScheduleInformation = ({
           <div className="col-span-1">
             <UserSelect
               form={form}
-              label={t("responsibleWorker")}
+              label={t("assignedWorker")}
               name={"assignedWorkerId"}
             />
           </div>
@@ -44,8 +44,8 @@ export const WorkScheduleInformation = ({
               label={t("footprint")}
               data-testid="footprint"
               data={[
-                { value: "1", label: "午前" },
-                { value: "2", label: "午後" },
+                { value: "1", label: t("footprint1") },
+                { value: "2", label: t("footprint2") },
               ]}
               {...form.getInputProps("footprint")}
             ></Select>

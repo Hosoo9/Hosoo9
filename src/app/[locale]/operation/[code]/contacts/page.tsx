@@ -8,7 +8,7 @@ export default async function OperationContactPage({ params }: { params: { code:
 
   return (
     <Container fluid>
-      <OperationHeader className="mt-5" code={params.code} showBack={true} />
+      <OperationHeader className="mt-5" code={params.code} />
 
       <div>
         <ContactHistory code={params.code} />

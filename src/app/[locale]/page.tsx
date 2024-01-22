@@ -1,8 +1,5 @@
-import DraftOperationList from "@/components/operation/lists/DraftOperationList"
 import { getCurrentUser } from "@/lib/session"
-import { Button } from "@mantine/core"
 import { getTranslations } from "next-intl/server"
-import Link from "next/link"
 import { redirect } from "next/navigation"
 
 export default async function Home() {
@@ -14,15 +11,17 @@ export default async function Home() {
     redirect("/api/auth/signin?callbackUrl=/")
   }
 
-  return (
-    <div>
-      <h2>{ t("operations") }</h2>
-      <Button component={Link} href="/operation/new">
-        {t("new")}
-      </Button>
+  redirect("/customer-search")
 
-      <DraftOperationList />
-    </div>
-    // <Welcome users={users} />
-  )
+  // return (
+  //   <div>
+  //     <h2>{ t("operations") }</h2>
+  //     {/* <Button component={Link} href="/operation/new"> */}
+  //     {/*   {t("new")} */}
+  //     {/* </Button> */}
+
+  //     <RootPage />
+  //   </div>
+  //   // <Welcome users={users} />
+  // )
 }

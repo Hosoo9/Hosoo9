@@ -3,6 +3,7 @@ import { sortExtractor } from "@/utils/sort"
 import { ContextOptions, PaginationParams } from "@/utils/types"
 import { Prisma } from "@prisma/client"
 import crypto from "crypto"
+import { OperationStateMachine } from "./state-machine"
 
 export type OperationWorkType = 1 | 2 | 3 | 4 | 5
 export type OperationState = 1 | 2 | 3 | 4 | 5 | 6
@@ -16,12 +17,21 @@ type CreateAlarmInput = {
   modelNumber: string
 }
 
+class StateTransitionError extends Error {}
+
 type CreateOperationInput = {
+  customerNumber: string
+  postalCode: string | null
+  municipality: string | null
+  address: string | null
+  housingType: HousingType | null
+  buildingNameRoomNumber: string | null
+  name: string | null
+  nameKana: string | null
+  phoneNumber: string | null
+  phoneNumberType: PhoneNumberType | null
+  // mailAddress: string | null
   createdBy: string
-  isSecurityWork: boolean
-  changedNotificationFlag: boolean
-  valveOpenFlag: boolean
-  operationType: OperationType
 }
 
 export type FindOperationsInput = PaginationParams & {
@@ -39,6 +49,7 @@ export type FindOperationsInput = PaginationParams & {
   createdAtFrom?: Date
   createdAtTo?: Date
   operationTypes?: OperationWorkType[]
+  companyId?: string
 }
 
 type CompleteOperationInput = {
@@ -151,7 +162,6 @@ export const findOperation = async (
 //   })
 // }
 
-
 const constructWhere = ({
   address,
   statuses,
@@ -163,7 +173,8 @@ const constructWhere = ({
   createdAtFrom,
   createdAtTo,
   operationTypes,
-  isExpiredExchange
+  isExpiredExchange,
+  companyId
 }: FindOperationsInput): Prisma.OperationWhereInput => {
   const conditionalOptions: Prisma.OperationWhereInput = {}
 
@@ -190,6 +201,10 @@ const constructWhere = ({
     conditionalOptions.isExpiredExchange = isExpiredExchange
   }
 
+  if (companyId) {
+    conditionalOptions.companyId = companyId
+  }
+
   return {
     status: {
       in: statuses,
@@ -204,9 +219,100 @@ const constructWhere = ({
   }
 }
 
+export const batchAssignWorkers = async ({
+  codes,
+  assignedWorkerId,
+  scheduledDate,
+}: {
+  codes: string[]
+  assignedWorkerId: string
+  scheduledDate: Date
+}) => {
+  await prisma.operation.updateMany({
+    where: {
+      code: {
+        in: codes,
+      },
+    },
+    data: {
+      assignedWorkerId,
+      scheduledDate,
+    },
+  })
+}
+
+export const batchAssignCompany = async ({
+  codes,
+  companyId
+}: {
+  codes: string[]
+  companyId: string
+}) => {
+  await prisma.operation.updateMany({
+    where: {
+      code: {
+        in: codes,
+      }
+    },
+    data: {
+      companyId,
+      isExpiredExchange: false,
+    },
+  })
+}
+
+export const updateOperationStatusByCodes = async ({
+  codes,
+  newStatus,
+}: {
+  codes: string[]
+  newStatus: OperationState
+}) => {
+  const operations = await prisma.operation.findMany({
+    where: {
+      code: {
+        in: codes,
+      },
+    },
+  })
+
+  const results = operations.map((operation) => {
+    const machine = new OperationStateMachine(
+      operation.code,
+      operation.status as OperationState,
+    )
+
+    return machine.isValidTransition(newStatus)
+      ? { status: "ok", machine }
+      : { status: "error", machine }
+  })
+
+  // collect errors
+  const errors = results.filter((result) => result.status === "error")
+
+  if (errors.length > 0) {
+    throw new StateTransitionError(
+      `Invalid transition for operation ${errors
+        .map((error) => error.machine.code)
+        .join(", ")}`,
+    )
+  } else {
+    await prisma.operation.updateMany({
+      where: {
+        code: {
+          in: codes,
+        },
+      },
+      data: {
+        status: newStatus,
+      },
+    })
+  }
+}
+
 export const findOperations = async (
   findOptions: FindOperationsInput,
-  { includeUser } = { includeUser: true },
+  { includeUser, includeCompany } = { includeUser: true, includeCompany: true },
 ) => {
   const { page, limit, sort } = findOptions
   const { field, order } = sortExtractor(sort)
@@ -218,6 +324,7 @@ export const findOperations = async (
     where,
     include: {
       createdByUser: includeUser,
+      company: includeCompany,
     },
     orderBy: {
       [field]: order,

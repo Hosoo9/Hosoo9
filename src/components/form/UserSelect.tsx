@@ -31,21 +31,12 @@ function UserSelect({
     return { value: user.id, label: user.name }
   })
 
-  if (error) {
-    console.log(error)
-  }
-
   return (
     <Select
       label={label}
       data={selectData}
       {...form.getInputProps(name)}
     ></Select>
-    // <Input.Wrapper label={label}>
-    //   <Input data-testid={name} {...form.getInputProps(name)} />{" "}
-    // </Input.Wrapper>
   )
 }
 export default UserSelect
-
-//To do comment

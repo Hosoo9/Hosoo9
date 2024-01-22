@@ -1,11 +1,34 @@
+import { useQuery } from "@tanstack/react-query"
 import { DataTable } from "mantine-datatable"
 import { useTranslations } from "next-intl"
+import { useState } from "react"
 
-export default function CustomerEquipmentTab({}: {}) {
+export default function CustomerEquipmentTab({
+  customerNumber,
+}: {
+  customerNumber: string
+}) {
+  const [page, setPage] = useState(1)
+  const pageSize = 10
+
+  const { isLoading, error, data, refetch } = useQuery<{ total: number, data: any[] }>({
+    queryKey: ["alarm", customerNumber, page],
+    queryFn: async () => {
+      const params = new URLSearchParams()
+      params.set("page", page.toString())
+      params.set("customerNumber", customerNumber)
+
+      const response = await fetch(
+        `/api/customer-search/alarm?${params.toString()}`,
+      )
+      return response.json()
+    },
+  })
+
   const t = useTranslations("OperationForm")
 
   const columns = [
-    { accessor: "kaykuNo", title: t("customerNumber") },
+    { accessor: "kyakuNo", title: t("customerNumber") },
     { accessor: "regNo", title: "登録番号" },
     { accessor: "systemKbn", title: "システム区分" },
     { accessor: "alarmModel", title: "型式" },
@@ -32,11 +55,16 @@ export default function CustomerEquipmentTab({}: {}) {
   return (
     <div className="pt-5">
       <DataTable
+        idAccessor={(record) => `${record.kyakuNo}-${record.regNo}`}
+        totalRecords={data?.total || 0}
         withTableBorder={false}
         striped
         borderRadius="sm"
+        page={page}
+        recordsPerPage={pageSize}
         highlightOnHover
-        records={[]}
+        records={data?.data || []}
+        onPageChange={setPage}
         columns={columns}
       />
     </div>

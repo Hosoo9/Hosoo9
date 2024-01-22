@@ -1,11 +1,17 @@
 import { z } from "zod"
 
 const create = {
-  isSecurityWork: z.boolean(),
-  changedNotificationFlag: z.boolean(),
-  valveOpenFlag: z.boolean(),
-  exchangingDate: z.coerce.date().nullable(),
-  operationType: z.enum(["1", "2", "3", "4", "5"]),
+  customerNumber: z.string(),
+  postalCode: z.string().nullable(),
+  municipality: z.string().nullable(),
+  address: z.string().nullable(),
+  housingType: z.enum(["1", "2"]).nullable(),
+  buildingNameRoomNumber: z.string().nullable(),
+  name: z.string().nullable(),
+  nameKana: z.string().nullable(),
+  phoneNumber: z.string().nullable(),
+  phoneNumberType: z.enum(["1", "2", "3"]).nullable(),
+  // mailAddress: z.string().nullable(),
 }
 
 const update = {
@@ -30,7 +36,7 @@ const update = {
   // desiredDate: z.coerce.date().optional(),
   // desiredTimeSlot: z.coerce.number().optional(),
   // memo: z.string().optional(),
-  // assignedWorkerId: z.string().optional(),
+  assignedWorkerId: z.string().nullable(),
   // scheduledDatetime: z.coerce.date().optional(),
   // amountExcludingTax: z.coerce.number().optional(),
   // amountConsumptionTax: z.coerce.number().optional(),
@@ -49,16 +55,10 @@ const update = {
   // postcardOutputTimestamp: z.coerce.date().nullable(),
   absenceNoticeDeliveryDate: z.coerce.date().nullable(),
   exchangingDate: z.coerce.date().nullable(),
+  isSecurityWork: z.boolean().nullable(),
+  changedNotificationFlag: z.boolean().nullable(),
+  valveOpenFlag: z.boolean().nullable(),
   operationType: z.enum(["1", "2", "3", "4", "5"]).nullable(),
-  customerNumber: z.string().nullable(),
-  name: z.string().nullable(),
-  nameKana: z.string().nullable(),
-  phoneNumber: z.string().nullable(),
-  assignedWorkerId: z.string().nullable(),
-  postalCode: z.string().nullable(),
-  municipality: z.string().nullable(),
-  address: z.string().nullable(),
-  buildingNameRoomNumber: z.string().nullable(),
   removingMeterNumber: z.coerce.string().nullable(),
   removingMeterValue: z.coerce.number().nullable(),
   removingMeterInspectionDate: z.coerce.date().nullable(),
@@ -97,6 +97,23 @@ export const selectOperationSchema = z.object({
   createdAtTo: z.coerce.date().optional(),
   operationTypes: z.array(z.enum(["1", "2", "3", "4", "5"])).optional(),
   sort: z.string().optional().default("createdAt-desc"),
+  companyId: z.string().optional(),
+})
+
+export const batchUpdateOperationSchema = z.object({
+  codes: z.array(z.string()),
+  newStatus: z.enum(["1", "2", "3", "4", "5", "6"]),
+})
+
+export const batchAssign = z.object({
+  codes: z.array(z.string()),
+  assignedWorkerId: z.string(),
+  scheduledDate: z.coerce.date(),
+})
+
+export const batchAssignCompanySchema = z.object({
+  codes: z.array(z.string()),
+  companyId: z.string(),
 })
 
 export const createOperationSchema = z.object(create)

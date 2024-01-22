@@ -11,16 +11,15 @@ import "dayjs/locale/ja"
 
 import { type OperationType } from "@/contexts/operation"
 import { getOperationStateName } from "@/lib/enum/operation-state"
-import { formatDate } from "@/utils/date-helper"
+import { getOperationType } from "@/lib/enum/operation-type"
+import { formatDate, formatDay } from "@/utils/date-helper"
 import {
   ActionIcon,
   Box,
   Button,
-  Center,
   Grid,
   LoadingOverlay,
   MultiSelect,
-  Paper,
   Stack,
   TextInput,
 } from "@mantine/core"
@@ -31,12 +30,12 @@ import { useQuery } from "@tanstack/react-query"
 import { DataTable, DataTableColumn, type DataTableSortStatus } from "mantine-datatable"
 import { useTranslations } from "next-intl"
 import Link from "next/link"
-import { useState } from "react"
-import { getOperationType } from "@/lib/enum/operation-type"
+import { useEffect, useState } from "react"
+import CompanySelectNoForm from "../form/CompanySelectNoForm"
 
 const PAGE_SIZES = [10, 15, 20]
 
-type Operation = {
+export type Operation = {
   code: string
   status: string
   operationType: OperationType
@@ -46,19 +45,19 @@ type Operation = {
 function OperationList({
   statuses,
   className,
-  actionTitle,
-  onAction,
-  onSecondAction,
-  secondActionTitle,
-  isExpired = false
+  isExpired = false,
+  customerNumber,
+  selectedRecords,
+  setSelectedRecords,
+  count,
 }: {
   statuses?: number[]
   className?: string
-  actionTitle?: string
-  onAction?: () => Promise<void>
-  secondActionTitle?: string
-  onSecondAction?: () => Promise<void>
   isExpired?: boolean
+  customerNumber?: string
+  setSelectedRecords?: (selectedRecords: Operation[]) => void
+  selectedRecords?: Operation[]
+  count: number
 }) {
   const [sorting, setSorting] = useState<DataTableSortStatus<Operation>>({
     columnAccessor: "createdAt",
@@ -67,12 +66,12 @@ function OperationList({
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
   const [assignedWorkerFilter, setAssignedWorkerFilter] = useState("")
+  const [companyIdFilter, setCompanyIdFilter] = useState<string | null>(null)
   const [debouncedAssignedWorker] = useDebouncedValue(assignedWorkerFilter, 300)
   const [createdAtRange, setCreatedAtRange] = useState<DatesRangeValue>()
   const [operationTypes, setOperationTypes] = useState<string[] | undefined>()
-  const [selectedRecords, setSelectedRecords] = useState<Operation[]>([])
 
-  const { isLoading, error, data } = useQuery({
+  const { isLoading, error, data, refetch } = useQuery({
     queryKey: [
       `operations`,
       statuses,
@@ -82,6 +81,7 @@ function OperationList({
       debouncedAssignedWorker,
       createdAtRange,
       operationTypes,
+      companyIdFilter,
     ],
     queryFn: () => {
       const params = new URLSearchParams()
@@ -121,9 +121,23 @@ function OperationList({
         params.append("isExpiredExchange", "true")
       }
 
+      if (customerNumber) {
+        params.append("customerNumber", customerNumber)
+      }
+
+      if (companyIdFilter) {
+        params.append("companyId", companyIdFilter)
+      }
+
       return fetch(`/api/operation?${params.toString()}`).then((res) => res.json())
     },
   })
+
+  useEffect(() => {
+    if (count > 0) {
+      refetch()
+    }
+  }, [count, refetch])
 
   const t = useTranslations("OperationForm")
 
@@ -200,12 +214,25 @@ function OperationList({
       ),
       filtering: assignedWorkerFilter !== "",
     },
-    // {
-    //   accessor: "isExpiredExchange",
-    //   title: t("isExpired"),
-    //   textAlign: "right",
-    //   sortable: true
-    // },
+    {
+      accessor: "company.name",
+      title: t("company"),
+      filter: ({ close }) => (
+        <Stack>
+          <CompanySelectNoForm
+            name={"companyId"}
+            value={companyIdFilter}
+            onChange={(value) => setCompanyIdFilter(value)}
+            label={t("company")}
+          />
+        </Stack>
+      ),
+      filtering: companyIdFilter !== null,
+    },
+    {
+      accessor: "createdBy",
+      title: t("createdBy"),
+    },
     {
       accessor: "createdAt",
       title: t("createdAt"),
@@ -233,21 +260,72 @@ function OperationList({
       ),
       filtering: Boolean(createdAtRange),
     },
-    // {
-    //   accessor: "updatedAt",
-    //   title: t("updatedAt"),
-    //   textAlign: "right",
-    //   sortable: true,
-    // },
+    {
+      accessor: "customerNumber",
+      title: t("customerNumber"),
+    },
+    {
+      accessor: "memo",
+      title: t("memo"),
+    },
+    {
+      accessor: "scheduledDate",
+      title: t("scheduledDate"),
+    },
+    {
+      accessor: "scheduledTime",
+      title: t("scheduledTime"),
+    },
+    {
+      accessor: "postcardStartDate",
+      title: t("postcardStartDate"),
+    },
+    {
+      accessor: "postcardEndDate",
+      title: t("postcardEndDate"),
+    },
+    {
+      accessor: "attendance",
+      title: t("attendance"),
+    },
+    {
+      accessor: "removingMeterNumber",
+      title: t("removingMeterNumber"),
+    },
+    {
+      accessor: "removingMeterInspectionDate",
+      title: t("removingMeterInspectionDate"),
+    },
+    {
+      accessor: "referenceDate",
+      title: t("referenceDate"),
+    },
+    {
+      accessor: "installingMeterSize",
+      title: t("installingMeterSize"),
+    },
+    {
+      accessor: "installingMeterModel",
+      title: t("installingMeterModel"),
+    },
+    {
+      accessor: "installingMeterNumber",
+      title: t("installingMeterNumber"),
+    },
   ]
 
   const records = (data?.data || []).map((item: any) => ({
+    ...item,
     code: item.code,
     status: t(getOperationStateName(item.status).toLowerCase()),
     assignedWorkerId: item.assignedWorkerId,
     operationType: getOperationType(item.operationType),
     isExpiredExchange: item.isExpiredExchange ? "✓" : "✗",
     createdAt: formatDate(item.createdAt),
+    scheduledDate: formatDay(item.scheduledDate),
+    postcardStartDate: formatDay(item.postcardStartDate),
+    postcardEndDate: formatDay(item.postcardEndDate),
+    removingMeterInspectionDate: formatDay(item.removingMeterInspectionDate),
     // updatedAt: formatDate(item.updatedAt),
   }))
 
@@ -279,8 +357,7 @@ function OperationList({
               recordsPerPageOptions={PAGE_SIZES}
               onRecordsPerPageChange={setPageSize}
               sortStatus={sorting}
-              onSortStatusChange={setSorting}
-              {...(onAction && {
+              {...(selectedRecords && {
                 selectedRecords: selectedRecords,
                 onSelectedRecordsChange: setSelectedRecords,
               })}
@@ -288,27 +365,6 @@ function OperationList({
           </Box>
         </Grid.Col>
       </Grid>
-
-      {onAction && (
-        <Paper withBorder={true} className="py-3">
-          <Center>
-            <div className="flex gap-3">
-              <Button disabled={selectedRecords.length === 0}>{actionTitle}</Button>
-
-              {onSecondAction && (
-                <Button
-                  disabled={selectedRecords.length === 0}
-                  variant="light"
-                  onClick={onSecondAction}
-                  color="red"
-                >
-                  {secondActionTitle}
-                </Button>
-              )}
-            </div>
-          </Center>
-        </Paper>
-      )}
     </>
   )
 }

@@ -27,6 +27,7 @@ export async function GET(request: NextRequest) {
 const createSchema = z.object({
   id: z.string(),
   role: z.enum([ROLE_BUREAU.toString(), ROLE_MANAGER.toString(), ROLE_TECHNICIAN.toString()]),
+  loginId: z.string(),
 })
 
 export async function POST(request: Request) {
@@ -40,7 +41,7 @@ export async function POST(request: Request) {
   const body = await request.json()
   const params = createSchema.parse(body)
 
-  await createUser({ ...params, role: parseInt(params.role),  })
+  await createUser({ ...params, role: parseInt(params.role), loginId: params.loginId })
 
   return NextResponse.json(params, { status: 200 })
 }

@@ -18,7 +18,7 @@ export const authOptions: NextAuthOptions = {
       // You can specify whatever fields you are expecting to be submitted.
       // e.g. domain, username, password, 2FA token, etc.
       credentials: {
-        username: { label: "ログインID", type: "text", placeholder: "" },
+        username: { label: "ユーザーID", type: "text" },
         password: { label: "パスワード", type: "password" },
       },
       async authorize(credentials, req) {
@@ -31,7 +31,7 @@ export const authOptions: NextAuthOptions = {
         const res = await fetch(`${process.env.BASE_URL}/api/auth/login`, {
           method: "POST",
           body: JSON.stringify({
-            id: credentials?.username,
+            loginId: credentials?.username,
             password: credentials?.password,
           }),
           headers: { "Content-Type": "application/json" },
@@ -56,6 +56,7 @@ export const authOptions: NextAuthOptions = {
     async session({ token, session }: { token: any; session: any }) {
       if (token) {
         session.user.id = token.id
+        session.user.loginId = token.loginId
         session.user.name = token.name
         session.user.role = token.role
         session.user.companyCode = token.companyCode
@@ -73,6 +74,7 @@ export const authOptions: NextAuthOptions = {
 
       return {
         id: user.id,
+        loginId: user.loginId,
         name: user.name,
         role: user.role,
         companyCode: user.companyId,

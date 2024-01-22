@@ -24,8 +24,7 @@ import { useTranslations } from "next-intl"
 import { useState } from "react"
 
 type MeterSize = {
-  id: string
-  code: string
+  size: string
 }
 
 export default function MeterSizeManagement() {
@@ -48,7 +47,7 @@ export default function MeterSizeManagement() {
     isLoading: isResetLoading,
     isSuccess: isResetSuccess,
     error: isResetError,
-    mutateAsync: resetPassword,
+    mutateAsync: deleteMeterSize,
   } = useMutation({
     mutationFn: (meterSizeId: string) => {
       return fetch(`/api/meter_sizes/${meterSizeId}`, {
@@ -103,8 +102,8 @@ export default function MeterSizeManagement() {
 
   const columns = [
     {
-      accessor: "code",
-      title: t("code"),
+      accessor: "size",
+      title: t("size"),
     },
     {
       accessor: "actions",
@@ -140,7 +139,7 @@ export default function MeterSizeManagement() {
       ),
       labels: { confirm: t("delete"), cancel: t("cancel")},
       confirmProps: { color: 'red' },
-      onConfirm: () => resetPassword(record.id),
+      onConfirm: () => deleteMeterSize(record.size),
     })
   }
 

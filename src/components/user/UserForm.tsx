@@ -9,11 +9,12 @@
 
 import "dayjs/locale/ja"
 
-import { Button, Container, Input, Select } from "@mantine/core"
+import { Button, Container, Input, Select, TextInput } from "@mantine/core"
 import { useForm } from "@mantine/form"
 import { useMutation } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
 import { notifications } from "@mantine/notifications"
+import CompanySelect from "../form/CompanySelect"
 
 function UserForm({
   user: user,
@@ -25,9 +26,13 @@ function UserForm({
   const form = useForm({
     initialValues: {
       id: user?.id ||"",
+      loginId: user?.loginId || "",
       name: user?.name || "",
       nameKana: user?.nameKana || "",
       role: user?.role ? user.role.toString() : null,
+      companyId: user?.companyId || null,
+      technicianType: user?.technicianType ? user.technicianType.toString() : null,
+      phoneNumber: user?.phoneNumber || "",
     },
   })
 
@@ -79,6 +84,11 @@ function UserForm({
           </Input.Wrapper>
         </div>
         <div>
+          <Input.Wrapper label={t("loginId")}>
+            <Input data-testid="loginId" {...form.getInputProps("loginId")} />{" "}
+          </Input.Wrapper>
+        </div>
+        <div>
           <Input.Wrapper label={t("name")}>
             <Input data-testid="name" {...form.getInputProps("name")} />{" "}
           </Input.Wrapper>
@@ -99,8 +109,24 @@ function UserForm({
             {...form.getInputProps(`role`)}
           ></Select>
         </div>
+        <div>
+          <CompanySelect form={form} label={t("company")} name="companyId" />
+        </div>
+        <div>
+          <Select
+            label={t("technicianType")}
+            data={[
+              { value: "1", label: t("technicianType1") },
+              { value: "2", label: t("technicianType2") },
+            ]}
+            {...form.getInputProps(`technicianType`)}
+          ></Select>
+        </div>
+        <div>
+          <TextInput {...form.getInputProps(`phoneNumber`)} label={t("phoneNumber")} />
+        </div>
         <Button className="mt-5" type="submit" disabled={isLoading}>
-          Save
+          { t("save") }
         </Button>
       </div>
     </form>

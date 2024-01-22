@@ -24,8 +24,8 @@ import { useTranslations } from "next-intl"
 import { useState } from "react"
 
 type MeterManufacturer = {
-  id: string
   code: string
+  name: string
 }
 
 export default function MeterManufacturerManagament() {
@@ -48,7 +48,7 @@ export default function MeterManufacturerManagament() {
     isLoading: isResetLoading,
     isSuccess: isResetSuccess,
     error: isResetError,
-    mutateAsync: resetPassword,
+    mutateAsync: deleteManufacturer,
   } = useMutation({
     mutationFn: (meterManufacturerId: string) => {
       return fetch(`/api/meter_manufacturers/${meterManufacturerId}`, {
@@ -104,7 +104,11 @@ export default function MeterManufacturerManagament() {
   const columns = [
     {
       accessor: "code",
-      title: t("code"),
+      title: "メーカーコード"
+    },
+    {
+      accessor: "name",
+      title: "メーカー名"
     },
     {
       accessor: "actions",
@@ -140,7 +144,7 @@ export default function MeterManufacturerManagament() {
       ),
       labels: { confirm: t("delete"), cancel: t("cancel")},
       confirmProps: { color: 'red' },
-      onConfirm: () => resetPassword(record.id),
+      onConfirm: () => deleteManufacturer(record.code),
     })
   }
 

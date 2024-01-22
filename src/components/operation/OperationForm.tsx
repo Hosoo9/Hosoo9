@@ -9,7 +9,7 @@
 
 import "dayjs/locale/ja"
 
-import { Button, Container, Divider, Group, Stepper, Title } from "@mantine/core"
+import { Button, Container, Group, Stepper, Title } from "@mantine/core"
 import { useForm } from "@mantine/form"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
@@ -19,8 +19,6 @@ import SignatureCanvas from "react-signature-canvas"
 import { CustomerInformation } from "./CustomerInformation"
 import { Flags } from "./Flags"
 import { InstallingMeterInformation } from "./InstallingMeterInformation"
-import { MetaInformation } from "./MetaInformation"
-import { Pause } from "./Pause"
 import { RemovingMeterInformation } from "./RemovingMeterInformation"
 import { WorkInformation } from "./WorkInformation"
 import { WorkScheduleInformation } from "./WorkScheduleInformation"
@@ -32,6 +30,13 @@ import { ApproveOperationButton } from "./ApproveOperationButton"
 import { RejectOperationButton } from "./RejectOperationButton"
 import { notifications } from "@mantine/notifications"
 import { OperationHeader } from "./OperationHeader"
+import {
+  getCustomerDataFrom,
+  stringToEmpty,
+  transformCustomerData,
+} from "@/utils/converters"
+import { adjustDateToTimezone } from "@/utils/date-helper"
+import CustomerStaticHeader from "../customer/CustomerStaticHeader"
 
 const setDate = (date: Date) => {
   return date === null ? null : new Date(date)
@@ -50,15 +55,31 @@ const setBoolean = (input: boolean | null) => {
 const transformData = (data: any) => {
   return {
     ...data,
+    ...transformCustomerData(data),
+    buildingType: data.buildingType ? data.buildingType.toString() : null,
     scheduledDate: setDate(data.scheduledDate),
     postcardStartDate: setDate(data.postcardStartDate),
     postcardEndDate: setDate(data.postcardEndDate),
     // postcardOutputTimestamp: setDate(data.postcardOutputTimestamp),
-    installingMeterModel: data.installingMeterModel ? data.installingMeterModel.toString() : null,
-    removingMeterModel: data.removingMeterModel ? data.removingMeterModel.toString() : null,
-    installingMeterManufacturer: data.installingMeterManufacturer ? data.installingMeterManufacturer.toString() : null,
-    removingMeterManufacturer: data.removingMeterManufacturer ? data.removingMeterManufacturer.toString() : null,
-    installingMeterSize: data.installingMeterSize ? data.installingMeterSize.toString() : null,
+    installingMeterModel: data.installingMeterModel
+      ? data.installingMeterModel.toString()
+      : null,
+    removingMeterModel: data.removingMeterModel
+      ? data.removingMeterModel.toString()
+      : null,
+    removingMeterNumber: stringToEmpty(data.removingMeterNumber),
+    removingMeterValue: stringToEmpty(data.removingMeterValue),
+    installingMeterNumber: stringToEmpty(data.installingMeterNumber),
+    installingMeterValue: stringToEmpty(data.installingMeterValue),
+    installingMeterManufacturer: data.installingMeterManufacturer
+      ? data.installingMeterManufacturer.toString()
+      : null,
+    removingMeterManufacturer: data.removingMeterManufacturer
+      ? data.removingMeterManufacturer.toString()
+      : null,
+    installingMeterSize: data.installingMeterSize
+      ? data.installingMeterSize.toString()
+      : null,
     removingMeterSize: data.removingMeterSize ? data.removingMeterSize.toString() : null,
     absenceNoticeDeliveryDate: setDate(data.absenceNoticeDeliveryDate),
     footprint: data.footprint ? data.footprint.toString() : null,
@@ -78,12 +99,15 @@ const transformData = (data: any) => {
     afterWorkInspectionType: data.afterWorkInspectionType
       ? data.afterWorkInspectionType.toString()
       : null,
+    scheduledTime: data.scheduledTime ? data.scheduledTime.toString() : "",
+    memo: stringToEmpty(data.memo),
   }
 }
 
 function OperationForm({ code }: { code: string }) {
   const router = useRouter()
   const [operation, setOperation] = useState<any>(null)
+  const [customer, setCustomer] = useState<any>(null)
 
   const {
     isLoading: isCurrentUserLoading,
@@ -107,12 +131,17 @@ function OperationForm({ code }: { code: string }) {
       const transformed = transformData(data)
       form.setInitialValues(transformed)
       form.setValues(transformed)
+
+      setCustomer({ ...getCustomerDataFrom(data) })
       setOperation({ ...data })
     },
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   })
 
   const form = useForm({
     initialValues: {
+      assignedWorkerId: null,
       isSecurityWork: false,
       changedNotificationFlag: false,
       valveOpenFlag: false,
@@ -137,8 +166,12 @@ function OperationForm({ code }: { code: string }) {
       buildingNameRoomNumber: null,
       address: null,
       scheduledDatetime: null,
+      scheduledDate: null,
+      referenceDate: null,
       installing: {},
       createdAt: null,
+      postcardStartDate: null,
+      postcardEndDate: null,
     },
 
     validate: {
@@ -172,24 +205,33 @@ function OperationForm({ code }: { code: string }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newOperation),
+        body: JSON.stringify({
+          ...newOperation,
+          // DatePicker needs to convert to local date
+          scheduledDate: adjustDateToTimezone(newOperation.scheduledDate),
+          referenceDate: adjustDateToTimezone(newOperation.referenceDate),
+          postcardStartDate: adjustDateToTimezone(newOperation.postcardStartDate),
+          postcardEndDate: adjustDateToTimezone(newOperation.postcardEndDate),
+        }),
       })
 
       return result.json()
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      setCustomer({ ...getCustomerDataFrom(data) })
+
       notifications.show({
-        title: 'Save success',
-        message: 'Operation has been saved',
+        title: "Save success",
+        message: "Operation has been saved",
       })
     },
     onError: () => {
       notifications.show({
-        title: 'Save failed',
-        message: 'Operation has not been saved',
-        color: 'red',
+        title: "Save failed",
+        message: "Operation has not been saved",
+        color: "red",
       })
-    }
+    },
   })
 
   const t = useTranslations("OperationForm")
@@ -241,7 +283,7 @@ function OperationForm({ code }: { code: string }) {
         <LoaderComponent />
       ) : (
         <form onReset={form.onReset} onSubmit={form.onSubmit(saveOperation)}>
-          <OperationHeader code={code} />
+          <OperationHeader code={code} showContact={true} />
           {/* <pre>{JSON.stringify(form.values, null, 2)}</pre> */}
           {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
           {/* <ContactHistory */}
@@ -249,12 +291,20 @@ function OperationForm({ code }: { code: string }) {
           {/*   onNewContact={(contacts) => form.insertListItem("ContactOperation", contacts)} */}
           {/* /> */}
 
-          <MetaInformation form={form} operation={operation} />
-          <Pause />
+          {/* { JSON.stringify(customer, null, 2) } */}
+          {customer && customer.customerNumber && (
+            <CustomerStaticHeader customer={customer} />
+          )}
+          {/* <MetaInformation form={form} operation={operation} /> */}
+          {/* <Pause /> */}
 
-          <Divider my="lg" className="pt-5" />
+          {/* <Divider my="lg" className="pt-5" /> */}
 
           <Stepper active={active} onStepClick={setActive} iconSize={32}>
+            <Stepper.Step label={t("customerInformation")}>
+              <CustomerInformation form={form} className="py-2" />
+            </Stepper.Step>
+
             <Stepper.Step label={t("workInformation")}>
               <div className="py-2">
                 <div className="py-5">
@@ -272,10 +322,6 @@ function OperationForm({ code }: { code: string }) {
 
             {/* <Divider my="lg" /> */}
 
-            <Stepper.Step label={t("customerInformation")}>
-              <CustomerInformation form={form} className="py-2" />
-            </Stepper.Step>
-
             {/* <Divider my="lg" /> */}
             {/* <Stepper.Step label={t("workInformation")}> */}
             {/*   <WorkInformation form={form} className="py-2" /> */}
@@ -290,7 +336,7 @@ function OperationForm({ code }: { code: string }) {
 
             {isFullForm(operation?.status) && (
               <Stepper.Step label={t("installingMeterInformation")}>
-                <InstallingMeterInformation form={form} className="py-2" />
+                <InstallingMeterInformation form={form} customerNumber={operation.customerNumber} className="py-2" />
                 {/* <pre>{ JSON.stringify(form.values, null, 2) }</pre> */}
               </Stepper.Step>
             )}
@@ -328,7 +374,7 @@ function OperationForm({ code }: { code: string }) {
               loading={mutationLoading}
               disabled={active === 0 || isLoading}
             >
-              { t("back") }
+              {t("back")}
             </Button>
             <Button
               onClick={nextStep}
@@ -346,7 +392,7 @@ function OperationForm({ code }: { code: string }) {
                 onSubmit={onRequestForApproval}
                 beforeSubmit={beforeSubmit}
               >
-                { t("submitForApproval") }
+                {t("submitForApproval")}
               </SubmitForApproval>
             )}
 
@@ -357,10 +403,10 @@ function OperationForm({ code }: { code: string }) {
               currentUser.role === 3 && (
                 <>
                   <ApproveOperationButton beforeSubmit={beforeSubmit} code={code}>
-                    { t("approve") }
+                    {t("approve")}
                   </ApproveOperationButton>
                   <RejectOperationButton beforeSubmit={beforeSubmit} code={code}>
-                    { t("reject") }
+                    {t("reject")}
                   </RejectOperationButton>
                 </>
               )}
@@ -371,7 +417,7 @@ function OperationForm({ code }: { code: string }) {
                 code={code}
                 onSubmit={onCompleteOperation}
               >
-                { t("completeOperation") }
+                {t("completeOperation")}
               </SubmitCompleteOperation>
             )}
           </Group>

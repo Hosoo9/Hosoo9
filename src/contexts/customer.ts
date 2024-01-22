@@ -1,3 +1,4 @@
+import prisma from "@/utils/prisma"
 import {
   randEmail,
   randFutureDate,
@@ -5,6 +6,7 @@ import {
   randNumber,
   randPhoneNumber,
 } from "@ngneat/falso"
+import { Prisma } from "@prisma/client"
 import dayjs from "dayjs"
 
 type SearchCustomerInput = {
@@ -12,14 +14,124 @@ type SearchCustomerInput = {
   meterNumber?: string | null
   phoneNumber?: string | null
   code?: string | null
+  userKataNm?: string | null
+  userKataKNm?: string | null
+  address?: string | null
+  municipality?: string | null
+  streetNo?: string | null
+  houseNo?: string | null
+  userSpecialNo?: string | null
+  disaReblkCd?: string | null
 }
 
 export const searchCustomer = async (searchInput: SearchCustomerInput) => {
-  if (searchInput.customerNumber) {
-    return [generateCustomer(searchInput)]
+  const where = constructWhere(searchInput)
+
+  const customers = await prisma.customer.findMany({
+    where,
+    // include: {
+    //   createdByUser: includeUser,
+    // },
+  })
+
+  return customers.map((customer) => {
+    return {
+      ...customer,
+      phoneNumber: customer.userTel,
+      // createdByUser: customer.createdByUser,
+    }
+  })
+}
+
+const constructWhere = ({
+  customerNumber,
+  meterNumber,
+  phoneNumber,
+  userKataNm,
+  userKataKNm,
+  address,
+  houseNo,
+  municipality,
+  streetNo,
+  userSpecialNo,
+  disaReblkCd
+}: SearchCustomerInput) => {
+  const conditionalOptions: Prisma.CustomerWhereInput = {}
+
+  if (customerNumber) {
+    conditionalOptions.customerNumber = {
+      startsWith: customerNumber,
+    }
   }
 
-  return [generateCustomer(searchInput), generateCustomer(searchInput)]
+  if (meterNumber) {
+    conditionalOptions.meterNo = {
+      startsWith: meterNumber,
+    }
+  }
+
+  if (phoneNumber) {
+    conditionalOptions.contactTel = {
+      startsWith: phoneNumber,
+    }
+  }
+
+  if (userKataNm) {
+    conditionalOptions.userKataNm = {
+      startsWith: userKataNm,
+    }
+  }
+
+  if (userKataKNm) {
+    conditionalOptions.userKataKNm = {
+      startsWith: userKataKNm,
+    }
+  }
+
+  if (address) {
+    conditionalOptions.address = {
+      contains: address,
+    }
+  }
+
+  if (houseNo) {
+    conditionalOptions.userHouseNo = parseInt(houseNo)
+  }
+
+  if (municipality) {
+    conditionalOptions.municipality = {
+      contains: municipality,
+    }
+  }
+
+  if (streetNo) {
+    conditionalOptions.userStreetNo = parseInt(streetNo)
+  }
+
+  if (userSpecialNo) {
+    conditionalOptions.userSpecialNo = parseInt(userSpecialNo)
+  }
+
+  if (disaReblkCd) {
+    conditionalOptions.disaReblkCd = {
+      startsWith: disaReblkCd,
+    }
+  }
+
+  // if (createdAtFrom) {
+  //   conditionalOptions.createdAt = {
+  //     gte: createdAtFrom,
+  //     lte: createdAtTo,
+  //   }
+  // }
+
+  // if (operationTypes && operationTypes.length > 0) {
+  //   conditionalOptions.operationType = {
+  //     in: operationTypes,
+  //   }
+  // }
+
+  return conditionalOptions
 }
 
 const names = [
@@ -62,16 +174,16 @@ const buildingNameRoomNumbers = [
 ]
 
 const addresses = [
-  "東京都渋谷区桜町1-2-3, 150-0001",
-  "大阪府中央区富士通り4-5-6, 550-0012",
-  "北海道札幌市朝日巷7-8-9, 060-0003",
-  "神奈川県横浜市中区梅の広場10-11-12, 220-0022",
-  "京都府京都市花通り13-14-15, 600-0004",
-  "福岡県福岡市山区菊の丘16-17-18, 810-0006",
-  "愛知県名古屋市月が導く道19-20-21, 460-0011",
-  "兵庫県神戸市山の高み22-23-24, 650-0002",
-  "広島県広島市水の小路25-26-27, 730-0035",
-  "宮城県仙台市土のアベニュー28-29-30, 980-0000",
+  "桜町1-2-3",
+  "富士通り4-5-6",
+  "朝日巷7-8-9",
+  "梅の広場10-11-12",
+  "花通り13-14-15",
+  "山区菊の丘16-17-18",
+  "月が導く道19-20-21",
+  "山の高み22-23-24",
+  "水の小路25-26-27",
+  "土のアベニュー28-29-30",
 ]
 
 const generateCustomer = (searchInput: SearchCustomerInput) => {
@@ -79,7 +191,10 @@ const generateCustomer = (searchInput: SearchCustomerInput) => {
     customerNumber:
       searchInput.customerNumber ?? randNumber({ min: 1000000, max: 9999999 }).toString(),
     housingType: randNumber({ min: 1, max: 2 }),
-    postalCode: randNumber({ min: 1000000, max: 9999999 }).toString(),
+    postalCode: `${randNumber({ min: 100, max: 999 }).toString()}-${randNumber({
+      min: 1000,
+      max: 9999,
+    }).toString()}`,
     municipality: municipalities[randNumber({ min: 0, max: 9 })],
     address: addresses[randNumber({ min: 0, max: 9 })],
     buildingNameRoomNumber: buildingNameRoomNumbers[randNumber({ min: 0, max: 9 })],

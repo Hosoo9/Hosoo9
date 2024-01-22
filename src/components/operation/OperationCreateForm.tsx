@@ -9,28 +9,56 @@
 
 import "dayjs/locale/ja"
 
-import { Button, Container, Group, Stepper } from "@mantine/core"
-import { useForm, zodResolver } from "@mantine/form"
-import { useMutation } from "@tanstack/react-query"
-import { useTranslations } from "next-intl"
-import { useRouter } from "next/navigation"
-import { SetStateAction, useState } from "react"
-import { Flags } from "./Flags"
-import { WorkInformation } from "./WorkInformation"
-import { notifications } from "@mantine/notifications"
 import { createOperationSchema } from "@/contexts/operation/validation-schema"
+import { Button, Container } from "@mantine/core"
+import { useForm, zodResolver } from "@mantine/form"
+import { notifications } from "@mantine/notifications"
+import { useMutation, useQuery } from "@tanstack/react-query"
+import { useTranslations } from "next-intl"
+import { useRouter, useSearchParams } from "next/navigation"
+import { CustomerInformation } from "./CustomerInformation"
+import { transformCustomerData } from "@/utils/converters"
 
-function OperationForm() {
+function OperationCreateForm() {
+  const searchParams = useSearchParams()
   const router = useRouter()
+
+  const { isLoading: isCustomerLoading, isError, data, refetch } = useQuery({
+    queryKey: [`customer-search`, searchParams],
+    queryFn: async () => {
+      if (!searchParams.has("customerNumber")) {
+        return []
+      }
+
+      const result = await fetch(`/api/customer-search?${searchParams.toString()}`)
+      return result.json()
+    },
+    cacheTime: 0,
+    onSuccess: (data) => {
+      if (data) {
+        if (data.length > 0) {
+          form.setValues({ ...transformCustomerData(data[0]) })
+        }
+      }
+    },
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  })
 
   const form = useForm({
     validate: zodResolver(createOperationSchema),
     initialValues: {
-      isSecurityWork: false,
-      changedNotificationFlag: false,
-      valveOpenFlag: false,
-      exchangingDate: null,
-      operationType: null,
+      isNonCustomer: false,
+      customerNumber: "",
+      postalCode: "",
+      municipality: "",
+      address: "",
+      housingType: null,
+      buildingNameRoomNumber: "",
+      name: "",
+      nameKana: "",
+      phoneNumber: "",
+      phoneNumberType: null,
     },
   })
 
@@ -60,7 +88,7 @@ function OperationForm() {
         message: "Operation has not been saved",
         color: "red",
       })
-    }
+    },
   })
 
   if (error) {
@@ -68,18 +96,6 @@ function OperationForm() {
   }
 
   const t = useTranslations("OperationForm")
-
-  const [searchQuery, setSearchQuery] = useState("")
-
-  const handleSearchInputChange = (event: {
-    target: { value: SetStateAction<string> }
-  }) => {
-    setSearchQuery(event.target.value)
-  }
-
-  const handleSearchClick = () => {
-    console.log(`Searching for "${searchQuery}"...`)
-  }
 
   const saveOperation = async (values: FormValues) => {
     const result = await mutateAsync(values)
@@ -101,35 +117,15 @@ function OperationForm() {
         {/* <Divider my="lg" className="pt-5" /> */}
         <div className="mt-5"></div>
 
-        <Stepper active={0}>
-          <Stepper.Step label={t("metaInformation")}>
-            <div className="py-2">
-              <div className="py-5">
-                <Flags form={form} />
-                <WorkInformation form={form} />
-              </div>
-            </div>
-          </Stepper.Step>
+        {/* <WorkInformation form={form} /> */}
+        <CustomerInformation form={form} noMailAddress={true} />
 
-          <Stepper.Step label={t("workScheduleInformation")}></Stepper.Step>
-          <Stepper.Step label={t("customerInformation")}></Stepper.Step>
-          {/* <Stepper.Step label={t("workInformation")}></Stepper.Step> */}
-          {/* <Stepper.Step */}
-          {/*   label={t("removingMeterInformation")} */}
-          {/*   className="py-2" */}
-          {/* ></Stepper.Step> */}
-
-          {/* <Stepper.Step label={t("installingMeterInformation")}></Stepper.Step> */}
-        </Stepper>
-
-        <Group justify="center" mt="xl">
-          <Button type="submit">{ t("nextStep") }</Button>
-        </Group>
+        <Button className="mt-5" type="submit" loading={isLoading}>
+          {t("create")}
+        </Button>
       </form>
     </Container>
   )
 }
 
-export default OperationForm
-
-// To do comment
+export default OperationCreateForm
